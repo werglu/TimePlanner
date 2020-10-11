@@ -1,5 +1,8 @@
 <body style="background-color:#eee2dc">
   <app-nav-menu></app-nav-menu>
+  <agm-map [latitude]="lat" [longitude]="lng" style="height:400px">
+    <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+  </agm-map>
   <div class="container">
     <router-outlet></router-outlet>
   </div>
