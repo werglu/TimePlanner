@@ -12,6 +12,7 @@
   },
   "private": true,
   "dependencies": {
+    "@agm/core": "^3.0.0-beta.0",
     "@angular/animations": "8.2.12",
     "@angular/common": "8.2.12",
     "@angular/compiler": "8.2.12",
@@ -22,6 +23,8 @@
     "@angular/platform-server": "8.2.12",
     "@angular/router": "8.2.12",
     "@nguniversal/module-map-ngfactory-loader": "8.1.1",
+    "@types/google-maps": "^3.2.2",
+    "@types/googlemaps": "^3.39.13",
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.3.1",
     "core-js": "^3.3.3",
