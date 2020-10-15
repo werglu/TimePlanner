@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Time_planner", "Time_planner\Time_planner.csproj", "{9ABF3BB5-CED5-4198-BB44-F76D12B0453E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Time_planner", "Time_planner\Time_planner.csproj", "{9ABF3BB5-CED5-4198-BB44-F76D12B0453E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Time_planner_api", "..\Time_planner_api\Time_planner_api\Time_planner_api.csproj", "{E6B194A9-5F9B-49BE-8201-531B5CF13086}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9ABF3BB5-CED5-4198-BB44-F76D12B0453E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9ABF3BB5-CED5-4198-BB44-F76D12B0453E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9ABF3BB5-CED5-4198-BB44-F76D12B0453E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6B194A9-5F9B-49BE-8201-531B5CF13086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6B194A9-5F9B-49BE-8201-531B5CF13086}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6B194A9-5F9B-49BE-8201-531B5CF13086}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6B194A9-5F9B-49BE-8201-531B5CF13086}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
