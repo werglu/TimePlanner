@@ -19,7 +19,7 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    pushd $(projectFolder) && npm install -g @angular/cli
-    pushd $(projectFolder) && npm install
-    pushd $(projectFolder) && ng build --prod
+    pushd $(projectFolder) && npm install -g @angular/cli && popd
+    pushd $(projectFolder) && npm install && popd
+    pushd $(projectFolder) && ng build --prod && popd
   displayName: 'npm install and build'
