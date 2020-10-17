@@ -28,7 +28,7 @@ namespace Time_planner_api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<WeatherForecastContext>(options =>
+            services.AddDbContext<DatabaseContext>(options =>
                                                           options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             services.AddCors(cfg => cfg.AddPolicy("ClientDomain", builder => builder.WithOrigins(Configuration.GetValue<string>("ClientDomain"))));
         }

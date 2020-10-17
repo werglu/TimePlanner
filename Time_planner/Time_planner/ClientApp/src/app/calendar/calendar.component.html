@@ -1,0 +1,46 @@
+<div *ngIf="events.length>0">
+  <div style="width:100%;display:inline-block">
+    <div class="btn-group" style="float:left">
+      <i class="fa fa-chevron-circle-left"
+         style="cursor:pointer"
+         mwlCalendarPreviousView
+         [view]="view"
+         [(viewDate)]="viewDate">
+      </i>
+      <div class="title">{{viewDate | calendarDate:(view + 'ViewTitle'):'en'}}</div>
+      <i class="fa fa-chevron-circle-right"
+         style="cursor:pointer"
+         mwlCalendarNextView
+         [view]="view"
+         [(viewDate)]="viewDate">
+      </i>
+    </div>
+    <div style="float:right">
+      <button class="btn btn-primary" (click)="getWeekView()">Week view</button>
+      <button class="btn btn-secondary" (click)="getMonthView()">Month view</button>
+      <button class="btn btn-primary" (click)="getDayView()">Day view</button>
+    </div>
+  </div>
+  <mwl-calendar-month-view [viewDate]="viewDate"
+                           *ngIf="monthView"
+                           weekStartsOn="1"
+                           [events]="events"
+                           [activeDayIsOpen]="activeDayIsOpen"
+                           [refresh]="refresh"
+                           (dayClicked)="dayClicked($event.day)"
+>
+  </mwl-calendar-month-view>
+  <mwl-calendar-week-view
+                          [viewDate]="viewDate"
+                          *ngIf="weekView"
+                          weekStartsOn="1"
+                          [refresh]="refresh"
+                          [events]="events"
+  ></mwl-calendar-week-view>
+  <mwl-calendar-day-view
+                         [viewDate]="viewDate"
+                         *ngIf="dayView"
+                         [refresh]="refresh"
+                         [events]="events"
+  ></mwl-calendar-day-view>
+</div>

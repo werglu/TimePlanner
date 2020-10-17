@@ -1,6 +1,6 @@
 using System;
 
-namespace Time_planner
+namespace Time_planner.Models
 {
     public class WeatherForecast
     {

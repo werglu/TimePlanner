@@ -13,9 +13,9 @@ namespace Time_planner_api.Controllers
     [ApiController]
     public class WeatherForecastsController : ControllerBase
     {
-        private readonly WeatherForecastContext _context;
+        private readonly DatabaseContext _context;
 
-        public WeatherForecastsController(WeatherForecastContext context)
+        public WeatherForecastsController(DatabaseContext context)
         {
             _context = context;
         }
