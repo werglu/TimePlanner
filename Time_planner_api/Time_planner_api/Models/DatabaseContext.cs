@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace Time_planner_api.Models
 {
-    public class WeatherForecastContext : DbContext
+    public class DatabaseContext : DbContext
     {
-        public WeatherForecastContext(DbContextOptions<WeatherForecastContext> options) : base(options)
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         { }
 
         public DbSet<WeatherForecast> WeatherForecasts { get; set; }
+        public DbSet<Event> Events { get; set; }
+
     }
 }

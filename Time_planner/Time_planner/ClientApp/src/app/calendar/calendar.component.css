@@ -1,0 +1,19 @@
+button {
+    background-color: #ac3b61;
+}
+
+div.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+i.fa {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+  padding-bottom: 0px;
+  font-size: 1.5rem;
+  color: #123c69;
+}

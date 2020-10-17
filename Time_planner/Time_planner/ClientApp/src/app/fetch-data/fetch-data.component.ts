@@ -7,19 +7,19 @@ import { environment } from '../../environments/environment.prod';
   templateUrl: './fetch-data.component.html'
 })
 export class FetchDataComponent {
-  public forecasts: WeatherForecast[];
+  public forecasts: Events[];
 
   constructor(http: HttpClient) {
     var baseUrl: string = environment.apiBaseUrl;
-    http.get<WeatherForecast[]>(baseUrl + 'api/WeatherForecasts').subscribe(result => {
+    http.get<Events[]>(baseUrl + 'api/Events').subscribe(result => {
       this.forecasts = result;
     }, error => console.error(error));
   }
 }
 
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
+interface Events {
+  id: number;
+  startDate: Date;
+  endDate: Date;
+  title: string;
 }
