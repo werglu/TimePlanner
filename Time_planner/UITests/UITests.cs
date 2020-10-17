@@ -23,7 +23,7 @@ namespace UITests
         public void Can_Navigate_To_MainPage()
         {
             _driver.Navigate()
-                .GoToUrl("https://localhost:44396/");
+                .GoToUrl("https://localhost:44336/");
             Assert.Equal("Time planner app", _driver.Title);
         }
     }
