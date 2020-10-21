@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AgmCoreModule } from '@agm/core';
@@ -13,6 +13,9 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DialogsModule } from '@progress/kendo-angular-dialog';
+import { EditEventModalComponent } from './calendar/edit-event-modal/edit-event-modal.component';
+import { AddEventModalComponent } from './calendar/add-event-modal/add-event-modal.component';
 
 @NgModule({
   declarations: [
@@ -21,13 +24,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HomeComponent,
     CounterComponent,
     CalendarComponent,
-    FetchDataComponent
+    FetchDataComponent,
+    EditEventModalComponent,
+    AddEventModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DialogsModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyABcru_NMTTmJLKCoddjaFgqeb9K3X4P48'
     }),

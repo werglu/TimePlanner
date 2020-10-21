@@ -1,0 +1,31 @@
+<form [formGroup]="editEventForm" (ngSubmit)="onSubmit()">
+  <div style="display:grid">
+    <label for="name">
+      Title
+    </label>
+    <input id="title" type="text" formControlName="title">
+  </div>
+  <div style="display:grid">
+    <label style="padding-top: 10px;" for="name">
+      Start date
+    </label>
+    <div>
+      <input style="width:40%;margin-right:10px" type="date" id="startDate" name="startDate">
+      <input type="time" id="startDateTime" name="startDateTime">
+    </div>
+  </div>
+  <div style="display:grid">
+    <label style="padding-top: 10px;" for="name">
+      End date
+    </label>
+    <div>
+      <input style="width:40%;margin-right:10px" type="date" id="endDate" name="endDate">
+      <input type="time" id="endDateTime" name="appt">
+    </div>
+  </div>
+  <div style="float:right">
+    <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    <button style="margin-top:20px;background-color: #ac3b61;" class="btn btn-primary" type="submit">Save</button>
+  </div>
+</form>
+
