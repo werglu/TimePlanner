@@ -17,4 +17,21 @@ export class EventsService {
     var x = this.http.get<Events[]>(baseUrl + 'api/Events');
     return x;
   }
+
+
+  deleteEvent(id: number): Observable<Events> {
+    var baseUrl: string = environment.apiBaseUrl;
+    return this.http.delete<Events>(baseUrl + 'api/Events/' + id.toString());
+  }
+
+  public editEvent(id: number, event: Events): Observable<Events> {
+    var baseUrl: string = environment.apiBaseUrl;
+    return this.http.put<Events>(baseUrl + 'api/Events/' + id.toString(), event);
+  }
+
+
+  public addEvent(event: Events): Observable<Events> {
+    var baseUrl: string = environment.apiBaseUrl;
+    return this.http.post<Events>(baseUrl + 'api/Events/', event);
+  }
 }

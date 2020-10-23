@@ -30,7 +30,7 @@ namespace Time_planner_api
             services.AddControllers();
             services.AddDbContext<DatabaseContext>(options =>
                                                           options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
-            services.AddCors(cfg => cfg.AddPolicy("ClientDomain", builder => builder.WithOrigins(Configuration.GetValue<string>("ClientDomain"))));
+            services.AddCors(cfg => cfg.AddPolicy("ClientDomain", builder => builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

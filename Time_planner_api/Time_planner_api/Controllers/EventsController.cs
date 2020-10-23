@@ -48,7 +48,12 @@ namespace Time_planner_api.Controllers
         [HttpPost]
         public async Task<ActionResult<Event>> PostEvent(Event ourEvent)
         {
-            _context.Events.Add(ourEvent);
+            await _context.Events.AddAsync( new Event() {
+                StartDate = ourEvent.StartDate,
+                Title = ourEvent.Title, 
+                EndDate= ourEvent.EndDate 
+            }); 
+
             try
             {
                 await _context.SaveChangesAsync();
@@ -68,9 +73,39 @@ namespace Time_planner_api.Controllers
             return CreatedAtAction("GetEvent", new { id = ourEvent.Id }, ourEvent);
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> PutEvent([FromRoute]int id, Event oldEvent)
+        {
+            Event newEvent = _context.Events.Where(e => e.Id == id).Single<Event>();
+            newEvent.Id = oldEvent.Id;
+            newEvent.StartDate = oldEvent.StartDate;
+            newEvent.Title = oldEvent.Title;
+            newEvent.EndDate = oldEvent.EndDate;
+
+            _context.Entry(newEvent).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EventExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
         // DELETE: api/Events/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Event>> DeleteEvent(int id)
+        public async Task<ActionResult<Event>> DeleteEvent([FromRoute] int id)
         {
             var ourEvent = await _context.Events.FindAsync(id);
             if (ourEvent == null)

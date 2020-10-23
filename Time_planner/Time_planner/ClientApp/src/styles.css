@@ -16,3 +16,13 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+.k-window-titlebar
+{
+    color: white;
+    background-color: #123c69;
+}
+
+.k-window-content {
+    background-color: aliceblue;
+}
