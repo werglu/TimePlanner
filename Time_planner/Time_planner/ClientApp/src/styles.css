@@ -19,10 +19,12 @@ code {
 
 .k-window-titlebar
 {
-    color: white;
-    background-color: #123c69;
+  color: white;
+  background-color: #9b786f;
+  /*#123c69;*/
 }
 
 .k-window-content {
-    background-color: aliceblue;
+  background-color: #eee2dc;
+  /*aliceblue*/
 }

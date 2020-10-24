@@ -1,0 +1,9 @@
+import { ListCategory } from "./listCategory";
+
+export interface Task {
+  id: number;
+  categoryId: number;
+  title: string;
+  category: ListCategory;
+  isDone: boolean;
+}

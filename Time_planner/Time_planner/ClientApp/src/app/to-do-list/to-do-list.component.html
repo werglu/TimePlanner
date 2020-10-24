@@ -1,0 +1,56 @@
+<div>
+  <h2 style="color:#123c69">My To Do List</h2>
+  <div style="display:flex">
+    <h4>Category:</h4>
+    <kendo-dropdownlist 
+                        style="margin-left:20px;"
+                        [data]="listCategories"
+                        [value]="listCategories[0]"
+                        [textField]="'category'"
+                        [valueField]="'id'"
+                        (valueChange)="onCategoryChange($event)">
+    </kendo-dropdownlist>
+    <button style="margin-left:30px;" class="btn btn-primary" (click)="openAddNewCategoryModal()"><i style="padding-right:7px;font-size:1.1rem" class="fa fa-plus"></i>Add new category</button>
+  </div>
+
+  <kendo-grid style="margin-top:30px;"
+              [kendoGridBinding]="gridData"
+              [height]="510"
+              [sort]="sort"
+              [sortable]="true">
+    <kendo-grid-column field="isDone" width="110" title="Is Done">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div>
+          <input class="checkbox-round" type="checkbox" id="checkbox" (click)="checked(dataItem)" [checked]="dataItem.isDone" />
+        </div>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="title" title="To do">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div>
+          <label>{{dataItem.title}}</label>
+        </div>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column title="Delete" width="80">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div>
+          <button class="btn" style="background-color:transparent" (click)="removeTask(dataItem)"><i class="fa fa-trash" style="margin-left:8px;"></i></button>
+        </div>
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid>
+
+  <div style="float:right">
+    <button style="margin-top:20px;" class="btn btn-primary" (click)="openAddNewTaskModal()"><i style="padding-right:7px;font-size:1.1rem" class="fa fa-plus"></i>Add to-do</button>
+  </div>
+</div>
+
+
+<kendo-dialog title="Add new category" *ngIf="addNewCategoryModalVisible" (close)="closeAddNewCategoryModal()" [minWidth]="250" [width]="450">
+  <add-new-category-modal (onCancel)="closeAddNewCategoryModal()" (onSave)="addCategory($event)"></add-new-category-modal>
+</kendo-dialog>
+
+<kendo-dialog title="Add new to-do" *ngIf="addNewTaskModalVisible" (close)="closeAddNewTaskModal()" [minWidth]="250" [width]="450">
+  <add-new-task-modal (onCancel)="closeAddNewTaskModal()" (onSave)="addTask($event)"></add-new-task-modal>
+</kendo-dialog>

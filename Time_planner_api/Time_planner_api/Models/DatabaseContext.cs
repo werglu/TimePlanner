@@ -13,6 +13,8 @@ namespace Time_planner_api.Models
 
         public DbSet<WeatherForecast> WeatherForecasts { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<ListCategory> ListCategories { get; set; }
+        public DbSet<Task> Tasks { get; set; }
 
     }
 }

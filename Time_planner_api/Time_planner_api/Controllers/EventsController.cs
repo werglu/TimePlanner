@@ -51,7 +51,7 @@ namespace Time_planner_api.Controllers
             await _context.Events.AddAsync( new Event() {
                 StartDate = ourEvent.StartDate,
                 Title = ourEvent.Title, 
-                EndDate= ourEvent.EndDate 
+                EndDate= ourEvent.EndDate
             }); 
 
             try

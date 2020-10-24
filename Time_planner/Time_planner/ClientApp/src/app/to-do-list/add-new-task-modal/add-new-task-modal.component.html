@@ -1,0 +1,25 @@
+<form [formGroup]="addTaskForm" (ngSubmit)="onSubmit()">
+  <div style="display:grid">
+    <label for="category">
+      Category
+    </label>
+    <kendo-combobox [data]="listCategories"
+                    [value]="listCategories[0]"
+                    [textField]="'category'"
+                    [valueField]="'id'"
+                    (valueChange)="onCategoryChange($event)">
+    </kendo-combobox>
+  </div>
+  <div style="display:grid">
+    <label style="padding-top: 10px;" for="title">
+      Title
+    </label>
+    <input id="title" type="text" formControlName="title">
+  </div>
+
+  <div style="float:right">
+    <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    <button style="margin-top:20px;background-color: #ac3b61;" class="btn btn-primary" type="submit">Save</button>
+  </div>
+</form>
+
