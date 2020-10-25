@@ -12,9 +12,15 @@
   </div>
   <div style="display:grid">
     <label style="padding-top: 10px;" for="title">
-      Title
+      Title <span class="required">*</span>
     </label>
-    <input id="title" type="text" formControlName="title">
+    <input id="title" type="text" formControlName="title" required>
+    <div *ngIf="title.invalid && (title.dirty || title.touched)"
+         class="alert alert-danger">
+      <div *ngIf="title.errors.required">
+        Title is required.
+      </div>
+    </div>
   </div>
 
   <div style="float:right">
