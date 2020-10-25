@@ -1,12 +1,12 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CalendarEvent } from 'angular-calendar';
 import { Events } from '../events';
 import { EventsService } from '../events.service';
 
 @Component({
   selector: 'add-event-modal',
-  templateUrl: './add-event-modal.component.html'
+  templateUrl: './add-event-modal.component.html',
+  styleUrls: ['./add-event-modal.component.css']
 })
 
 export class AddEventModalComponent implements OnInit {

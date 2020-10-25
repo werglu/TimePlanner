@@ -111,7 +111,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       start: event.startDate,
       end: event.endDate,
       title: event.title,
-      actions: this.actions,
+      actions: this.actions
     });
     this.activeDayIsOpen = false;
     this.refresh.next();

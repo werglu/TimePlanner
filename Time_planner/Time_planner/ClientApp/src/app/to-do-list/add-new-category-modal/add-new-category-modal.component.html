@@ -1,0 +1,14 @@
+<form [formGroup]="addCategoryForm" (ngSubmit)="onSubmit()">
+  <div style="display:grid">
+    <label for="name">
+      Category name
+    </label>
+    <input id="name" type="text" formControlName="name">
+  </div>
+
+  <div style="float:right">
+    <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    <button style="margin-top:20px;background-color: #ac3b61;" class="btn btn-primary" type="submit">Save</button>
+  </div>
+</form>
+

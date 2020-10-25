@@ -1,0 +1,46 @@
+
+.leftMenu {
+  height: 100%;
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #bab2b5;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.list {
+  margin-left: 80px;
+}
+
+button {
+  background-color: #ac3b61;
+}
+
+.checkbox-round {
+  width: 1.5em;
+  height: 1.5em;
+  margin-left: 25px;
+  background-color: white;
+  border-radius: 50%;
+  vertical-align: middle;
+  border: 1px solid #ddd;
+  -webkit-appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.checkbox-round:checked {
+  background-color: #66bb6a;
+  border-color: #66bb6a;
+}
+
+i.fa {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+  padding-bottom: 0px;
+  color: #123c69;
+}

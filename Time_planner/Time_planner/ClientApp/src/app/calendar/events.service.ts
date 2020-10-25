@@ -18,7 +18,6 @@ export class EventsService {
     return x;
   }
 
-
   deleteEvent(id: number): Observable<Events> {
     var baseUrl: string = environment.apiBaseUrl;
     return this.http.delete<Events>(baseUrl + 'api/Events/' + id.toString());
@@ -28,7 +27,6 @@ export class EventsService {
     var baseUrl: string = environment.apiBaseUrl;
     return this.http.put<Events>(baseUrl + 'api/Events/' + id.toString(), event);
   }
-
 
   public addEvent(event: Events): Observable<Events> {
     var baseUrl: string = environment.apiBaseUrl;

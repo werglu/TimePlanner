@@ -16,6 +16,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogsModule } from '@progress/kendo-angular-dialog';
 import { EditEventModalComponent } from './calendar/edit-event-modal/edit-event-modal.component';
 import { AddEventModalComponent } from './calendar/add-event-modal/add-event-modal.component';
+import { ToDoListComponent } from './to-do-list/to-do-list.component';
+import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
+import { GridModule } from '@progress/kendo-angular-grid';
+import { AddNewCategoryModalComponent } from './to-do-list/add-new-category-modal/add-new-category-modal.component';
+import { AddNewTaskModalComponent } from './to-do-list/add-new-task-modal/add-new-task-modal.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +31,10 @@ import { AddEventModalComponent } from './calendar/add-event-modal/add-event-mod
     CalendarComponent,
     FetchDataComponent,
     EditEventModalComponent,
-    AddEventModalComponent
+    AddEventModalComponent,
+    ToDoListComponent,
+    AddNewCategoryModalComponent,
+    AddNewTaskModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -36,6 +44,8 @@ import { AddEventModalComponent } from './calendar/add-event-modal/add-event-mod
     FormsModule,
     ReactiveFormsModule,
     DialogsModule,
+    DropDownsModule,
+    GridModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyABcru_NMTTmJLKCoddjaFgqeb9K3X4P48'
     }),
@@ -48,6 +58,7 @@ import { AddEventModalComponent } from './calendar/add-event-modal/add-event-mod
       { path: 'counter', component: CounterComponent },
       { path: 'calendar', component: CalendarComponent },
       { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'to-do-list', component: ToDoListComponent }
     ])
   ],
   providers: [],

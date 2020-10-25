@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Time_planner_api.Models;
 
 namespace Time_planner_api.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20201023175027_ListCategory")]
+    partial class ListCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,30 +59,6 @@ namespace Time_planner_api.Migrations
                     b.ToTable("ListCategories");
                 });
 
-            modelBuilder.Entity("Time_planner_api.Models.Task", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDone")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("Tasks");
-                });
-
             modelBuilder.Entity("Time_planner_api.Models.WeatherForecast", b =>
                 {
                     b.Property<string>("Date")
@@ -99,15 +77,6 @@ namespace Time_planner_api.Migrations
                     b.HasKey("Date");
 
                     b.ToTable("WeatherForecasts");
-                });
-
-            modelBuilder.Entity("Time_planner_api.Models.Task", b =>
-                {
-                    b.HasOne("Time_planner_api.Models.ListCategory", "Category")
-                        .WithMany("Tasks")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
