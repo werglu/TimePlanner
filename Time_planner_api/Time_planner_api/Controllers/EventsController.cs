@@ -49,9 +49,9 @@ namespace Time_planner_api.Controllers
         public async Task<ActionResult<Event>> PostEvent(Event ourEvent)
         {
             await _context.Events.AddAsync( new Event() {
-                StartDate = ourEvent.StartDate,
+                StartDate = ourEvent.StartDate.ToLocalTime(),
                 Title = ourEvent.Title, 
-                EndDate= ourEvent.EndDate
+                EndDate= ourEvent.EndDate.ToLocalTime()
             }); 
 
             try
@@ -78,9 +78,9 @@ namespace Time_planner_api.Controllers
         {
             Event newEvent = _context.Events.Where(e => e.Id == id).Single<Event>();
             newEvent.Id = oldEvent.Id;
-            newEvent.StartDate = oldEvent.StartDate;
+            newEvent.StartDate = oldEvent.StartDate.ToLocalTime();
             newEvent.Title = oldEvent.Title;
-            newEvent.EndDate = oldEvent.EndDate;
+            newEvent.EndDate = oldEvent.EndDate.ToLocalTime();
 
             _context.Entry(newEvent).State = EntityState.Modified;
 

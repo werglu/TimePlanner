@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ListCategory } from '../listCategory';
 import { ListCategoriesService } from '../listCategories.service';
 
@@ -16,9 +16,11 @@ export class AddNewCategoryModalComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     private listCategoriesService: ListCategoriesService) {
     this.addCategoryForm = this.formBuilder.group({
-      name: ''
+      name: ['', Validators.required]
     });
   }
+
+  get name() { return this.addCategoryForm.get('name'); }
 
   ngOnInit(): void {
   }
@@ -36,6 +38,23 @@ export class AddNewCategoryModalComponent implements OnInit {
   }
   
   onSubmit() {
-    this.listCategoriesService.addCategory(this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
+    if (this.addCategoryForm.valid) {
+      this.listCategoriesService.addCategory(this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
+    }
+    else {
+      this.validateAllFormControls(this.addCategoryForm);
+    }
+  }
+
+  validateAllFormControls(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(field => {
+      const control = formGroup.get(field);
+      if (control instanceof FormGroup) {
+        this.validateAllFormControls(control);
+      }
+      else if (control instanceof FormControl) {
+        control.markAllAsTouched();
+      }
+    })
   }
 }

@@ -28,3 +28,11 @@ code {
   background-color: #eee2dc;
   /*aliceblue*/
 }
+
+.alert {
+  padding: .5rem 1rem;
+}
+
+.required {
+  color: red;
+}

@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ListCategory } from '../listCategory';
 import { ListCategoriesService } from '../listCategories.service';
 import { Task } from '../task';
@@ -22,9 +22,11 @@ export class AddNewTaskModalComponent implements OnInit {
     private tasksService: TasksService) {
     this.addTaskForm = this.formBuilder.group({
       category: '',
-      title: ''
+      title: ['', Validators.required]
     });
   }
+
+  get title() { return this.addTaskForm.get('title'); }
 
   ngOnInit(): void {
     this.getCategories();
@@ -56,7 +58,24 @@ export class AddNewTaskModalComponent implements OnInit {
   }
   
   onSubmit() {
-    var x = this.getFormValue();
-    this.tasksService.addTask(this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
+    if (this.addTaskForm.valid) {
+      this.tasksService.addTask(this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
+    }
+    else {
+      this.validateAllFormControls(this.addTaskForm);
+    }
   }
+
+  validateAllFormControls(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(field => {
+      const control = formGroup.get(field);
+      if (control instanceof FormGroup) {
+        this.validateAllFormControls(control);
+      }
+      else if (control instanceof FormControl) {
+        control.markAllAsTouched();
+      }
+    })
+  }
+
 }
