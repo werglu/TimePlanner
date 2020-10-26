@@ -41,6 +41,7 @@
     "@progress/kendo-theme-bootstrap": "^4.22.0",
     "@types/google-maps": "^3.2.2",
     "@types/googlemaps": "^3.39.13",
+    "agm-direction": "^0.8.7",
     "angular-calendar": "^0.28.20",
     "angular-checkboxes": "^1.0.3",
     "aspnet-prerendering": "^3.0.1",

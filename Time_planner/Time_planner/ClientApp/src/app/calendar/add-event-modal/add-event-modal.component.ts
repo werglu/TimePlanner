@@ -31,7 +31,9 @@ export class AddEventModalComponent implements OnInit {
       id: 1,
       title: (<HTMLInputElement>document.getElementById('title')).value,
       startDate: this.setDate('startDate'),
-      endDate: this.setDate('endDate')
+      endDate: this.setDate('endDate'),
+      latitude: 0.0,
+      longitude: 0.0
     };
   }
 

@@ -32,4 +32,9 @@ export class EventsService {
     var baseUrl: string = environment.apiBaseUrl;
     return this.http.post<Events>(baseUrl + 'api/Events/', event);
   }
+
+  public getSortedEvents(): Observable<Events[]> {
+    var baseUrl: string = environment.apiBaseUrl;
+    return this.http.get<Events[]>(baseUrl + 'api/Events/sort/');
+  }
 }

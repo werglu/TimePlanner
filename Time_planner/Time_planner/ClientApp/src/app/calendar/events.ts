@@ -3,4 +3,6 @@ export interface Events {
   startDate: Date;
   endDate: Date;
   title: string;
+  latitude: number;
+  longitude: number;
 }

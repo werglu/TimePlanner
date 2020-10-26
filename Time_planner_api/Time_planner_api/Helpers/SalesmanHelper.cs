@@ -68,7 +68,7 @@ namespace Time_planner_api.Helpers
             for (int i = 0; i < size; i++)
             {
                 distance += Math.Sqrt(Math.Pow((events[i].Latitude - events[(i + 1) % size].Latitude), 2) +
-                    Math.Pow((events[i].Longitute - events[(i + 1) % size].Longitute), 2));
+                    Math.Pow((events[i].Longitude - events[(i + 1) % size].Longitude), 2));
             }
 
             return distance;
