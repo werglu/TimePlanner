@@ -25,6 +25,28 @@
         </div>
       </ng-template>
     </kendo-grid-column>
+    <kendo-grid-column field="priority" title="Priority" width="100">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <ng-template [ngIf]="dataItem.priority == 2">
+          <div>
+            <i class="fa fa-star"></i>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="dataItem.priority == 1">
+          <div>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="dataItem.priority == 0">
+          <div>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+          </div>
+        </ng-template>
+      </ng-template>
+    </kendo-grid-column>
     <kendo-grid-column field="title" title="To do">
       <ng-template kendoGridCellTemplate let-dataItem>
         <div>

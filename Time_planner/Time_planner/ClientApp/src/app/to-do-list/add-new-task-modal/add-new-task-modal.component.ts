@@ -13,7 +13,9 @@ import { TasksService } from '../tasks.service';
 export class AddNewTaskModalComponent implements OnInit {
   addTaskForm: FormGroup;
   public listCategories: Array<ListCategory> = [];
+  public priorities: Array<string> = ['High priority', 'Medium priority', 'Low priority'];
   currentCategory: ListCategory;
+  choosenPriority = 1;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Task>();
 
@@ -22,7 +24,8 @@ export class AddNewTaskModalComponent implements OnInit {
     private tasksService: TasksService) {
     this.addTaskForm = this.formBuilder.group({
       category: '',
-      title: ['', Validators.required]
+      title: ['', Validators.required],
+      priority: ''
     });
   }
 
@@ -47,13 +50,26 @@ export class AddNewTaskModalComponent implements OnInit {
     this.currentCategory = category;
   }
 
+  onPriorityChange(priority: string) {
+    if (priority == this.priorities[0]) {
+      this.choosenPriority = 0;
+    }     
+    if (priority == this.priorities[1]) {
+      this.choosenPriority = 1;
+    }
+    if (priority == this.priorities[2]) {
+      this.choosenPriority = 2;
+    }
+  }
+
   getFormValue(): Task {
     return {
       id: 13,
       category:  this.currentCategory,
       categoryId: this.currentCategory.id,
       isDone: false,
-      title: (<HTMLInputElement>document.getElementById('title')).value
+      title: (<HTMLInputElement>document.getElementById('title')).value,
+      priority: this.choosenPriority
     };
   }
   

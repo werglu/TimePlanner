@@ -6,4 +6,5 @@ export interface Task {
   title: string;
   category: ListCategory;
   isDone: boolean;
+  priority: number;
 }
