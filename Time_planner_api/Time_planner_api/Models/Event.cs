@@ -21,5 +21,9 @@ namespace Time_planner_api.Models
         [Required]
         [Column(TypeName = "varchar(50)")]
         public string Title { get; set; }
+
+        public double Longitute { get; set; }
+
+        public double Latitude { get; set; }
     }
 }

@@ -17,8 +17,5 @@ namespace Time_planner_api.Models
         public bool IsDone { get; set; }
         public int CategoryId { get; set; }
         public ListCategory Category { get; set; }
-
-        public double Longitute { get; set; }
-        public double Latitude { get; set; }
     }
 }

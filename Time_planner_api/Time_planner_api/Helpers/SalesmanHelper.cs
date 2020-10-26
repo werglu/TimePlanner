@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-
+using Time_planner_api.Models;
 
 namespace Time_planner_api.Helpers
 {
     public class SalesmanHelper
     {
-        public static List<Models.Task> FindShortestRoute(List<Models.Task> tasks)
+        public static List<Event> FindShortestRoute(List<Event> events)
         {
-            var oldList = tasks.ToArray();
-            var newList = tasks.ToArray();
+            var oldList = events.ToArray();
+            var newList = events.ToArray();
             var size = oldList.Length;
             var noImprovementCount = 0;
 
@@ -61,15 +60,15 @@ namespace Time_planner_api.Helpers
             return newList.ToList();
         }
 
-        private static double CalculateDistance(Models.Task[] tasks)
+        private static double CalculateDistance(Event[] events)
         {
             double distance = 0;
-            var size = tasks.Length;
+            var size = events.Length;
 
             for (int i = 0; i < size; i++)
             {
-                distance += Math.Sqrt(Math.Pow((tasks[i].Latitude - tasks[(i + 1) % size].Latitude), 2) +
-                    Math.Pow((tasks[i].Longitute - tasks[(i + 1) % size].Longitute), 2));
+                distance += Math.Sqrt(Math.Pow((events[i].Latitude - events[(i + 1) % size].Latitude), 2) +
+                    Math.Pow((events[i].Longitute - events[(i + 1) % size].Longitute), 2));
             }
 
             return distance;
