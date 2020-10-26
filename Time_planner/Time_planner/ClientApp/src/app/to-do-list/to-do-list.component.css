@@ -44,3 +44,8 @@ i.fa {
   padding-bottom: 0px;
   color: #123c69;
 }
+
+i.fa-star {
+  color: yellow;
+  text-shadow: 0 0 3px black;
+}

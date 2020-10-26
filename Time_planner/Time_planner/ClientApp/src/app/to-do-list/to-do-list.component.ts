@@ -16,6 +16,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 export class ToDoListComponent implements OnInit {
 
   public listCategories: Array<ListCategory> = [];
+  public priorities: Array<string> = ['High priority', 'Medium priority', 'Low priority'];
   public columns: any[] = [{ name: "Done" }, { name: "Title" }];
   public tasks: Array<Task> = [];
   public view: Observable<GridDataResult>;
@@ -28,7 +29,10 @@ export class ToDoListComponent implements OnInit {
   public sort: SortDescriptor[] = [{
     field: 'isDone',
     dir: 'asc'
-  }];
+  }, {
+      field: 'priority',
+      dir: 'asc'
+    }];
 
   constructor(private listCategoriesService: ListCategoriesService,
     private tasksService: TasksService) {

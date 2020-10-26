@@ -22,7 +22,15 @@
       </div>
     </div>
   </div>
-
+  <div style="display:grid">
+    <label for="priority">
+      Choose priority:
+    </label>
+    <kendo-combobox [data]="priorities"
+                    [value]="priorities[1]"
+                    (valueChange)="onPriorityChange($event)">
+    </kendo-combobox>
+  </div>
   <div style="float:right">
     <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
     <button style="margin-top:20px;background-color: #ac3b61;" class="btn btn-primary" type="submit">Save</button>

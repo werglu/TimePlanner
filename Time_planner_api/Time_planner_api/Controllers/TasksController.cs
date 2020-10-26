@@ -49,7 +49,8 @@ namespace Time_planner_api.Controllers
             newTask.IsDone = task.IsDone;
             newTask.Title = task.Title;
             newTask.CategoryId = task.CategoryId;
-            newTask.Category = task.Category;    
+            newTask.Category = task.Category;
+            newTask.Priority = task.Priority;
 
             _context.Entry(newTask).State = EntityState.Modified;
 
@@ -81,7 +82,8 @@ namespace Time_planner_api.Controllers
                 Title = task.Title,
                 IsDone = task.IsDone,
                 CategoryId = task.CategoryId,
-                Category = null     
+                Category = null,
+                Priority = task.Priority
             });
 
             try
