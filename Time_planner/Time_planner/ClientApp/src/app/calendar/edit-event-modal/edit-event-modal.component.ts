@@ -10,7 +10,7 @@ import { EventsService } from '../events.service';
 })
 
 export class EditEventModalComponent implements OnInit {
-  editEventForm: FormGroup;  
+  editEventForm: FormGroup;
   @Input() editedEvent: CalendarEvent;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Events>();
@@ -46,8 +46,13 @@ export class EditEventModalComponent implements OnInit {
   }
 
   getStartDate(): string {
-    var date = this.editedEvent.start.toLocaleDateString().split(".");
-    return date[2] + '-' + date[1] + '-' + date[0];
+    var d = this.editedEvent.start.toLocaleDateString();
+    if (d.indexOf('.') >= 0) {
+      var date = d.split('.');
+      return date[2] + '-' + (date[1].length == 1 ? '0' + date[1] : date[1]) + '-' + (date[0].length == 1 ? '0' + date[0] : date[0]);
+    }
+    var date = d.split('/');
+    return date[2] + '-' + (date[0].length == 1 ? '0' + date[0] : date[0]) + '-' + (date[1].length == 1 ? '0' + date[1] : date[1]);
   }
 
   getStartTime(): string {
@@ -65,8 +70,13 @@ export class EditEventModalComponent implements OnInit {
   }
 
   getEndDate(): string {
-    var date = this.editedEvent.end.toLocaleDateString().split(".");
-    return date[2] + '-' + date[1] + '-' + date[0];
+    var d = this.editedEvent.end.toLocaleDateString();
+    if (d.indexOf('.') >= 0) {
+      var date = d.split('.');
+      return date[2] + '-' + (date[1].length == 1 ? '0' + date[1] : date[1]) + '-' + (date[0].length == 1 ? '0' + date[0] : date[0]);
+    }
+    var date = d.split('/');
+    return date[2] + '-' + (date[0].length == 1 ? '0' + date[0] : date[0]) + '-' + (date[1].length == 1 ? '0' + date[1] : date[1]);
   }
 
   getFormValue(): Events {
