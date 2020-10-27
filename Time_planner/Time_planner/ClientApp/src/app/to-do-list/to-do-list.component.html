@@ -2,8 +2,7 @@
   <h2 style="color:#123c69">My To Do List</h2>
   <div style="display:flex">
     <h4>Category:</h4>
-    <kendo-dropdownlist 
-                        style="margin-left:20px;"
+    <kendo-dropdownlist style="margin-left:20px;"
                         [data]="listCategories"
                         [value]="listCategories[0]"
                         [textField]="'category'"
@@ -49,8 +48,11 @@
     </kendo-grid-column>
     <kendo-grid-column field="title" title="To do">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <div>
+        <div *ngIf="dataItem.isDone==false">
           <label>{{dataItem.title}}</label>
+        </div>
+        <div *ngIf="dataItem.isDone==true">
+          <label><s>{{dataItem.title}}</s></label>
         </div>
       </ng-template>
     </kendo-grid-column>
