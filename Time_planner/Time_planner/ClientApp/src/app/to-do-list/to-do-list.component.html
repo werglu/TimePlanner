@@ -49,8 +49,11 @@
     </kendo-grid-column>
     <kendo-grid-column field="title" title="To do">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <div>
+        <div *ngIf="dataItem.isDone==false">
           <label>{{dataItem.title}}</label>
+        </div>
+        <div *ngIf="dataItem.isDone==true">
+          <label><s>{{dataItem.title}}</s></label>
         </div>
       </ng-template>
     </kendo-grid-column>
