@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AgmCoreModule } from '@agm/core';
+//import { AgmDirectionModule } from 'agm-direction';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
@@ -49,6 +50,7 @@ import { AddNewTaskModalComponent } from './to-do-list/add-new-task-modal/add-ne
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyABcru_NMTTmJLKCoddjaFgqeb9K3X4P48'
     }),
+    //AgmDirectionModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,

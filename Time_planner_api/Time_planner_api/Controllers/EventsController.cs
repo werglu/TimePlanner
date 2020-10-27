@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Time_planner_api.Helpers;
 using Time_planner_api.Models;
 
 namespace Time_planner_api.Controllers
@@ -117,6 +118,14 @@ namespace Time_planner_api.Controllers
             await _context.SaveChangesAsync();
 
             return ourEvent;
+        }
+
+        // GET: api/Events/sort
+        [HttpGet]
+        [Route("sort")]
+        public async Task<ActionResult<IEnumerable<Event>>> GetSortedEvents()
+        {
+            return SalesmanHelper.FindShortestRoute(await _context.Events.ToListAsync());
         }
 
         private bool EventExists(int id)
