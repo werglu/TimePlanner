@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Time_planner_api.Models;
 
 namespace Time_planner_api.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20201031141306_Not1")]
+    partial class Not1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,6 +59,22 @@ namespace Time_planner_api.Migrations
                     b.ToTable("ListCategories");
                 });
 
+            modelBuilder.Entity("Time_planner_api.Models.MessageTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("Time_planner_api.Models.Notification", b =>
                 {
                     b.Property<int>("Id")
@@ -67,15 +85,14 @@ namespace Time_planner_api.Migrations
                     b.Property<int?>("EventId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsDismissed")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("MessageType")
+                    b.Property<int>("MessageId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EventId");
+
+                    b.HasIndex("MessageId");
 
                     b.ToTable("Notifications");
                 });
@@ -132,6 +149,12 @@ namespace Time_planner_api.Migrations
                     b.HasOne("Time_planner_api.Models.Event", "Event")
                         .WithMany("Notifications")
                         .HasForeignKey("EventId");
+
+                    b.HasOne("Time_planner_api.Models.MessageTemplate", "Message")
+                        .WithMany("Notifications")
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Time_planner_api.Models.Task", b =>
