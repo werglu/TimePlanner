@@ -1,0 +1,18 @@
+.seeMore {
+  text-decoration: underline;
+  color: #123c69;
+  font-size: 0.9rem;
+  padding: 0px;
+}
+
+.dismiss {
+  padding: 0px;
+  margin-left: 30px;
+  text-decoration: underline;
+  color: #123c69;
+  font-size: 0.9rem;
+}
+
+a:hover {
+    color: #0000ee;
+}

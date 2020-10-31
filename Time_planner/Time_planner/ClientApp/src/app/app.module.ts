@@ -22,6 +22,8 @@ import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { GridModule } from '@progress/kendo-angular-grid';
 import { AddNewCategoryModalComponent } from './to-do-list/add-new-category-modal/add-new-category-modal.component';
 import { AddNewTaskModalComponent } from './to-do-list/add-new-task-modal/add-new-task-modal.component';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { NotificationDetailsModalComponent } from './notifications/notification-details-modal/notification-details-modal.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import { AddNewTaskModalComponent } from './to-do-list/add-new-task-modal/add-ne
     AddEventModalComponent,
     ToDoListComponent,
     AddNewCategoryModalComponent,
-    AddNewTaskModalComponent
+    AddNewTaskModalComponent,
+    NotificationsComponent,
+    NotificationDetailsModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

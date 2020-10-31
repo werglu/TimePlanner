@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Time_planner_api.Models;
 
 namespace Time_planner_api.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20201031132400_Event5")]
+    partial class Event5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,29 +57,6 @@ namespace Time_planner_api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ListCategories");
-                });
-
-            modelBuilder.Entity("Time_planner_api.Models.Notification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("EventId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDismissed")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("MessageType")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Time_planner_api.Models.Task", b =>
@@ -125,13 +104,6 @@ namespace Time_planner_api.Migrations
                     b.HasKey("Date");
 
                     b.ToTable("WeatherForecasts");
-                });
-
-            modelBuilder.Entity("Time_planner_api.Models.Notification", b =>
-                {
-                    b.HasOne("Time_planner_api.Models.Event", "Event")
-                        .WithMany("Notifications")
-                        .HasForeignKey("EventId");
                 });
 
             modelBuilder.Entity("Time_planner_api.Models.Task", b =>

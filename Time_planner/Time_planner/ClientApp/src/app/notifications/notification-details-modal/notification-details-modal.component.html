@@ -1,0 +1,13 @@
+<div>
+  <label>{{messages[notificationDetails.messageType]}}</label>
+  <div *ngIf="messageType == 0">
+    <label>{{notificationEvent.title}}</label>
+  </div>
+  <div *ngIf="messageType != 0" style="float:right">
+    <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Close</button>
+  </div>
+  <div *ngIf="messageType == 0" style="float:right">
+    <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="save(false)">Reject</button>
+    <button style="margin-top:20px;margin-right:10px;background-color: #ac3b61;" class="btn btn-primary" (click)="save(true)">Accept</button>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<div>
+  <kendo-grid [kendoGridBinding]="gridData"
+              [height]="510">
+    <ng-template kendoGridNoRecordsTemplate>
+      <label>You have no notifications.</label>
+    </ng-template>
+    <kendo-grid-column field="messageType" title="Notifications">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div style="display:block">
+          <label>{{threeDotsWrap(messages[dataItem.messageType])}}</label>
+          <div>
+            <button class="seeMore btn" (click)="showNotificationDetailsModal(dataItem)">See more</button>
+            <button class="dismiss btn" (click)="dismiss(dataItem)">Dismiss</button>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid>
+  <button class="btn btn-secondary" style="float:right;margin-right:30px;margin-bottom:5px;margin-top:5px;padding: 3px 10px;font-size: 0.9rem;" (click)="dismissAll()">
+    Dismiss all
+  </button>
+
+</div>
+
+<kendo-dialog title="Notification details" *ngIf="notificationDetailsVisible" (close)="closeNotificationDetailsModal()" [minWidth]="250" [width]="450">
+  <notification-details-modal [notificationDetails]="notificationDetails" (onCancel)="closeNotificationDetailsModal()" (onSave)="emitNotification($event)"></notification-details-modal>
+</kendo-dialog>

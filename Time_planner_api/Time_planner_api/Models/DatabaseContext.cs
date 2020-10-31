@@ -1,8 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Time_planner_api.Models
 {
@@ -15,6 +11,7 @@ namespace Time_planner_api.Models
         public DbSet<Event> Events { get; set; }
         public DbSet<ListCategory> ListCategories { get; set; }
         public DbSet<Task> Tasks { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
     }
 }
