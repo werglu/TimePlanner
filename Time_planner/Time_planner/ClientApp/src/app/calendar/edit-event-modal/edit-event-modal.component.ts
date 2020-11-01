@@ -6,7 +6,8 @@ import { EventsService } from '../events.service';
 
 @Component({
   selector: 'edit-event-modal',
-  templateUrl: './edit-event-modal.component.html'
+  templateUrl: './edit-event-modal.component.html',
+  styleUrls: ['./edit-event-modal.component.css']
 })
 
 export class EditEventModalComponent implements OnInit {

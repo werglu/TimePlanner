@@ -4,9 +4,13 @@
     <ng-template kendoGridNoRecordsTemplate>
       <label>You have no notifications.</label>
     </ng-template>
-    <kendo-grid-column field="messageType" title="Notifications">
+    <kendo-grid-column [headerStyle]="{'color': '#004445','font-weight': '500'}"
+                       [footerStyle]="{'padding': '2px','color': '#faf5e4'}"
+                       [style]="{'padding': '0px 0px 1px 0px'}"
+                       field="messageType" title="Notifications"
+                       >
       <ng-template kendoGridCellTemplate let-dataItem>
-        <div style="display:block">
+        <div style="display:block;border-left:5px red solid;padding:0.75rem" [style.border-color]="colors[dataItem.messageType]">
           <label>{{threeDotsWrap(messages[dataItem.messageType])}}</label>
           <div>
             <button class="seeMore btn" (click)="showNotificationDetailsModal(dataItem)">See more</button>
@@ -14,11 +18,16 @@
           </div>
         </div>
       </ng-template>
+      <ng-template kendoGridFooterTemplate>
+        <button class="btn btn-primary" style="float:right;margin-right:30px;margin-bottom:5px;margin-top:5px;padding: 3px 10px;font-size: 0.9rem;" (click)="dismissAll()">
+          Dismiss all
+        </button>
+      </ng-template>
+
     </kendo-grid-column>
+
   </kendo-grid>
-  <button class="btn btn-secondary" style="float:right;margin-right:30px;margin-bottom:5px;margin-top:5px;padding: 3px 10px;font-size: 0.9rem;" (click)="dismissAll()">
-    Dismiss all
-  </button>
+
 
 </div>
 

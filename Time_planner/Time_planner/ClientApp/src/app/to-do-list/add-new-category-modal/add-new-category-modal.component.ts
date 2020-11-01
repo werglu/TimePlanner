@@ -5,7 +5,8 @@ import { ListCategoriesService } from '../listCategories.service';
 
 @Component({
   selector: 'add-new-category-modal',
-  templateUrl: './add-new-category-modal.component.html'
+  templateUrl: './add-new-category-modal.component.html',
+  styleUrls: ['./add-new-category-modal.component.css']
 })
 
 export class AddNewCategoryModalComponent implements OnInit {

@@ -12,6 +12,7 @@ import { Notification } from './notification';
 
 export class NotificationsComponent implements OnInit {
 
+  public colors: Array<string> = ['#00ace6', '#00cc99', '#ff4d88'];
   public messages: Array<string> = ['Some user invites you to join an event jdjkfghjdfhgkjkjghdfkjhgkdfhg', 'Some user accepted your request', 'Some user rejected your request'];
   public view: Observable<GridDataResult>;
   public gridData: any[] = [];

@@ -7,7 +7,8 @@ import { TasksService } from '../tasks.service';
 
 @Component({
   selector: 'add-new-task-modal',
-  templateUrl: './add-new-task-modal.component.html'
+  templateUrl: './add-new-task-modal.component.html',
+  styleUrls: ['./add-new-task-modal.component.css']
 })
 
 export class AddNewTaskModalComponent implements OnInit {
