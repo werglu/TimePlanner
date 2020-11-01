@@ -1,5 +1,7 @@
+@import "../../colors.css";
+
 button {
-    background-color: #ac3b61;
+    background-color: var(--yellow);
 }
 
 div.title {
@@ -15,5 +17,5 @@ i.fa {
   word-break: break-all;
   padding-bottom: 0px;
   font-size: 1.5rem;
-  color: #123c69;
+  color: var(--color-dark-green);
 }

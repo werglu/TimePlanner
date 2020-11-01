@@ -1,4 +1,4 @@
-<header style="background-color: #bab2b5">
+<header style="background-color:#004445">
   <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
     <div class="container" style="display: contents">
       <div class="dropdown">
@@ -24,19 +24,19 @@
           <li class="nav-item"
               [routerLinkActive]="['link-active']"
               [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link header-font-color" style="color: #123c69;" [routerLink]="['/']">Home</a>
+            <a class="nav-link header-font-color" [routerLink]="['/']">Home</a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link header-font-color" style="color: #123c69;" [routerLink]="['/counter']">Counter</a>
+            <a class="nav-link header-font-color" [routerLink]="['/counter']">Counter</a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link header-font-color" style="color: #123c69;" [routerLink]="['/fetch-data']">Fetch data</a>
+            <a class="nav-link header-font-color" [routerLink]="['/fetch-data']">Fetch data</a>
           </li>
 
           <li class="nav-item">
             <div class="dropdown">
-              <button *ngIf="noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none"><i style="color: #123c69;font-size:1.4rem;margin-top:-9px;" class="fa fa-bell-slash navbar-brand"></i></button>
-              <button *ngIf="!noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none"><i style="font-size:1.4rem;color:#ac3b61;margin-top:-9px;" class="fa fa-bell navbar-brand"></i></button>
+              <button *ngIf="noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none"><i style="font-size:1.4rem;margin-top:-9px;" class="fa fa-bell-slash navbar-brand"></i></button>
+              <button *ngIf="!noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none"><i style="font-size:1.4rem;margin-top:-9px;" class="fa fa-bell navbar-brand"></i></button>
 
               <div *ngIf="showNotificationsList" class="dropdown-content" style="right:0;left:auto;min-width:290px;display:block">
                 <notifications-component (onChange)="notificationsChanged($event)"></notifications-component>

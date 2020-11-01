@@ -5,7 +5,8 @@ import { EventsService } from '../../calendar/events.service';
 
 @Component({
   selector: 'notification-details-modal',
-  templateUrl: './notification-details-modal.component.html'
+  templateUrl: './notification-details-modal.component.html',
+  styleUrls: ['./notification-details-modal.component.css']
 })
 
 export class NotificationDetailsModalComponent implements OnInit {

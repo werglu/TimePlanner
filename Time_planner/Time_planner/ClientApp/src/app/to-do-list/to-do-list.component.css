@@ -1,22 +1,11 @@
-
-.leftMenu {
-  height: 100%;
-  width: 200px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #bab2b5;
-  overflow-x: hidden;
-  padding-top: 20px;
-}
+@import "../../colors.css";
 
 .list {
   margin-left: 80px;
 }
 
 button {
-  background-color: #ac3b61;
+  background-color: var(--yellow);
 }
 
 .checkbox-round {
@@ -42,10 +31,14 @@ i.fa {
   text-align: center;
   word-break: break-all;
   padding-bottom: 0px;
-  color: #123c69;
+  color: var(--color-dark-green);
 }
 
 i.fa-star {
   color: yellow;
   text-shadow: 0 0 3px black;
+}
+
+h2 {
+  color: var(--color-dark-green);
 }
