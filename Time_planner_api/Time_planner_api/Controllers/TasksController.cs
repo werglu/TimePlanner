@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Time_planner_api.Helpers;
 using Time_planner_api.Models;
 
 namespace Time_planner_api.Controllers
@@ -124,6 +125,14 @@ namespace Time_planner_api.Controllers
             await _context.SaveChangesAsync();
 
             return task;
+        }
+
+        // GET: api/Tasks/weekplan
+        [HttpGet]
+        [Route("weekplan")]
+        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentProposition>>> GetWeekPlannedTasks(List<int> taskIds)
+        {
+            return WeekPlanHelper.FindBestWeekPlan(await _context.Tasks.Where(task => taskIds.Contains(task.Id)).ToListAsync());
         }
 
         private bool TaskExists(int id)
