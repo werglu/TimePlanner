@@ -1,6 +1,6 @@
 <div>
   <label>{{messages[notificationDetails.messageType]}}</label>
-  <div *ngIf="messageType == 0">
+  <div *ngIf="notificationEvent !=null && messageType == 0">
     <label>{{notificationEvent.title}}</label>
   </div>
   <div *ngIf="messageType != 0" style="float:right">
