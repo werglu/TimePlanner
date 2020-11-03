@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Time_planner_api.Models;
 
@@ -16,6 +17,12 @@ namespace Time_planner_api.Helpers
             {
                 this.task = task;
                 Cleanup();
+            }
+
+            public TaskHelper(TaskHelper taskHelper)
+            {
+                task = taskHelper.GetTask();
+                dayTimes = taskHelper.GetDayTimes();
             }
 
             public TaskAssignmentProposition GetAssignmentProposition()
@@ -47,15 +54,39 @@ namespace Time_planner_api.Helpers
                 return dayTimes.Sum();
             }
 
+            public double GetAssignedTime(int i)
+            {
+                return dayTimes[i];
+            }
+
+            public int GetTaskPriority()
+            {
+                return task.Priority;
+            }
+
+            public Task GetTask()
+            {
+                return task;
+            }
+
+            public double[] GetDayTimes()
+            {
+                var result = new double[dayTimes.Length];
+                for (int i = 0; i < result.Length; i++)
+                {
+                    result[i] = dayTimes[i];
+                }
+                return result;
+            }
+
             public void Cleanup()
             {
                 dayTimes = new double[7];
             }
         }
 
-        public static List<TaskAssignmentProposition> FindBestWeekPlan(List<Task> tasks, double hoursPerDay = 8.0, bool allTasksFirst = false, int iterationCount = 30, int populationCount = 20, double worstChromosoms = 0.75)
+        public static List<TaskAssignmentProposition> FindBestWeekPlan(List<Task> tasks, double hoursPerDay = 8.0, int iterationCount = 30, int populationCount = 20, double worstChromosoms = 0.75)
         {
-            // todo: count allTasksFirst
             var population = CreatePopulation(tasks, hoursPerDay, populationCount);
 
             while (iterationCount-- > 0)
@@ -121,7 +152,7 @@ namespace Time_planner_api.Helpers
 
                 foreach (var taskHelper in chromosomToBeMutated)
                 {
-                    mutatedChromosom.Add(taskHelper);
+                    mutatedChromosom.Add(new TaskHelper(taskHelper));
                 }
 
                 mutatedChromosom.Sort((x, y) => rnd.Next());
@@ -141,7 +172,7 @@ namespace Time_planner_api.Helpers
 
                 for (int i = 0; i < freeTimes.Length; i++)
                 {
-                    freeTimes[i] = hoursPerDay - mutatedChromosom.Sum(taskHelper => taskHelper.GetAssignedTime()); // todo: change to count events
+                    freeTimes[i] = hoursPerDay - mutatedChromosom.Sum(taskHelper => taskHelper.GetAssignedTime(i)); // todo: change to count events
                 }
 
                 foreach (var taskHelper in mutatedChromosom)
@@ -180,8 +211,8 @@ namespace Time_planner_api.Helpers
 
         private static int GetChromosomGoodness(List<TaskHelper> chromosom)
         {
-            // todo: allTasksFirst, priority, etc
-            return (int)(chromosom.Sum(taskHelper => taskHelper.GetAssignedTime()));
+            // todo: do it better
+            return (int)(chromosom.Sum(taskHelper => taskHelper.GetTaskPriority() * taskHelper.GetAssignedTime()));
         }
     }
 }
