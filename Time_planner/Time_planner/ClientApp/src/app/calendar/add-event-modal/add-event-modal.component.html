@@ -3,7 +3,7 @@
     <label for="name">
       Title <span class="required">*</span>
     </label>
-    <input id="title" type="text" formControlName="title" required>
+    <input style="width:70%;" id="title" type="text" formControlName="title" required>
     <div *ngIf="title.invalid && (title.dirty || title.touched)"
          class="alert alert-danger">
       <div *ngIf="title.errors.required">
@@ -12,7 +12,7 @@
     </div>
   </div>
   <div style="display:grid">
-    <label style="padding-top: 10px;" for="name">
+    <label style="padding-top:10px;" for="name">
       Start date <span class="required">*</span>
     </label>
     <div>
@@ -27,7 +27,7 @@
     </div>
   </div>
   <div style="display:grid">
-    <label style="padding-top: 10px;" for="name">
+    <label style="padding-top:10px;" for="name">
       End date <span class="required">*</span>
     </label>
     <div>
@@ -47,9 +47,33 @@
       </div>
     </div>
   </div>
-    <div style="float:right">
-      <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
-      <button style="margin-top:20px;" class="btn btn-primary" type="submit">Save</button>
+  <div style="display:grid">
+    <label  style="padding-top:10px;" for="city">
+      City <span class="required">*</span>
+    </label>
+    <input style="width:50%;" id="city" type="text" formControlName="city" required>
+    <div *ngIf="city.invalid && (city.dirty || city.touched)"
+         class="alert alert-danger">
+      <div *ngIf="city.errors.required">
+        City is required.
+      </div>
     </div>
+  </div>
+  <div style="display:grid">
+    <label  style="padding-top:10px;" for="streetAddress">
+      Street address <span class="required">*</span>
+    </label>
+    <input style="width:70%;" id="streetAddress" type="text" formControlName="streetAddress" required>
+    <div *ngIf="streetAddress.invalid && (streetAddress.dirty || streetAddress.touched)"
+         class="alert alert-danger">
+      <div *ngIf="streetAddress.errors.required">
+        Street address is required.
+      </div>
+    </div>
+  </div>
+  <div style="float:right">
+    <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    <button style="margin-top:20px;" class="btn btn-primary" type="submit">Save</button>
+  </div>
 </form>
 

@@ -52,7 +52,9 @@ namespace Time_planner_api.Controllers
             await _context.Events.AddAsync( new Event() {
                 StartDate = ourEvent.StartDate.ToLocalTime(),
                 Title = ourEvent.Title, 
-                EndDate= ourEvent.EndDate.ToLocalTime()
+                EndDate= ourEvent.EndDate.ToLocalTime(),
+                City = ourEvent.City,
+                StreetAddress = ourEvent.StreetAddress
             }); 
 
             try
@@ -82,6 +84,8 @@ namespace Time_planner_api.Controllers
             newEvent.StartDate = oldEvent.StartDate.ToLocalTime();
             newEvent.Title = oldEvent.Title;
             newEvent.EndDate = oldEvent.EndDate.ToLocalTime();
+            newEvent.City = oldEvent.City;
+            newEvent.StreetAddress = oldEvent.StreetAddress;
 
             _context.Entry(newEvent).State = EntityState.Modified;
 

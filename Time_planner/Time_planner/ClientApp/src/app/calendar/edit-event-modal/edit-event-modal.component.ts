@@ -12,6 +12,7 @@ import { EventsService } from '../events.service';
 
 export class EditEventModalComponent implements OnInit {
   editEventForm: FormGroup;
+  currentEvent: Events;
   @Input() editedEvent: CalendarEvent;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Events>();
@@ -21,7 +22,9 @@ export class EditEventModalComponent implements OnInit {
     this.editEventForm = this.formBuilder.group({
       title: [' ', Validators.required],
       startDate: '',
-      endDate: ''
+      endDate: '',
+      city: [' ', Validators.required],
+      streetAddress: [' ', Validators.required]
     });
   }
 
@@ -30,8 +33,15 @@ export class EditEventModalComponent implements OnInit {
   get startDateTime() { return this.editEventForm.get('startDateTime'); }
   get endDate() { return this.editEventForm.get('endDate'); }
   get endDateTime() { return this.editEventForm.get('endDateTime'); }
+  get city() { return this.editEventForm.get('city'); }
+  get streetAddress() { return this.editEventForm.get('streetAddress'); }
 
   ngOnInit(): void {
+    if (this.editedEvent.id != null) {
+      this.eventsService.getEvent(Number(this.editedEvent.id)).subscribe((event) => {
+        this.currentEvent = event;
+      });
+    }
   }
 
   validateAllFormControls(formGroup: FormGroup) {
@@ -86,6 +96,8 @@ export class EditEventModalComponent implements OnInit {
       title: (<HTMLInputElement>document.getElementById('title')).value,
       startDate: this.setDate('startDate'),
       endDate: this.setDate('endDate'),
+      city: (<HTMLInputElement>document.getElementById('city')).value,
+      streetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value,
       latitude: 0.0,
       longitude: 0.0
     };

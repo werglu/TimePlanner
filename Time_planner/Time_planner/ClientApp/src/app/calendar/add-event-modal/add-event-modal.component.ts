@@ -20,7 +20,9 @@ export class AddEventModalComponent implements OnInit {
     this.editEventForm = this.formBuilder.group({
       title: ['', Validators.required],
       startDate: '',
-      endDate: ''
+      endDate: '',
+      city: [' ', Validators.required],
+      streetAddress: [' ', Validators.required]
     });
   }
 
@@ -29,6 +31,9 @@ export class AddEventModalComponent implements OnInit {
   get startDateTime() { return this.editEventForm.get('startDateTime'); }
   get endDate() { return this.editEventForm.get('endDate'); }
   get endDateTime() { return this.editEventForm.get('endDateTime'); }
+  get city() { return this.editEventForm.get('city'); }
+  get streetAddress() { return this.editEventForm.get('streetAddress'); }
+
 
   ngOnInit(): void {
   }
@@ -39,6 +44,8 @@ export class AddEventModalComponent implements OnInit {
       title: (<HTMLInputElement>document.getElementById('title')).value,
       startDate: this.setDate('startDate'),
       endDate: this.setDate('endDate'),
+      city: (<HTMLInputElement>document.getElementById('city')).value,
+      streetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value,
       latitude: 0.0,
       longitude: 0.0
     };
@@ -102,7 +109,7 @@ export class AddEventModalComponent implements OnInit {
   getStartDate(): string {
     let d: Date = new Date();
     var m = d.getMonth() + 1;
-    var day = d.getDay() + 1;
+    var day = d.getDate();
     return d.getFullYear() + '-' + (m < 10 ? '0' + m : m) + '-' + (day < 10 ? '0' + day : day);
   }
 
