@@ -24,6 +24,7 @@ import { AddNewCategoryModalComponent } from './to-do-list/add-new-category-moda
 import { AddNewTaskModalComponent } from './to-do-list/add-new-task-modal/add-new-task-modal.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { NotificationDetailsModalComponent } from './notifications/notification-details-modal/notification-details-modal.component';
+import { EditTaskModalComponent } from './to-do-list/edit-task-modal/edit-task-modal.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { NotificationDetailsModalComponent } from './notifications/notification-
     AddNewCategoryModalComponent,
     AddNewTaskModalComponent,
     NotificationsComponent,
-    NotificationDetailsModalComponent
+    NotificationDetailsModalComponent,
+    EditTaskModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

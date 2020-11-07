@@ -97,4 +97,23 @@ export class AddEventModalComponent implements OnInit {
     }
     return date;
   }
+
+
+  getStartDate(): string {
+    let d: Date = new Date();
+    var m = d.getMonth() + 1;
+    var day = d.getDay() + 1;
+    return d.getFullYear() + '-' + (m < 10 ? '0' + m : m) + '-' + (day < 10 ? '0' + day : day);
+  }
+
+  getStartTime() {
+    let date: Date = new Date();
+    return (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' + (date.getMinutes() < 10 ? '0' +  date.getMinutes() : date.getMinutes());
+  }
+
+  getEndTime() {
+    let date: Date = new Date();
+    return (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' + (date.getMinutes()+1 < 10 ? '0' + (date.getMinutes()+1) : (date.getMinutes()+1));
+  }
+
 }

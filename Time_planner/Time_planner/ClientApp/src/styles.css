@@ -44,3 +44,38 @@ code {
 .required {
   color: red;
 }
+
+.cal-header {
+    color: var(--color-dark-green);
+}
+
+.cal-header .cal-weekend {
+  background-color: white !important;
+}
+
+.cal-weekend {
+  background-color: #F5F5F5 !important;
+}
+
+.cal-weekend:hover {
+  background-color: #D3D3D3 !important;
+}
+
+.cal-month-view .cal-day-cell.cal-out-month .cal-day-number {
+  opacity: 0.2;
+}
+
+.cal-month-view .cal-day-number {
+  opacity: unset ;
+  color: var(--color-dark-green);
+}
+
+
+.cal-month-view .cal-day-badge {
+  background-color: #ff414d;
+  color: #fff;
+}
+
+.fa-trash {
+    color: var(--yellow);
+}

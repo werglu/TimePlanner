@@ -17,6 +17,7 @@ export class AddNewTaskModalComponent implements OnInit {
   public priorities: Array<string> = ['High priority', 'Medium priority', 'Low priority'];
   currentCategory: ListCategory;
   choosenPriority = 1;
+  public addDatesOff = true;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Task>();
 
@@ -26,11 +27,17 @@ export class AddNewTaskModalComponent implements OnInit {
     this.addTaskForm = this.formBuilder.group({
       category: '',
       title: ['', Validators.required],
-      priority: ''
+      priority: '',
+      startDate: '',
+      endDate: ''
     });
   }
 
   get title() { return this.addTaskForm.get('title'); }
+  get startDate() { return this.addTaskForm.get('startDate'); }
+  get startDateTime() { return this.addTaskForm.get('startDateTime'); }
+  get endDate() { return this.addTaskForm.get('endDate'); }
+  get endDateTime() { return this.addTaskForm.get('endDateTime'); }
 
   ngOnInit(): void {
     this.getCategories();
@@ -51,6 +58,15 @@ export class AddNewTaskModalComponent implements OnInit {
     this.currentCategory = category;
   }
 
+  turnOnAddDates() {
+    this.addDatesOff = false;
+  }
+
+  turnOffAddDates() {
+    this.addDatesOff = true;
+  }
+
+
   onPriorityChange(priority: string) {
     if (priority == this.priorities[0]) {
       this.choosenPriority = 0;
@@ -70,7 +86,9 @@ export class AddNewTaskModalComponent implements OnInit {
       categoryId: this.currentCategory.id,
       isDone: false,
       title: (<HTMLInputElement>document.getElementById('title')).value,
-      priority: this.choosenPriority
+      priority: this.choosenPriority,
+      startDate: this.setDate('startDate'),
+      endDate: this.setDate('endDate')
     };
   }
   
@@ -95,4 +113,32 @@ export class AddNewTaskModalComponent implements OnInit {
     })
   }
 
+  setDate(value: string): Date {
+    if (this.addDatesOff) return null;
+    var time = (<HTMLInputElement>document.getElementById(value + 'Time')).value;
+    var date = (<HTMLInputElement>document.getElementById(value)).valueAsDate;
+    var t = time.split(':');
+    if (date != null) {
+      date.setHours(Number(t[0]));
+      date.setMinutes(Number(t[1]));
+    }
+    return date;
+  }
+
+  startDateInvalid(): boolean {
+    return this.setDate('startDate') == null;
+  }
+
+  endDateInvalid(): boolean {
+    return this.setDate('endDate') == null;
+  }
+
+  dateInvalid(): boolean {
+    var startDate = this.setDate('startDate');
+    var endDate = this.setDate('endDate');
+    if (startDate > endDate) {
+      return true;
+    }
+    return false;
+  }
 }

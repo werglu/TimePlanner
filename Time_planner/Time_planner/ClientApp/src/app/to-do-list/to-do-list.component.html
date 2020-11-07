@@ -19,8 +19,11 @@
               [sortable]="true">
     <kendo-grid-column field="isDone" width="110" title="Is Done">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <div>
-          <input class="checkbox-round" type="checkbox" id="checkbox" (click)="checked(dataItem)" [checked]="dataItem.isDone" />
+        <div *ngIf="dataItem.isDone">
+          <button class="btn checkButton" (click)="checked(dataItem)"><i class="fa fa-check-circle"></i></button>
+        </div>
+        <div *ngIf="!dataItem.isDone">
+          <button class="btn checkButton" (click)="checked(dataItem)"><i class="fa fa-circle"></i></button>
         </div>
       </ng-template>
     </kendo-grid-column>

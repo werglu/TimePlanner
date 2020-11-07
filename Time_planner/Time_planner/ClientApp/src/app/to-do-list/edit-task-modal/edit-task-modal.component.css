@@ -1,27 +1,16 @@
-@import "../../colors.css";
+@import "../../../colors.css";
 
-.list {
-  margin-left: 80px;
-}
-
-button {
+.btn-primary {
   background-color: var(--yellow);
 }
 
-i.fa {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
-  padding-bottom: 0px;
+.fa-toggle-on {
+  font-size: 1.6rem;
   color: var(--color-dark-green);
 }
 
-i.fa-star {
-  color: yellow;
-  text-shadow: 0 0 3px black;
-}
-
-h2 {
+.fa-toggle-off {
+  font-size: 1.6rem;
   color: var(--color-dark-green);
 }
 
@@ -30,6 +19,7 @@ h2 {
   color: var(--color-light-green) !important;
   text-shadow: 0 0 2px var(--color-light-green);
 }
+
 .fa-circle {
   font-size: 1.5rem;
   text-shadow: 0 0 4px black;
@@ -37,7 +27,7 @@ h2 {
 }
 
 .checkButton {
-    padding: 0px;
-    background-color: transparent;
-    margin-left: 27px;
+  padding: 0px;
+  background-color: transparent;
+  margin-left: 27px;
 }

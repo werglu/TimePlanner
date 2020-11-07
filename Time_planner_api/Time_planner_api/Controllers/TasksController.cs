@@ -51,6 +51,8 @@ namespace Time_planner_api.Controllers
             newTask.CategoryId = task.CategoryId;
             newTask.Category = task.Category;
             newTask.Priority = task.Priority;
+            newTask.StartDate = task.StartDate != null ? task.StartDate?.ToLocalTime() : task.StartDate;
+            newTask.EndDate = task.EndDate != null ? task.EndDate?.ToLocalTime() : task.EndDate;
 
             _context.Entry(newTask).State = EntityState.Modified;
 
@@ -83,7 +85,9 @@ namespace Time_planner_api.Controllers
                 IsDone = task.IsDone,
                 CategoryId = task.CategoryId,
                 Category = null,
-                Priority = task.Priority
+                Priority = task.Priority,
+                StartDate = task.StartDate == null ? null : task.StartDate?.ToLocalTime(),
+                EndDate = task.EndDate == null ? null : task.EndDate?.ToLocalTime()
             });
 
             try

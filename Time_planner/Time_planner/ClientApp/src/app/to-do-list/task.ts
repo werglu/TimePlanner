@@ -7,4 +7,6 @@ export interface Task {
   category: ListCategory;
   isDone: boolean;
   priority: number;
+  startDate?: Date;
+  endDate?: Date;
 }

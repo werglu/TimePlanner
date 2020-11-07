@@ -49,6 +49,10 @@
   <edit-event-modal [editedEvent]="editedEvent" (onCancel)="closeOpenEventModal()" (onSave)="editEvent($event)"></edit-event-modal>
 </kendo-dialog>
 
+<kendo-dialog title="Edit task" *ngIf="openTask" (close)="closeOpenTaskModal()" [minWidth]="250" [width]="450">
+  <edit-task-modal [editedTask]="editedEvent" (onCancel)="closeOpenTaskModal()" (onSave)="editTask($event)"></edit-task-modal>
+</kendo-dialog>
+
 <kendo-dialog title="Add new event" *ngIf="addNewEventModalVisible" (close)="closeAddNewEventModal()" [minWidth]="250" [width]="450">
   <add-event-modal (onCancel)="closeAddNewEventModal()" (onSave)="addEvent($event)"></add-event-modal>
 </kendo-dialog>
