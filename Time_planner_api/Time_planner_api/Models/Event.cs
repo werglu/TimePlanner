@@ -22,6 +22,10 @@ namespace Time_planner_api.Models
 
         public List<Notification> Notifications { get; set; }
 
+
+        public string City { get; set; }
+        public string StreetAddress { get; set; }
+
         [NotMapped]
         public double Longitude
         {
