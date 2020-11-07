@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -130,9 +131,78 @@ namespace Time_planner_api.Controllers
         // GET: api/Tasks/weekplan
         [HttpGet]
         [Route("weekplan")]
-        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentProposition>>> GetWeekPlannedTasks(List<int> taskIds)
+        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentProposition>>> GetWeekPlannedTasks(List<int> taskIds, double startMinutes, double endMinutes)
         {
-            return WeekPlanHelper.FindBestWeekPlan(await _context.Tasks.Where(task => taskIds.Contains(task.Id)).ToListAsync());
+            var startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek)); // starts from sunday
+
+            var events = new List<Event>[7];
+            for (int i = 0; i < events.Length; i++)
+            {
+                var begin = startOfWeek.AddDays(i);
+                var end = startOfWeek.AddDays(i + 1);
+                events[i] = await _context.Events.Where(ev => ev.StartDate < end && ev.EndDate >= begin).ToListAsync();
+                events[i].Sort((x, y) =>
+                {
+                    if (x.StartDate != y.StartDate)
+                    {
+                        return x.StartDate.CompareTo(y.StartDate);
+                    }
+                    return x.EndDate.CompareTo(y.EndDate);
+                });
+            }
+
+            var windows = new List<(DateTime, DateTime)>[7];
+            var currentWindowStart = startOfWeek.AddMinutes(startMinutes);
+            for (int i = 0; i < events.Length; i++)
+            {
+                windows[i] = new List<(DateTime, DateTime)>();
+                var dayEnd = startOfWeek.AddDays(i).AddMinutes(endMinutes);
+                foreach (var ev in events[i])
+                {
+                    if (currentWindowStart < ev.StartDate)
+                    {
+                        var currentWindowEnd = ev.EndDate;
+                        if (dayEnd < currentWindowEnd)
+                        {
+                            currentWindowEnd = dayEnd;
+                        }
+                        windows[i].Add((currentWindowStart, currentWindowEnd));
+                    }
+                    if (ev.EndDate > currentWindowStart)
+                    {
+                        currentWindowStart = ev.EndDate;
+                    }
+                    if (ev.StartDate > dayEnd)
+                    {
+                        break;
+                    }
+                }
+                if (currentWindowStart < dayEnd)
+                {
+                    windows[i].Add((currentWindowStart, dayEnd));
+                }
+            }
+
+            var freeTimes = new List<double>[7];
+            for (int i = 0; i < freeTimes.Length; i++)
+            {
+                freeTimes[i] = windows[i].Select(x => (x.Item2 - x.Item1).TotalMinutes).ToList();
+            }
+
+            var algorithmResult = WeekPlanHelper.FindBestWeekPlan(await _context.Tasks.Where(task => taskIds.Contains(task.Id)).ToListAsync(), freeTimes);
+
+            var planningResult = new List<TaskAssignmentProposition>();
+            foreach (var item in algorithmResult)
+            {
+                var dayTimes = new (DateTime, DateTime)[7];
+                for (int i = 0; i < item.Item2.Length; i++)
+                {
+                    dayTimes[i] = windows[i][item.Item2[i]];
+                }
+                planningResult.Add(new TaskAssignmentProposition() { Task = item.Item1, DayTimes = dayTimes });
+            }
+
+            return planningResult;
         }
 
         private bool TaskExists(int id)

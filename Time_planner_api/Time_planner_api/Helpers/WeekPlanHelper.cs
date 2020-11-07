@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Time_planner_api.Models;
 
@@ -11,7 +11,7 @@ namespace Time_planner_api.Helpers
         private class TaskHelper
         {
             private Task task;
-            private double[] dayTimes;
+            private int[] dayTimes;
 
             public TaskHelper(Task task)
             {
@@ -25,38 +25,45 @@ namespace Time_planner_api.Helpers
                 dayTimes = taskHelper.GetDayTimes();
             }
 
-            public TaskAssignmentProposition GetAssignmentProposition()
+            public void AddAssignedTask(List<(Task, int[])> list)
             {
-                if (dayTimes.All(x => x == 0))
+                if (dayTimes.All(x => x < 0))
                 {
-                    return null;
+                    return;
                 }
-                return new TaskAssignmentProposition { Task = task, DayTimes = dayTimes };
+                list.Add((task, dayTimes));
             }
 
-            public void FindPlaceIfAny(double[] freeTimes)
+            public void FindPlaceIfAny(List<double>[] freeTimes)
             {
                 // todo: optimize
                 int count = 0;
                 for (int i = 0; i < freeTimes.Length && count < task.Split; i++)
                 {
-                    if (task.Time / task.Split <= freeTimes[i])
+                    int ind = freeTimes[i].FindIndex(x => x >= task.Time / task.Split);
+                    if (ind >= 0)
                     {
-                        dayTimes[i] += task.Time / task.Split;
-                        freeTimes[i] -= task.Time / task.Split;
+                        freeTimes[i][ind] -= task.Time / task.Split;
+                        dayTimes[i] = ind;
                         count++;
+                    }
+                }
+            }
+
+            public void UpdateFreeTimes(List<double>[] freeTimes)
+            {
+                for (int i = 0; i < freeTimes.Length; i++)
+                {
+                    if (dayTimes[i] >= 0)
+                    {
+                        freeTimes[i][dayTimes[i]] -= task.Time / task.Split;
                     }
                 }
             }
 
             public double GetAssignedTime()
             {
-                return dayTimes.Sum();
-            }
-
-            public double GetAssignedTime(int i)
-            {
-                return dayTimes[i];
+                return dayTimes.Count(x => x >= 0) * (task.Time / task.Split);
             }
 
             public int GetTaskPriority()
@@ -69,9 +76,9 @@ namespace Time_planner_api.Helpers
                 return task;
             }
 
-            public double[] GetDayTimes()
+            public int[] GetDayTimes()
             {
-                var result = new double[dayTimes.Length];
+                var result = new int[dayTimes.Length];
                 for (int i = 0; i < result.Length; i++)
                 {
                     result[i] = dayTimes[i];
@@ -81,36 +88,36 @@ namespace Time_planner_api.Helpers
 
             public void Cleanup()
             {
-                dayTimes = new double[7];
+                dayTimes = new int[7];
+                for (int i = 0; i < dayTimes.Length; i++)
+                {
+                    dayTimes[i] = -1;
+                }
             }
         }
 
-        public static List<TaskAssignmentProposition> FindBestWeekPlan(List<Task> tasks, double hoursPerDay = 8.0, int iterationCount = 30, int populationCount = 20, double worstChromosoms = 0.75)
+        public static List<(Task, int[])> FindBestWeekPlan(List<Task> tasks, List<double>[] freeTimes, int iterationCount = 30, int populationCount = 20, double worstChromosoms = 0.75)
         {
-            var population = CreatePopulation(tasks, hoursPerDay, populationCount);
+            var population = CreatePopulation(tasks, freeTimes, populationCount);
 
             while (iterationCount-- > 0)
             {
                 RemoveWorstChromosoms(population, worstChromosoms);
-                AddMutations(population, populationCount - population.Count, hoursPerDay);
+                AddMutations(population, freeTimes, populationCount - population.Count);
             }
 
             var bestChromosom = GetBestChromosom(population);
-            var assignedTasks = new List<TaskAssignmentProposition>();
+            var assignedTasks = new List<(Task, int[])>();
 
             foreach (var taskHelper in bestChromosom)
             {
-                var assignedTask = taskHelper.GetAssignmentProposition();
-                if (assignedTask != null)
-                {
-                    assignedTasks.Add(assignedTask);
-                }
+                taskHelper.AddAssignedTask(assignedTasks);
             }
 
             return assignedTasks;
         }
 
-        private static List<List<TaskHelper>> CreatePopulation(List<Task> tasks, double hoursPerDay, int populationCount)
+        private static List<List<TaskHelper>> CreatePopulation(List<Task> tasks, List<double>[] freeTimes, int populationCount)
         {
             var population = new List<List<TaskHelper>>();
             var rnd = new Random();
@@ -118,11 +125,11 @@ namespace Time_planner_api.Helpers
             while (populationCount-- > 0)
             {
                 var chromosom = tasks.Select(task => new TaskHelper(task)).OrderBy(task => rnd.Next()).ToList();
-                var freeTimes = new double[7] { hoursPerDay, hoursPerDay, hoursPerDay, hoursPerDay, hoursPerDay, hoursPerDay, hoursPerDay }; // todo: change to count events
+                var freeTimesClone = (List<double>[])freeTimes.Clone();
 
                 foreach (var taskHelper in chromosom)
                 {
-                    taskHelper.FindPlaceIfAny(freeTimes);
+                    taskHelper.FindPlaceIfAny(freeTimesClone);
                 }
 
                 population.Add(chromosom);
@@ -139,7 +146,7 @@ namespace Time_planner_api.Helpers
             population.RemoveRange(removeIndex, population.Count - removeIndex + 1);
         }
 
-        private static void AddMutations(List<List<TaskHelper>> population, int mutationCount, double hoursPerDay, double change = 0.3)
+        private static void AddMutations(List<List<TaskHelper>> population, List<double>[] freeTimes, int mutationCount, double change = 0.3)
         {
             // todo: add different mutations
             var rnd = new Random();
@@ -168,16 +175,16 @@ namespace Time_planner_api.Helpers
                     }
                 }
 
-                var freeTimes = new double[7];
+                var freeTimesClone = (List<double>[])freeTimes.Clone();
 
-                for (int i = 0; i < freeTimes.Length; i++)
+                foreach(var taskHelper in mutatedChromosom)
                 {
-                    freeTimes[i] = hoursPerDay - mutatedChromosom.Sum(taskHelper => taskHelper.GetAssignedTime(i)); // todo: change to count events
+                    taskHelper.UpdateFreeTimes(freeTimesClone);
                 }
 
                 foreach (var taskHelper in mutatedChromosom)
                 {
-                    taskHelper.FindPlaceIfAny(freeTimes);
+                    taskHelper.FindPlaceIfAny(freeTimesClone);
                 }
 
                 mutatedChromosoms.Add(mutatedChromosom);
