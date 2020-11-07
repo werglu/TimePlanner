@@ -1,10 +1,12 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CalendarEvent, CalendarView, CalendarMonthViewBeforeRenderEvent, CalendarEventAction } from 'angular-calendar';
 import { EventsService } from './events.service';
 import { Events } from './events';
 import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { isSameDay, isSameMonth } from 'date-fns';
+import { TasksService } from '../to-do-list/tasks.service';
+import { Task } from '../to-do-list/task';
 
 @Component({
   selector: 'app-calendar-component',
@@ -17,19 +19,18 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   dayView = false;
   weekView = false;
   openEvent = false;
+  openTask = false;
   editedEvent: CalendarEvent;
   addNewEventModalVisible = false;
   view: CalendarView = CalendarView.Month;
   viewDate: Date = new Date();
   activeDayIsOpen = false;
-
   CalendarView = CalendarView;
   refresh: Subject<any> = new Subject();
-
   events: CalendarEvent[] = [];
   actions: CalendarEventAction[] = [
     {
-      label: '<i class="fa fa-trash"></i>',
+      label: '<i style="color:#f8b400;" class="fa fa-trash"></i>',
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.deleteEvent(event);
@@ -38,10 +39,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   ];
 
   constructor(public eventsService: EventsService,
-  public http: HttpClient) {
+    public tasksService: TasksService,
+    public http: HttpClient) {
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
+    this.getTasks();
     this.getEvents();
   }
 
@@ -51,24 +54,61 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   getEvents(): void {
     this.eventsService.getAllEvents().subscribe(e => {
       e.forEach(ee => {
-        this.events.push({
-          id: ee.id,
-          title: ee.title,
-          start: new Date(ee.startDate),
-          end: new Date(ee.endDate),
-          actions: this.actions,
-        })
+          this.events.push({
+            id: ee.id,
+            title: ee.title,
+            start: new Date(ee.startDate),
+            end: new Date(ee.endDate),
+            actions: this.actions,
+            color: {
+              primary: '#ff9642',
+              secondary: '#ff9642'
+            },
+            meta: {
+              type: 'event'
+            }
+          })
       });
+      this.refresh.next();
+    });
+  }
+
+  getTasks() {
+    this.tasksService.getTasks().subscribe(t => {
+      t.forEach(task => {
+        if (task.startDate != null) {
+          this.events.push({
+            id: task.id,
+            title: task.title,
+            start: new Date(task.startDate),
+            end: new Date(task.endDate),
+            actions: this.actions,
+            color: {
+              primary: '#2c786c',
+              secondary: '#ff9642'
+            },
+            meta: {
+              type: 'task'
+            }
+          })
+        }
+      })
+      this.refresh.next();
     });
   }
 
   eventClicked(event: CalendarEvent): void {
     this.editedEvent = event;
-    this.openEvent = true;
+    if (event.meta.type == 'event') { this.openEvent = true; }
+    if (event.meta.type == 'task') { this.openTask = true; }
   }
 
   closeOpenEventModal() {
     this.openEvent = false;
+  }
+
+  closeOpenTaskModal() {
+    this.openTask = false;
   }
 
   getWeekView() {
@@ -111,8 +151,38 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       start: event.startDate,
       end: event.endDate,
       title: event.title,
-      actions: this.actions
+      actions: this.actions,
+      color: {
+        primary: '#ff9642',
+        secondary: '#ff9642'
+      },
+      meta: {
+        type: 'event'
+      }
     });
+    this.activeDayIsOpen = false;
+    this.refresh.next();
+  }
+
+  editTask(task: Task) {
+    this.closeOpenTaskModal();
+    this.events = this.events.filter(e => e.id !== task.id);
+    if (!task.isDone) {
+      this.events.push({
+        id: task.id,
+        title: task.title,
+        start: new Date(task.startDate),
+        end: new Date(task.endDate),
+        actions: this.actions,
+        color: {
+          primary: '#2c786c',
+          secondary: '#ff9642'
+        },
+        meta: {
+          type: 'task'
+        }
+      });
+    }
     this.activeDayIsOpen = false;
     this.refresh.next();
   }
@@ -120,6 +190,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   addEvent(event: Events) {
     this.closeAddNewEventModal();
     this.events = [];
+    this.getTasks();
     this.getEvents();
     this.activeDayIsOpen = false;
     this.refresh.next();

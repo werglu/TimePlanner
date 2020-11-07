@@ -19,5 +19,9 @@ namespace Time_planner_api.Models
         public ListCategory Category { get; set; }
 
         public int Priority { get; set; }
+
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+
     }
 }

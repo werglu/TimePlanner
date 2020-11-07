@@ -3,3 +3,13 @@
 .btn-primary {
   background-color: var(--yellow);
 }
+
+.fa-toggle-on {
+  font-size: 1.6rem;
+  color: var(--color-dark-green);
+}
+
+.fa-toggle-off {
+  font-size: 1.6rem;
+  color: var(--color-dark-green);
+}
