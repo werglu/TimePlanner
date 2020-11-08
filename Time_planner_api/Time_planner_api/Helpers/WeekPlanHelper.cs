@@ -143,7 +143,7 @@ namespace Time_planner_api.Helpers
             population.Sort((x, y) => GetChromosomGoodness(y).CompareTo(GetChromosomGoodness(x)));
             var chromosomsToBeRemoved = (int)(worstChromosoms * (double)population.Count);
             var removeIndex = Math.Max(population.Count - (int)(worstChromosoms * (double)population.Count - 1), 0);
-            population.RemoveRange(removeIndex, population.Count - removeIndex + 1);
+            population.RemoveRange(removeIndex, population.Count - removeIndex);
         }
 
         private static void AddMutations(List<List<TaskHelper>> population, List<double>[] freeTimes, int mutationCount, double change = 0.3)

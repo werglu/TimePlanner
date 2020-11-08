@@ -197,7 +197,7 @@ namespace Time_planner_api.Controllers
                 var dayTimes = new (DateTime, DateTime)[7];
                 for (int i = 0; i < item.Item2.Length; i++)
                 {
-                    dayTimes[i] = windows[i][item.Item2[i]];
+                    dayTimes[i] = item.Item2[i] >= 0 ? windows[i][item.Item2[i]] : (DateTime.MinValue, DateTime.MinValue);
                 }
                 planningResult.Add(new TaskAssignmentProposition() { Task = item.Item1, DayTimes = dayTimes });
             }
