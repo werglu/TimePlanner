@@ -13,9 +13,11 @@ import { EventsService } from '../events.service';
 export class EditEventModalComponent implements OnInit {
   editEventForm: FormGroup;
   currentEvent: Events;
+  isPublic: boolean;
   @Input() editedEvent: CalendarEvent;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Events>();
+  @Output() onChangeVisibility = new EventEmitter<boolean>();
 
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService) {
@@ -40,6 +42,8 @@ export class EditEventModalComponent implements OnInit {
     if (this.editedEvent.id != null) {
       this.eventsService.getEvent(Number(this.editedEvent.id)).subscribe((event) => {
         this.currentEvent = event;
+        this.isPublic = event.isPublic;
+        this.onChangeVisibility.emit(this.isPublic);
       });
     }
   }
@@ -96,6 +100,7 @@ export class EditEventModalComponent implements OnInit {
       title: (<HTMLInputElement>document.getElementById('title')).value,
       startDate: this.setDate('startDate'),
       endDate: this.setDate('endDate'),
+      isPublic: this.isPublic,
       city: (<HTMLInputElement>document.getElementById('city')).value,
       streetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value,
       latitude: 0.0,
@@ -135,5 +140,10 @@ export class EditEventModalComponent implements OnInit {
       date.setMinutes(Number(t[1]));
     }
     return date;
+  }
+
+  changeVisibility() {
+    this.isPublic = !this.isPublic;
+    this.onChangeVisibility.emit(this.isPublic);
   }
 }

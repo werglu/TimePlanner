@@ -12,8 +12,10 @@ import { EventsService } from '../events.service';
 export class AddEventModalComponent implements OnInit {
   editEventForm: FormGroup;  
   @Output() onCancel = new EventEmitter();
+  @Output() onChangeVisibility = new EventEmitter <boolean>();
   @Output() onSave = new EventEmitter<Events>();
   invalidDate = false;
+  isPublic = false;
 
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService) {
@@ -44,6 +46,7 @@ export class AddEventModalComponent implements OnInit {
       title: (<HTMLInputElement>document.getElementById('title')).value,
       startDate: this.setDate('startDate'),
       endDate: this.setDate('endDate'),
+      isPublic: this.isPublic,
       city: (<HTMLInputElement>document.getElementById('city')).value,
       streetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value,
       latitude: 0.0,
@@ -123,4 +126,8 @@ export class AddEventModalComponent implements OnInit {
     return (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' + (date.getMinutes()+1 < 10 ? '0' + (date.getMinutes()+1) : (date.getMinutes()+1));
   }
 
+  changeVisibility() {
+    this.isPublic = !this.isPublic;
+    this.onChangeVisibility.emit(this.isPublic);
+  }
 }

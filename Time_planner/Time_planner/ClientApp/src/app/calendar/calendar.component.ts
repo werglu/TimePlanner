@@ -20,6 +20,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   weekView = false;
   openEvent = false;
   openTask = false;
+  isPublic = false;
   editedEvent: CalendarEvent;
   addNewEventModalVisible = false;
   view: CalendarView = CalendarView.Month;
@@ -197,6 +198,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   openAddNewEventModal() {
+    this.isPublic = false;
     this.addNewEventModalVisible = true;
   }
 
@@ -211,5 +213,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       this.activeDayIsOpen = false;
       this.refresh.next();
     });
+  }
+
+  eventVisibilityChanged(event: boolean) {
+    this.isPublic = event;
   }
 }

@@ -3,6 +3,7 @@ export interface Events {
   startDate: Date;
   endDate: Date;
   title: string;
+  isPublic: boolean;
   city: string;
   streetAddress: string;
   latitude: number;

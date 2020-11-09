@@ -1,6 +1,13 @@
 <form [formGroup]="editEventForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label>
+      Set as public
+    </label>
+    <button *ngIf="!isPublic" class="btn" style="background-color:transparent;" (click)="changeVisibility()"><i class="fa fa-toggle-off"></i></button>
+    <button *ngIf="isPublic" class="btn" style="background-color:transparent;" (click)="changeVisibility()"><i class="fa fa-toggle-on"></i></button>
+  </div>
   <div style="display:grid">
-    <label for="name">
+    <label style="padding-top:10px;" for="name">
       Title <span class="required">*</span>
     </label>
     <input style="width:70%;" id="title" type="text" formControlName="title" required>
@@ -48,7 +55,7 @@
     </div>
   </div>
   <div style="display:grid">
-    <label  style="padding-top:10px;" for="city">
+    <label style="padding-top:10px;" for="city">
       City <span class="required">*</span>
     </label>
     <input style="width:50%;" id="city" type="text" formControlName="city" required>
@@ -60,7 +67,7 @@
     </div>
   </div>
   <div style="display:grid">
-    <label  style="padding-top:10px;" for="streetAddress">
+    <label style="padding-top:10px;" for="streetAddress">
       Street address <span class="required">*</span>
     </label>
     <input style="width:70%;" id="streetAddress" type="text" formControlName="streetAddress" required>
