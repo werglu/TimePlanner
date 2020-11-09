@@ -54,7 +54,8 @@ namespace Time_planner_api.Controllers
                 Title = ourEvent.Title, 
                 EndDate= ourEvent.EndDate.ToLocalTime(),
                 City = ourEvent.City,
-                StreetAddress = ourEvent.StreetAddress
+                StreetAddress = ourEvent.StreetAddress,
+                IsPublic = ourEvent.IsPublic
             }); 
 
             try
@@ -86,6 +87,7 @@ namespace Time_planner_api.Controllers
             newEvent.EndDate = oldEvent.EndDate.ToLocalTime();
             newEvent.City = oldEvent.City;
             newEvent.StreetAddress = oldEvent.StreetAddress;
+            newEvent.IsPublic = oldEvent.IsPublic;
 
             _context.Entry(newEvent).State = EntityState.Modified;
 
