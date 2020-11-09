@@ -152,9 +152,9 @@ namespace Time_planner_api.Controllers
             }
 
             var windows = new List<(DateTime, DateTime)>[7];
-            var currentWindowStart = startOfWeek.AddMinutes(startMinutes);
             for (int i = 0; i < events.Length; i++)
             {
+                var currentWindowStart = startOfWeek.AddDays(i).AddMinutes(startMinutes);
                 windows[i] = new List<(DateTime, DateTime)>();
                 var dayEnd = startOfWeek.AddDays(i).AddMinutes(endMinutes);
                 foreach (var ev in events[i])
