@@ -8,6 +8,10 @@ button {
   background-color: var(--yellow);
 }
 
+.btn-secondary {
+  background-color: rgb(88, 164, 152);
+}
+
 i.fa {
   white-space: normal;
   text-align: center;

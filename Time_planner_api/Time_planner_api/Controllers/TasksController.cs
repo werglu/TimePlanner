@@ -128,10 +128,10 @@ namespace Time_planner_api.Controllers
             return task;
         }
 
-        // GET: api/Tasks/weekplan
-        [HttpGet]
+        // PUT: api/Tasks/weekplan
+        [HttpPut]
         [Route("weekplan")]
-        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentProposition>>> GetWeekPlannedTasks(List<int> taskIds, double startMinutes, double endMinutes)
+        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentProposition>>> GetWeekPlannedTasks(List<int> taskIds, double startMinutes = 420.0, double endMinutes = 1320.0)
         {
             var startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek)); // starts from sunday
 
@@ -199,7 +199,11 @@ namespace Time_planner_api.Controllers
                 {
                     dayTimes[i] = item.Item2[i] >= 0 ? windows[i][item.Item2[i]] : (DateTime.MinValue, DateTime.MinValue);
                 }
-                planningResult.Add(new TaskAssignmentProposition() { Task = item.Item1, DayTimes = dayTimes });
+                planningResult.Add(new TaskAssignmentProposition()
+                {
+                    Task = item.Item1,
+                    DayTimes = dayTimes.Select(dayTime => new TaskAssignmentProposition.Interval() { Start = dayTime.Item1, End = dayTime.Item2 }).ToArray()
+                });
             }
 
             return planningResult;

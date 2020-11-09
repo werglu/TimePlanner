@@ -21,6 +21,7 @@ export class ToDoListComponent implements OnInit {
   public tasks: Array<Task> = [];
   public view: Observable<GridDataResult>;
   public gridData: any[] = [];
+  public mySelection: number[] = [];
   defaultItem: string;
   refresh: Subject<any> = new Subject();
   addNewCategoryModalVisible = false;
@@ -104,5 +105,11 @@ export class ToDoListComponent implements OnInit {
     this.listCategories = [];
     this.getCategories();
     this.refresh.next();
+  }
+
+  findDates() {
+    this.tasksService.findDates(this.mySelection).subscribe(taskAssignmentPropositions => {
+      taskAssignmentPropositions.forEach(taskAssignmentProposition => console.log(taskAssignmentProposition));
+    });
   }
 }
