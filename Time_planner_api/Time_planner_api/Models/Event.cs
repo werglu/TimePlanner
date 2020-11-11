@@ -25,7 +25,12 @@ namespace Time_planner_api.Models
         public bool IsPublic { get; set; }
 
         public string City { get; set; }
+
         public string StreetAddress { get; set; }
+
+        public int? OwnerId { get; set; }
+
+        public User Owner { get; set; }
 
         [NotMapped]
         public double Longitude
