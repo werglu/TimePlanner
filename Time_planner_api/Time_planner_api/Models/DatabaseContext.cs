@@ -12,6 +12,6 @@ namespace Time_planner_api.Models
         public DbSet<ListCategory> ListCategories { get; set; }
         public DbSet<Task> Tasks { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-
+        public DbSet<User> Users { get; set; }
     }
 }
