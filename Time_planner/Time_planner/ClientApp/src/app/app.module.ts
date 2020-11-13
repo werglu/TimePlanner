@@ -25,6 +25,7 @@ import { AddNewTaskModalComponent } from './to-do-list/add-new-task-modal/add-ne
 import { NotificationsComponent } from './notifications/notifications.component';
 import { NotificationDetailsModalComponent } from './notifications/notification-details-modal/notification-details-modal.component';
 import { EditTaskModalComponent } from './to-do-list/edit-task-modal/edit-task-modal.component';
+import { AccessDeniedComponent } from './access-denied/access-denied.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { EditTaskModalComponent } from './to-do-list/edit-task-modal/edit-task-m
     AddNewTaskModalComponent,
     NotificationsComponent,
     NotificationDetailsModalComponent,
-    EditTaskModalComponent
+    EditTaskModalComponent,
+    AccessDeniedComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -66,7 +68,8 @@ import { EditTaskModalComponent } from './to-do-list/edit-task-modal/edit-task-m
       { path: 'counter', component: CounterComponent },
       { path: 'calendar', component: CalendarComponent },
       { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'to-do-list', component: ToDoListComponent }
+      { path: 'to-do-list', component: ToDoListComponent },
+      { path: 'access-denied', component: AccessDeniedComponent },
     ])
   ],
   providers: [],
