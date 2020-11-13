@@ -31,7 +31,23 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         version: 'v8.0',
       });
 
+      // log visitor activity
+      // TODO: support to July 1,2022
+      // https://developers.facebook.com/docs/facebook-pixel
       FB.AppEvents.logPageView();
+
+      FB.getLoginStatus(function (response) {
+        let loginBtn = document.getElementById("loginBtn");
+        let logoutBtn = document.getElementById("logoutBtn");
+
+        if (response.status === 'connected') {
+          loginBtn.style.display = "none";
+          logoutBtn.style.display = "block";
+        } else {
+          loginBtn.style.display = "block";
+          logoutBtn.style.display = "none";
+        }
+      });
     };
 
     (function (d, s, id) {
@@ -43,10 +59,37 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     }(document, 'script', 'facebook-jssdk'));
   }
 
+  fbLogout() {
+    FB.logout(function (response) {
+      let loginBtn = document.getElementById("loginBtn");
+      loginBtn.style.display = "block";
+      let logoutBtn = document.getElementById("logoutBtn");
+      logoutBtn.style.display = "none";
+
+      window.location.replace("https://localhost:5001/access-denied");
+    });
+  }
+
+  fbLogin() {
+    FB.login(function (response) {
+      if (response.authResponse) {
+        let loginBtn = document.getElementById("loginBtn");
+        loginBtn.style.display = "none";
+        let logoutBtn = document.getElementById("logoutBtn");
+        logoutBtn.style.display = "block";
+
+        window.location.replace("https://localhost:5001/");
+      }
+    }, {
+      scope: 'public_profile, email, user_friends, user_photos',
+      return_scopes: true
+    });
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-  
+
   getNotifications() {
     this.notificationsService.getNotificationss().subscribe(n => {
       if (n.length == 0) {

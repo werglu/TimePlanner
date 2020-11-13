@@ -45,8 +45,14 @@
           </li>
 
           <li>
-            <div app-nav-menu class="fb-login-button" data-size="small" data-button-type="login_with" data-layout="default"
-                 data-auto-logout-link="true" data-use-continue-as="true" data-scope="public_profile, email, user_friends, user_photos" data-width=""></div>
+            <a id="loginBtn" (click)="fbLogin()" class="fb btn">
+              <i class="fa fa-facebook fa-fw"></i> Log In
+            </a>
+          </li>
+          <li>
+            <a id="logoutBtn" (click)="fbLogout()" class="fb btn">
+              <i class="fa fa-facebook fa-fw"></i> Log Out
+            </a>
           </li>
         </ul>
         <!-- Load the JS SDK asynchronously -->
