@@ -39,13 +39,16 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       FB.getLoginStatus(function (response) {
         let loginBtn = document.getElementById("loginBtn");
         let logoutBtn = document.getElementById("logoutBtn");
+        let notificationsBtn = document.getElementById("notificationBtn");
 
         if (response.status === 'connected') {
           loginBtn.style.display = "none";
           logoutBtn.style.display = "block";
+          notificationsBtn.style.display = "block";
         } else {
           loginBtn.style.display = "block";
           logoutBtn.style.display = "none";
+          notificationsBtn.style.display = "none";
         }
       });
     };
@@ -65,6 +68,8 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       loginBtn.style.display = "block";
       let logoutBtn = document.getElementById("logoutBtn");
       logoutBtn.style.display = "none";
+      let notificationsBtn = document.getElementById("notificationBtn");
+      notificationsBtn.style.display = "none";
 
       window.location.replace("https://localhost:5001/access-denied");
     });
@@ -77,6 +82,8 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         loginBtn.style.display = "none";
         let logoutBtn = document.getElementById("logoutBtn");
         logoutBtn.style.display = "block";
+        let notificationsBtn = document.getElementById("notificationBtn");
+        notificationsBtn.style.display = "block";
 
         window.location.replace("https://localhost:5001/");
       }

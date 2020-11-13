@@ -34,7 +34,7 @@
           </li>
 
           <li class="nav-item">
-            <div class="dropdown">
+            <div id="notificationBtn" class="dropdown">
               <button *ngIf="noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none"><i style="font-size:1.4rem;margin-top:-9px;" class="fa fa-bell-slash navbar-brand"></i></button>
               <button *ngIf="!noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none"><i style="font-size:1.4rem;margin-top:-9px;" class="fa fa-bell navbar-brand"></i></button>
 
