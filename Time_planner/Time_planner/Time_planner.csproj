@@ -33,11 +33,13 @@
   <ItemGroup>
     <None Remove="ClientApp\src\app\access-denied\access-denied.component.ts" />
     <None Remove="ClientApp\src\app\auth.guard.ts" />
+    <None Remove="ClientApp\src\app\logout\logout.component.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\access-denied\access-denied.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\auth.guard.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\logout\logout.component.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

@@ -71,7 +71,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       let notificationsBtn = document.getElementById("notificationBtn");
       notificationsBtn.style.display = "none";
 
-      window.location.replace("https://localhost:5001/access-denied");
+      window.location.replace("https://localhost:5001/logout");
     });
   }
 

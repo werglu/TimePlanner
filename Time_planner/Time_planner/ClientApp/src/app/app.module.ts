@@ -26,6 +26,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { NotificationDetailsModalComponent } from './notifications/notification-details-modal/notification-details-modal.component';
 import { EditTaskModalComponent } from './to-do-list/edit-task-modal/edit-task-modal.component';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
+import { LogoutComponent } from './logout/logout.component';
 import { AuthGuard } from './auth.guard';
 
 @NgModule({
@@ -44,7 +45,8 @@ import { AuthGuard } from './auth.guard';
     NotificationsComponent,
     NotificationDetailsModalComponent,
     EditTaskModalComponent,
-    AccessDeniedComponent
+    AccessDeniedComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -71,6 +73,7 @@ import { AuthGuard } from './auth.guard';
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthGuard] },
       { path: 'to-do-list', component: ToDoListComponent, canActivate: [AuthGuard] },
       { path: 'access-denied', component: AccessDeniedComponent },
+      { path: 'logout', component: LogoutComponent }
     ])
   ],
   providers: [AuthGuard],
