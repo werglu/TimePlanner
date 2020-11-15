@@ -55,10 +55,7 @@ namespace Time_planner_api.Controllers
             try
             {
                 _context.Users.Add(new User() { FacebookId = id });
-                await _context.Database.OpenConnectionAsync();
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Users ON");
                 await _context.SaveChangesAsync();
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Users OFF");
 
                 return Ok();
             }
