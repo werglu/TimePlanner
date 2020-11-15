@@ -1,10 +1,15 @@
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from "@angular/router";
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from "@angular/router";
 import { Injectable, OnInit } from "@angular/core";
 
 declare var FB: any;
 
 @Injectable()
 export class AuthGuard implements OnInit, CanActivate {
+
+  isConnected: boolean;
+
+  constructor(private router: Router) {
+  }
 
   ngOnInit() {
     (window as any).fbAsyncInit = function () {
@@ -29,21 +34,18 @@ export class AuthGuard implements OnInit, CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
 
-    FB.getLoginStatus(function (response) {
+    FB.getLoginStatus( response => {
       if (response.status === 'connected') {
-        sessionStorage.setItem("connected", "true");
+        this.isConnected = true;
       } else {
-        sessionStorage.setItem("connected", "false");
+        this.isConnected = false;
       }
     });
 
-    let connected = sessionStorage.getItem("connected");
-    sessionStorage.removeItem("connected");
-
-    if (connected === "true") {
+    if (this.isConnected == true) {
       return true;
     } else {
-      window.location.replace("https://localhost:5001/access-denied");
+      this.router.navigate(['/access-denied']);
       return false;
     }
   }
