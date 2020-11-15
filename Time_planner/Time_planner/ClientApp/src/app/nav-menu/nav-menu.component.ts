@@ -38,7 +38,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       // https://developers.facebook.com/docs/facebook-pixel
       FB.AppEvents.logPageView();
 
-      FB.getLoginStatus(function (response) {
+      FB.getLoginStatus(response => {
         let loginBtn = document.getElementById("loginBtn");
         let logoutBtn = document.getElementById("logoutBtn");
         let notificationsBtn = document.getElementById("notificationBtn");
@@ -65,7 +65,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   fbLogout() {
-    FB.logout(function (response) {
+    FB.logout(response => {
       let loginBtn = document.getElementById("loginBtn");
       loginBtn.style.display = "block";
       let logoutBtn = document.getElementById("logoutBtn");
@@ -73,7 +73,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       let notificationsBtn = document.getElementById("notificationBtn");
       notificationsBtn.style.display = "none";
 
-      window.location.replace("https://localhost:5001/logout");
+      this.router.navigate(['/logout']);
     });
   }
 
@@ -87,9 +87,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         let notificationsBtn = document.getElementById("notificationBtn");
         notificationsBtn.style.display = "block";
 
-        this.userService.putUser(response.authResponse.userID).subscribe(() => window.location.replace("https://localhost:5001/"));
-
-       // window.location.replace("https://localhost:5001/");
+        this.userService.putUser(response.authResponse.userID).subscribe(() => this.router.navigate(['/']));
       }
     }, {
       scope: 'public_profile, email, user_friends, user_photos',
