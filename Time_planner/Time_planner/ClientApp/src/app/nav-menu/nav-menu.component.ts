@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationsService } from '../notifications/notifications.service';
 import { Subscription, interval } from 'rxjs';
+import { UserService } from '../user/user.service';
 
 declare var FB: any;
 
@@ -16,7 +17,8 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   noNotifications = true;
   subscription: Subscription;
 
-  constructor(private router: Router, private notificationsService: NotificationsService) {
+  constructor(private router: Router, private notificationsService: NotificationsService,
+    public userService: UserService) {
     const source = interval(5000);
     this.subscription = source.subscribe(val => this.getNotifications());
   }
@@ -75,8 +77,8 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     });
   }
 
-  fbLogin() {
-    FB.login(function (response) {
+   fbLogin() {
+    FB.login(response => {
       if (response.authResponse) {
         let loginBtn = document.getElementById("loginBtn");
         loginBtn.style.display = "none";
@@ -85,7 +87,9 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         let notificationsBtn = document.getElementById("notificationBtn");
         notificationsBtn.style.display = "block";
 
-        window.location.replace("https://localhost:5001/");
+        this.userService.putUser(response.authResponse.userID).subscribe(() => window.location.replace("https://localhost:5001/"));
+
+       // window.location.replace("https://localhost:5001/");
       }
     }, {
       scope: 'public_profile, email, user_friends, user_photos',
