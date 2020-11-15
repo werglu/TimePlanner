@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Time_planner_api.Models;
 
 namespace Time_planner_api.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20201115154521_RemoveUsers")]
+    partial class RemoveUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +37,6 @@ namespace Time_planner_api.Migrations
                     b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
 
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -49,8 +48,6 @@ namespace Time_planner_api.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("Events");
                 });
@@ -66,12 +63,7 @@ namespace Time_planner_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("ListCategories");
                 });
@@ -92,14 +84,9 @@ namespace Time_planner_api.Migrations
                     b.Property<int>("MessageType")
                         .HasColumnType("int");
 
-                    b.Property<string>("ReceiverId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EventId");
-
-                    b.HasIndex("ReceiverId");
 
                     b.ToTable("Notifications");
                 });
@@ -137,16 +124,6 @@ namespace Time_planner_api.Migrations
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("Time_planner_api.Models.User", b =>
-                {
-                    b.Property<string>("FacebookId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("FacebookId");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("Time_planner_api.Models.WeatherForecast", b =>
                 {
                     b.Property<string>("Date")
@@ -167,29 +144,11 @@ namespace Time_planner_api.Migrations
                     b.ToTable("WeatherForecasts");
                 });
 
-            modelBuilder.Entity("Time_planner_api.Models.Event", b =>
-                {
-                    b.HasOne("Time_planner_api.Models.User", "Owner")
-                        .WithMany("AttendedEvents")
-                        .HasForeignKey("OwnerId");
-                });
-
-            modelBuilder.Entity("Time_planner_api.Models.ListCategory", b =>
-                {
-                    b.HasOne("Time_planner_api.Models.User", "Owner")
-                        .WithMany("OwnedTaskCategories")
-                        .HasForeignKey("OwnerId");
-                });
-
             modelBuilder.Entity("Time_planner_api.Models.Notification", b =>
                 {
                     b.HasOne("Time_planner_api.Models.Event", "Event")
                         .WithMany("Notifications")
                         .HasForeignKey("EventId");
-
-                    b.HasOne("Time_planner_api.Models.User", "Receiver")
-                        .WithMany("Notifications")
-                        .HasForeignKey("ReceiverId");
                 });
 
             modelBuilder.Entity("Time_planner_api.Models.Task", b =>

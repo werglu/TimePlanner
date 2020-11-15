@@ -14,7 +14,7 @@ namespace Time_planner_api.Models
 
         public Event Event { get; set; }
 
-        public int? ReceiverId { get; set; }
+        public string ReceiverId { get; set; }
 
         public User Receiver { get; set; }
 
