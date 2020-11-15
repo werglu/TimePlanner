@@ -12,7 +12,7 @@ namespace Time_planner_api.Models
         [Required]
         public string Category { get; set; }
 
-        public int? OwnerId { get; set; }
+        public string OwnerId { get; set; }
 
         public User Owner { get; set; }
 

@@ -7,7 +7,7 @@ namespace Time_planner_api.Models
     public class User
     {
         [Key]
-        public int FacebookId { get; set; }
+        public string FacebookId { get; set; }
 
         public List<Event> AttendedEvents { get; set; }
 
