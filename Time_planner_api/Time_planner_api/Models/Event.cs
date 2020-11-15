@@ -28,7 +28,7 @@ namespace Time_planner_api.Models
 
         public string StreetAddress { get; set; }
 
-        public int? OwnerId { get; set; }
+        public string OwnerId { get; set; }
 
         public User Owner { get; set; }
 
