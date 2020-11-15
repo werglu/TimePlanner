@@ -34,7 +34,7 @@
           </li>
 
           <li class="nav-item">
-            <div id="notificationBtn" class="dropdown">
+            <div id="notificationBtn" class="dropdown" style="display: none;">
               <button *ngIf="noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none"><i style="font-size:1.4rem;margin-top:-9px;" class="fa fa-bell-slash navbar-brand"></i></button>
               <button *ngIf="!noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none"><i style="font-size:1.4rem;margin-top:-9px;" class="fa fa-bell navbar-brand"></i></button>
 
@@ -45,12 +45,12 @@
           </li>
 
           <li>
-            <a id="loginBtn" (click)="fbLogin()" class="fb btn">
+            <a id="loginBtn" (click)="fbLogin()" class="fb btn" style="display: none;">
               <i class="fa fa-facebook fa-fw"></i> Log In
             </a>
           </li>
           <li>
-            <a id="logoutBtn" (click)="fbLogout()" class="fb btn">
+            <a id="logoutBtn" (click)="fbLogout()" class="fb btn" style="display: none;">
               <i class="fa fa-facebook fa-fw"></i> Log Out
             </a>
           </li>

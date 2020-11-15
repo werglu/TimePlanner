@@ -70,10 +70,6 @@ namespace Time_planner_api.Controllers
                     throw;
                 }
             }
-            finally
-            {
-                await _context.Database.CloseConnectionAsync();
-            }
         }
 
         private bool UserExists(string id)

@@ -16,7 +16,3 @@ export class UserService {
     return this.http.post(baseUrl + 'api/Users/' + id.toString(), {});
   }
 }
-
-interface Users {
-  facebookId: number
-}
