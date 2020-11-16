@@ -2,6 +2,9 @@ import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { TaskAssignmentProposition } from '../taskAssignmentProposition';
 import { TaskAssignment } from '../taskAssignment';
+import { TasksService } from '../tasks.service';
+import { Task } from '../task';
+import { TaskAssignmentSave } from '../taskAssignmentSave';
 
 @Component({
   selector: 'find-dates-modal',
@@ -14,9 +17,10 @@ export class FindDatesModalComponent implements OnInit {
   public foundDatesModel: Array<TaskAssignment> = [];
   @Input() foundDates: Array<TaskAssignmentProposition>;
   @Output() onCancel = new EventEmitter();
-  @Output() onSave = new EventEmitter<TaskAssignmentProposition>();
+  @Output() onSave = new EventEmitter<TaskAssignmentSave[]>();
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,
+    private tasksService: TasksService) {
     this.findDatesForm = this.formBuilder.group({
       name: ['', Validators.required]
     });
@@ -52,33 +56,16 @@ export class FindDatesModalComponent implements OnInit {
     this.onCancel.emit();
   }
 
-  //getFormValue(): TaskAssignmentProposition {
-  //  return {
-  //    id: 1,  
-  //    category: (<HTMLInputElement>document.getElementById('name')).value,
-  //    tasks: null
-  //  };
-  //}
+  getFormValue(): TaskAssignmentSave[] {
+    var taskAssignmentsSave: TaskAssignmentSave[] = [];
+    this.foundDatesModel.forEach(task => {
+      taskAssignmentsSave.push({ taskId: task.task.id, dayTimes: task.dayTimes });
+    })
+    return taskAssignmentsSave;
+  }
   
   onSubmit() {
-    //if (this.addCategoryForm.valid) {
-    //  this.listCategoriesService.addCategory(this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
-    //}
-    //else {
-    //  this.validateAllFormControls(this.addCategoryForm);
-    //}
-  }
-
-  validateAllFormControls(formGroup: FormGroup) {
-    Object.keys(formGroup.controls).forEach(field => {
-      const control = formGroup.get(field);
-      if (control instanceof FormGroup) {
-        this.validateAllFormControls(control);
-      }
-      else if (control instanceof FormControl) {
-        control.markAllAsTouched();
-      }
-    })
+    this.tasksService.saveDates(this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
   }
 
   checked(itemInd, dayInd: number) {

@@ -122,7 +122,6 @@ export class ToDoListComponent implements OnInit {
   }
 
   saveDates(taskAssignmentPropositions: any) {
-    // todo
     this.closeFindDatesModal();
   }
 }

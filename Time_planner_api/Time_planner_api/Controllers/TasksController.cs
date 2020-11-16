@@ -209,6 +209,33 @@ namespace Time_planner_api.Controllers
             return planningResult;
         }
 
+        // PUT: api/Tasks/weekplan
+        [HttpPut]
+        [Route("saveDates")]
+        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentSave>>> SaveDates(List<TaskAssignmentSave> tasksToSave)
+        {
+            foreach (var task in tasksToSave)
+            {
+                Models.Task newTask = _context.Tasks.Where(t => t.Id == task.TaskId).Single<Models.Task>();
+                // todo marta
+                //newTask.StartDate = task.StartDate != null ? task.StartDate?.ToLocalTime() : task.StartDate;
+                //newTask.EndDate = task.EndDate != null ? task.EndDate?.ToLocalTime() : task.EndDate;
+
+                _context.Entry(newTask).State = EntityState.Modified;
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
+            return NoContent();
+        }
+
         private bool TaskExists(int id)
         {
             return _context.Tasks.Any(t => t.Id == id);
