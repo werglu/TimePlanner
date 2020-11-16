@@ -79,3 +79,45 @@ code {
 .fa-trash {
     color: var(--yellow);
 }
+
+/*tooltip*/
+.fa-info-circle {
+  margin-left: 2px;
+  position: relative;
+  display: inline-block;
+  color: var(--color-dark-green);
+}
+
+.fa-info-circle .tooltiptext {
+  visibility: hidden;
+  width: 160px;
+  opacity: 0.9;
+  top: 110%;
+  left: 50%;
+  margin-left: -80px;
+  background-color: var(--color-light-green);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: smaller;
+}
+
+.fa-info-circle .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent var(--color-light-green) transparent;
+}
+
+.fa-info-circle:hover .tooltiptext {
+  visibility: visible;
+}
+/*tooltip*/

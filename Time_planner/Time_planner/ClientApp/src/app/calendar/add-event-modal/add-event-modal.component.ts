@@ -23,8 +23,8 @@ export class AddEventModalComponent implements OnInit {
       title: ['', Validators.required],
       startDate: '',
       endDate: '',
-      city: [' ', Validators.required],
-      streetAddress: [' ', Validators.required]
+      city: ['', Validators.required],
+      streetAddress: ['', Validators.required]
     });
   }
 
@@ -91,7 +91,7 @@ export class AddEventModalComponent implements OnInit {
   dateInvalid(): boolean {
     var startDate = this.setDate('startDate');
     var endDate = this.setDate('endDate');
-    if (startDate > endDate) {
+    if (startDate >= endDate) {
       return true;
     }
     return false;

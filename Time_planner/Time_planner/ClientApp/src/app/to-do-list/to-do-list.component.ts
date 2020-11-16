@@ -4,7 +4,7 @@ import { ListCategory } from './listCategory';
 import { TasksService } from './tasks.service';
 import { Task } from './task';
 import { Observable, Subject } from 'rxjs';
-import { GridDataResult, DataStateChangeEvent, GridComponent, DataBindingDirective } from '@progress/kendo-angular-grid';
+import { GridDataResult } from '@progress/kendo-angular-grid';
 import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Component({
@@ -21,7 +21,8 @@ export class ToDoListComponent implements OnInit {
   public tasks: Array<Task> = [];
   public view: Observable<GridDataResult>;
   public gridData: any[] = [];
-  defaultItem: string;
+  openTask = false;
+  currentTask: Task;
   refresh: Subject<any> = new Subject();
   addNewCategoryModalVisible = false;
   addNewTaskModalVisible = false;
@@ -58,6 +59,7 @@ export class ToDoListComponent implements OnInit {
           this.gridData.push(task);
         }
       });
+      this.refresh.next();
     });
   }
 
@@ -103,6 +105,22 @@ export class ToDoListComponent implements OnInit {
     this.closeAddNewCategoryModal();
     this.listCategories = [];
     this.getCategories();
+    this.refresh.next();
+  }
+
+  closeOpenTaskModal() {
+    this.openTask = false;
+  }
+
+  openEditTaskModal(task: Task) {
+    this.openTask = true;
+    this.currentTask = task;
+  }
+
+  editTask(task: Task) {
+    this.closeOpenTaskModal();
+    this.gridData = this.gridData.filter(t => t.id != task.id);
+    if (this.currentCategory == 1 || this.currentCategory == task.categoryId) { this.gridData.push(task); }
     this.refresh.next();
   }
 }

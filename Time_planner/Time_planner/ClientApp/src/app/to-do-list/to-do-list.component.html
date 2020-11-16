@@ -1,5 +1,5 @@
 <div>
-  <h2>My To Do List</h2>
+  <h2>My Tasks</h2>
   <div style="display:flex">
     <h4>Category:</h4>
     <kendo-dropdownlist style="margin-left:20px;"
@@ -52,10 +52,10 @@
     <kendo-grid-column field="title" title="To do">
       <ng-template kendoGridCellTemplate let-dataItem>
         <div *ngIf="dataItem.isDone==false">
-          <label>{{dataItem.title}}</label>
+          <a class="link" (click)="openEditTaskModal(dataItem)">{{dataItem.title}}</a>
         </div>
         <div *ngIf="dataItem.isDone==true">
-          <label><s>{{dataItem.title}}</s></label>
+          <a class="link" (click)="openEditTaskModal(dataItem)"><s>{{dataItem.title}}</s></a>
         </div>
       </ng-template>
     </kendo-grid-column>
@@ -80,4 +80,11 @@
 
 <kendo-dialog title="Add new to-do" *ngIf="addNewTaskModalVisible" (close)="closeAddNewTaskModal()" [minWidth]="250" [width]="450">
   <add-new-task-modal (onCancel)="closeAddNewTaskModal()" (onSave)="addTask($event)"></add-new-task-modal>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="openTask" (close)="closeOpenTaskModal()" [minWidth]="250" [width]="450">
+  <kendo-dialog-titlebar>
+    <div><span class="k-icon k-i-user"></span>Edit task</div>
+  </kendo-dialog-titlebar>
+  <edit-task-modal [editedTask]="currentTask" (onCancel)="closeOpenTaskModal()" (onSave)="editTask($event)"></edit-task-modal>
 </kendo-dialog>

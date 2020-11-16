@@ -28,6 +28,7 @@ import { EditTaskModalComponent } from './to-do-list/edit-task-modal/edit-task-m
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import { LogoutComponent } from './logout/logout.component';
 import { AuthGuard } from './auth.guard';
+import { EditTaskAaEventModalComponent } from './to-do-list/edit-task-as-event-modal/edit-task-as-event-modal.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { AuthGuard } from './auth.guard';
     NotificationsComponent,
     NotificationDetailsModalComponent,
     EditTaskModalComponent,
+    EditTaskAaEventModalComponent,
     AccessDeniedComponent,
     LogoutComponent
   ],

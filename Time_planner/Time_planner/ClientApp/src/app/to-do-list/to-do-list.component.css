@@ -41,3 +41,11 @@ h2 {
     background-color: transparent;
     margin-left: 27px;
 }
+
+.link {
+    text-decoration: underline;
+}
+
+.link:hover {
+    cursor:pointer;
+}
