@@ -86,6 +86,6 @@
   <add-new-task-modal (onCancel)="closeAddNewTaskModal()" (onSave)="addTask($event)"></add-new-task-modal>
 </kendo-dialog>
 
-<kendo-dialog title="Task plan proposition" *ngIf="findDatesModalVisible" (close)="closeFindDatesModal()" [minWidth]="250" [width]="450">
+<kendo-dialog title="Week plan proposition" *ngIf="findDatesModalVisible" (close)="closeFindDatesModal()" [minWidth]="250" [width]="700">
   <find-dates-modal (onCancel)="closeFindDatesModal()" (onSave)="saveDates($event)" [foundDates]="foundDates"></find-dates-modal>
 </kendo-dialog>

@@ -3,3 +3,20 @@
 .btn-primary {
   background-color: var(--yellow);
 }
+
+.pass-icon {
+     padding-right: 2em;
+    margin-left: 0.3em;
+}
+
+.notpassed {
+  color: var(--yellow)
+}
+
+.passed {
+  color: var(--color-light-green)
+}
+
+.overpassed {
+  color: var(--color-dark-green)
+}

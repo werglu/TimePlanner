@@ -133,7 +133,7 @@ namespace Time_planner_api.Controllers
         [Route("weekplan")]
         public async Task<ActionResult<IEnumerable<Models.TaskAssignmentProposition>>> GetWeekPlannedTasks(List<int> taskIds, double startMinutes = 420.0, double endMinutes = 1320.0)
         {
-            var startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek)); // starts from sunday
+            var startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek) + 1); // starts from monday
 
             var events = new List<Event>[7];
             for (int i = 0; i < events.Length; i++)

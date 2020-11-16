@@ -25,10 +25,10 @@ namespace Time_planner_api.Models
         public DateTime? EndDate { get; set; }
 
         [NotMapped]
-        public int Days { get { return 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 - 1; } }
+        public int Days { get { return Id % 255; } }
         [NotMapped]
-        public double Time { get { return 0.3; } }
+        public double Time { get { return (double)Id / 100.0; } }
         [NotMapped]
-        public int Split { get { return 2; } }
+        public int Split { get { return Id % 7; } }
     }
 }
