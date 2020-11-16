@@ -40,12 +40,15 @@ namespace Time_planner_api.Helpers
                 int count = 0;
                 for (int i = 0; i < freeTimes.Length && count < task.Split; i++)
                 {
-                    int ind = freeTimes[i].FindIndex(x => x >= task.Time / task.Split);
-                    if (ind >= 0)
+                    for (int j = 0; j < freeTimes[i].Count; j++)
                     {
-                        freeTimes[i][ind] -= task.Time / task.Split;
-                        dayTimes[i] = ind;
-                        count++;
+                        if (freeTimes[i][j] >= task.Time / task.Split && ((task.Days >> j) & 1) == 1)
+                        {
+                            freeTimes[i][j] -= task.Time / task.Split;
+                            dayTimes[i] = j;
+                            count++;
+                            break;
+                        }
                     }
                 }
             }
