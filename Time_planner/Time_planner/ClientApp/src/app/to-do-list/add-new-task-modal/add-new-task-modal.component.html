@@ -31,49 +31,6 @@
                     (valueChange)="onPriorityChange($event)">
     </kendo-combobox>
   </div>
-  <div style="padding-top: 10px;">
-    <label>
-      Add start and end date
-    </label>
-    <button *ngIf="addDatesOff" class="btn" style="background-color:transparent;" (click)="turnOnAddDates()"><i class="fa fa-toggle-off"></i></button>
-    <button *ngIf="!addDatesOff" class="btn" style="background-color:transparent" (click)="turnOffAddDates()"><i class="fa fa-toggle-on"></i></button>
-  </div>
-  <div *ngIf="!addDatesOff" style="display:grid">
-    <label style="padding-top: 10px;" for="name">
-      Start date <span class="required">*</span>
-    </label>
-    <div>
-      <input style="width:40%;margin-right:10px" type="date" id="startDate" name="startDate">
-      <input type="time" id="startDateTime" name="startDateTime" value="00:00">
-    </div>
-    <div *ngIf="startDateInvalid() && startDate.touched"
-         class="alert alert-danger">
-      <div>
-        Start date is reqired.
-      </div>
-    </div>
-  </div>
-  <div *ngIf="!addDatesOff" style="display:grid">
-    <label style="padding-top: 10px;" for="name">
-      End date <span class="required">*</span>
-    </label>
-    <div>
-      <input style="width:40%;margin-right:10px" type="date" id="endDate" name="endDate">
-      <input type="time" id="endDateTime" name="appt" value="00:00">
-    </div>
-    <div *ngIf="endDateInvalid() && endDate.touched"
-         class="alert alert-danger">
-      <div>
-        End date is reqired.
-      </div>
-    </div>
-    <div *ngIf="dateInvalid()"
-         class="alert alert-danger">
-      <div>
-        End date must be greathen than start date.
-      </div>
-    </div>
-  </div>
   <div style="float:right">
     <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
     <button style="margin-top:20px;" class="btn btn-primary" type="submit">Save</button>

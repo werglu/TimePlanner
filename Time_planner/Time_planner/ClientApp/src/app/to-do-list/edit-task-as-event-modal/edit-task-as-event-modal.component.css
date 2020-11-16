@@ -1,0 +1,33 @@
+@import "../../../colors.css";
+
+.btn-primary {
+  background-color: var(--yellow);
+}
+
+.fa-toggle-on {
+  font-size: 1.6rem;
+  color: var(--color-dark-green);
+}
+
+.fa-toggle-off {
+  font-size: 1.6rem;
+  color: var(--color-dark-green);
+}
+
+.fa-check-circle {
+  font-size: 1.6rem;
+  color: var(--color-light-green) !important;
+  text-shadow: 0 0 2px var(--color-light-green);
+}
+
+.fa-circle {
+  font-size: 1.5rem;
+  text-shadow: 0 0 4px black;
+  color: white !important;
+}
+
+.checkButton {
+  padding: 0px;
+  background-color: transparent;
+  margin-left: 27px;
+}

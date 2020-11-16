@@ -1,7 +1,7 @@
 <form [formGroup]="editEventForm" (ngSubmit)="onSubmit()">
   <div>
     <label>
-      Set as public
+      Set as public <i class=" fa fa-info-circle"><span class="tooltiptext">When event is public all your friends can see it.</span></i>
     </label>
     <button *ngIf="!isPublic" class="btn" style="background-color:transparent;" (click)="changeVisibility()"><i class="fa fa-toggle-off"></i></button>
     <button *ngIf="isPublic" class="btn" style="background-color:transparent;" (click)="changeVisibility()"><i class="fa fa-toggle-on"></i></button>
@@ -55,7 +55,7 @@
     </div>
   </div>
   <div style="display:grid">
-    <label style="padding-top:10px;" for="city">
+    <label style="padding-top:10px;" for="name">
       City <span class="required">*</span>
     </label>
     <input style="width:50%;" id="city" type="text" formControlName="city" required>
@@ -67,7 +67,7 @@
     </div>
   </div>
   <div style="display:grid">
-    <label style="padding-top:10px;" for="streetAddress">
+    <label style="padding-top:10px;" for="name">
       Street address <span class="required">*</span>
     </label>
     <input style="width:70%;" id="streetAddress" type="text" formControlName="streetAddress" required>
@@ -83,4 +83,3 @@
     <button style="margin-top:20px;" class="btn btn-primary" type="submit">Save</button>
   </div>
 </form>
-

@@ -5,7 +5,7 @@ i.navbar-brand {
   text-align: center;
   word-break: break-all;
   padding-bottom: 0px;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: var(--color-background);
 }
 
@@ -41,10 +41,10 @@ html {
 }
 
 
-  .dropdown-content a:hover {
-    background-color: #ddd;
-    color: var(--color-background);
-  }
+.dropdown-content a:hover {
+  background-color: #ddd;
+  color: var(--color-background);
+}
 
 .btn:focus {
   box-shadow: none;
@@ -74,22 +74,20 @@ input,
 .btn {
   width: 100%;
   border: none;
-  border-radius: 4px;
+  border-radius: 15px;
   margin: 5px 0;
-  opacity: 0.85;
   display: inline-block;
   font-size: 14px;
   text-decoration: none; /* remove underline from anchors */
 }
 
-  input:hover,
-  .btn:hover {
-    opacity: 1;
-  }
+input:hover,
+.btn:hover {
+  opacity: 1;
+}
 
-/* add appropriate colors to fb buttons */
+/* add appropriate colors to fb button */
 .fb {
-  padding: 6px;
-  background-color: #3B5998;
+  background-color: var(--color-facebook-button);
   color: white;
 }

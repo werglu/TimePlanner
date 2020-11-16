@@ -1,0 +1,93 @@
+<form [formGroup]="editTaskForm" (ngSubmit)="onSubmit()">
+  <div style="display:flex">
+    <label>
+      Mark as done
+    </label>
+    <div *ngIf="isDone">
+      <button class="btn checkButton" (click)="checked(false)"><i class="fa fa-check-circle"></i></button>
+    </div>
+    <div *ngIf="!isDone">
+      <button class="btn checkButton" (click)="checked(true)"><i class="fa fa-circle"></i></button>
+    </div>
+  </div>
+  <div style="display:grid">
+    <label style="padding-top: 10px;" for="category">
+      Category
+    </label>
+    <kendo-combobox [data]="listCategories"
+                    [value]="currentCategory"
+                    [textField]="'category'"
+                    [valueField]="'id'"
+                    (valueChange)="onCategoryChange($event)">
+    </kendo-combobox>
+  </div>
+  <div style="display:grid">
+    <label style="padding-top: 10px;" for="title">
+      Title <span class="required">*</span>
+    </label>
+    <input id="title" type="text" formControlName="title" [value]="editedTask.title" required>
+    <div *ngIf="title.invalid && (title.dirty || title.touched) && title.value == null"
+         class="alert alert-danger">
+      <div *ngIf="title.errors.required">
+        Title is required.
+      </div>
+    </div>
+  </div>
+  <div style="display:grid" *ngIf="this.currentTask != null">
+    <label for="priority" style="padding-top: 10px;">
+      Choose priority:
+    </label>
+    <kendo-combobox [data]="priorities"
+                    [value]="priorities[this.currentTask.priority]"
+                    (valueChange)="onPriorityChange($event)">
+    </kendo-combobox>
+  </div>
+  <div style="padding-top: 10px;" *ngIf="getStartDate() == null" >
+    <label>
+      Add start and end date
+    </label>
+    <button *ngIf="addDatesOff" class="btn" style="background-color:transparent;" (click)="turnOnAddDates()"><i class="fa fa-toggle-off"></i></button>
+    <button *ngIf="!addDatesOff" class="btn" style="background-color:transparent" (click)="turnOffAddDates()"><i class="fa fa-toggle-on"></i></button>
+  </div>
+  <div *ngIf="!addDatesOff || getStartDate() != null"  style="display:grid">
+    <label style="padding-top: 10px;" for="name">
+      Start date <span class="required">*</span>
+    </label>
+    <div>
+      <input style="width:40%;margin-right:10px" type="date" id="startDate" name="startDate" [value]="getStartDate()">
+      <input type="time" id="startDateTime" name="startDateTime" value="00:00" [value]="getStartTime()">
+    </div>
+    <div *ngIf="startDateInvalid() && startDate.touched"
+         class="alert alert-danger">
+      <div>
+        Start date is reqired.
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!addDatesOff || getStartDate() != null" style="display:grid">
+    <label style="padding-top: 10px;" for="name">
+      End date <span class="required">*</span>
+    </label>
+    <div>
+      <input style="width:40%;margin-right:10px" type="date" id="endDate" name="endDate" [value]="getEndDate()">
+      <input type="time" id="endDateTime" name="appt" value="00:00" [value]="getEndTime()">
+    </div>
+    <div *ngIf="endDateInvalid() && endDate.touched"
+         class="alert alert-danger">
+      <div>
+        End date is reqired.
+      </div>
+    </div>
+    <div *ngIf="dateInvalid()"
+         class="alert alert-danger">
+      <div>
+        End date must be greathen than start date.
+      </div>
+    </div>
+  </div>
+  <div style="float:right">
+    <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    <button style="margin-top:20px;" class="btn btn-primary" type="submit">Save</button>
+  </div>
+</form>
+

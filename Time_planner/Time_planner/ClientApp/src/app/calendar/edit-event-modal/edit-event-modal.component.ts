@@ -125,7 +125,7 @@ export class EditEventModalComponent implements OnInit {
   dateInvalid(): boolean {
     var startDate = this.setDate('startDate');
     var endDate = this.setDate('endDate');
-    if (startDate > endDate) {
+    if (startDate >= endDate) {
       return true;
     }
     return false;
