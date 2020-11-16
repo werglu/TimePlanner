@@ -9,7 +9,7 @@ button {
 }
 
 .btn-secondary {
-  background-color: rgb(88, 164, 152);
+  background-color: var(--color-light-green);
 }
 
 i.fa {

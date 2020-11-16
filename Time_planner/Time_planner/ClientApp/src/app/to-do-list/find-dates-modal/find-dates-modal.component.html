@@ -1,0 +1,29 @@
+<form [formGroup]="findDatesForm" (ngSubmit)="onSubmit()">
+  <!--<label>!!!!!! {{ foundDates | json }} !!!!!!!!!!!</label>-->
+
+  <kendo-grid style="margin-top:30px;"
+              [kendoGridBinding]="foundDates"
+              [height]="510"
+              [sort]="sort"
+              [sortable]="true">
+    <kendo-grid-column field="title" title="To do">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <label>{{dataItem.task.title }}</label>
+      </ng-template>
+    </kendo-grid-column>
+    <!--<kendo-grid-column title="Delete" width="80">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div>
+          <button class="btn" style="background-color:transparent" (click)="removeTask(dataItem)"><i class="fa fa-trash" style="margin-left:8px;"></i></button>
+        </div>
+      </ng-template>
+    </kendo-grid-column>-->
+  </kendo-grid>
+
+  <div style="float:right">
+    <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    <button style="margin-top:20px;" class="btn btn-primary" type="submit">Save</button>
+  </div>
+
+</form>
+

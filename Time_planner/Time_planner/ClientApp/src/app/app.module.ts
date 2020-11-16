@@ -28,6 +28,7 @@ import { EditTaskModalComponent } from './to-do-list/edit-task-modal/edit-task-m
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import { LogoutComponent } from './logout/logout.component';
 import { AuthGuard } from './auth.guard';
+import { FindDatesModalComponent } from './to-do-list/find-dates-modal/find-dates-modal.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { AuthGuard } from './auth.guard';
     NotificationDetailsModalComponent,
     EditTaskModalComponent,
     AccessDeniedComponent,
-    LogoutComponent
+    LogoutComponent,
+    FindDatesModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
