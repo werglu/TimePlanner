@@ -23,21 +23,21 @@ namespace Time_planner_api.Controllers
         }
 
 
-        // GET: api/Events
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEvents()
+        // GET: api/Events/104416411457610
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<IEnumerable<Event>>> GetEvents(string userId)
         {
-            return await _context.Events.ToListAsync();
+            return await _context.Events.Where(e => e.OwnerId == userId).ToListAsync();          
         }
 
 
-        // GET: api/Events/2
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Event>> GetEvent(int id)
+        // GET: api/Events/104416411457610/2
+        [HttpGet("{userId}/{id}")]
+        public async Task<ActionResult<Event>> GetEvent(string userId, int id)
         {
             var ourEvent = await _context.Events.FindAsync(id);
 
-            if (ourEvent == null)
+            if (ourEvent == null || ourEvent.OwnerId != userId)
             {
                 return NotFound();
             }
@@ -55,7 +55,8 @@ namespace Time_planner_api.Controllers
                 EndDate= ourEvent.EndDate.ToLocalTime(),
                 City = ourEvent.City,
                 StreetAddress = ourEvent.StreetAddress,
-                IsPublic = ourEvent.IsPublic
+                IsPublic = ourEvent.IsPublic,
+                OwnerId = ourEvent.OwnerId
             }); 
 
             try
@@ -74,7 +75,7 @@ namespace Time_planner_api.Controllers
                 }
             }
 
-            return CreatedAtAction("GetEvent", new { id = ourEvent.Id }, ourEvent);
+            return CreatedAtAction("GetEvent", new {userId = ourEvent.OwnerId, id = ourEvent.Id }, ourEvent);
         }
 
         [HttpPut("{id}")]
@@ -88,6 +89,7 @@ namespace Time_planner_api.Controllers
             newEvent.City = oldEvent.City;
             newEvent.StreetAddress = oldEvent.StreetAddress;
             newEvent.IsPublic = oldEvent.IsPublic;
+            newEvent.OwnerId = oldEvent.OwnerId;
 
             _context.Entry(newEvent).State = EntityState.Modified;
 
