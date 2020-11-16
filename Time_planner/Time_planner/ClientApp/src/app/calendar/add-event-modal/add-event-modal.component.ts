@@ -2,6 +2,8 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Events } from '../events';
 import { EventsService } from '../events.service';
+import { Friend } from '../../shared/friend';
+import { UserService } from '../../user/user.service';
 
 @Component({
   selector: 'add-event-modal',
@@ -16,9 +18,11 @@ export class AddEventModalComponent implements OnInit {
   @Output() onSave = new EventEmitter<Events>();
   invalidDate = false;
   isPublic = false;
+  friends: Friend[];
 
   constructor(private formBuilder: FormBuilder,
-    public eventsService: EventsService) {
+    public eventsService: EventsService,
+    public userService: UserService) {
     this.editEventForm = this.formBuilder.group({
       title: ['', Validators.required],
       startDate: '',
@@ -26,6 +30,8 @@ export class AddEventModalComponent implements OnInit {
       city: [' ', Validators.required],
       streetAddress: [' ', Validators.required]
     });
+
+    this.friends = userService.getUserFriends();
   }
 
   get title() { return this.editEventForm.get('title'); }
@@ -129,5 +135,9 @@ export class AddEventModalComponent implements OnInit {
   changeVisibility() {
     this.isPublic = !this.isPublic;
     this.onChangeVisibility.emit(this.isPublic);
+  }
+
+  sendInvitation(friend: Friend) {
+    // TODO!
   }
 }
