@@ -183,10 +183,10 @@ namespace Time_planner_api.Controllers
                 }
             }
 
-            var freeTimes = new List<double>[7];
+            var freeTimes = new List<int>[7];
             for (int i = 0; i < freeTimes.Length; i++)
             {
-                freeTimes[i] = windows[i].Select(x => (x.Item2 - x.Item1).TotalMinutes).ToList();
+                freeTimes[i] = windows[i].Select(x => (int)((x.Item2 - x.Item1).TotalMinutes)).ToList();
             }
 
             var algorithmResult = WeekPlanHelper.FindBestWeekPlan(await _context.Tasks.Where(task => taskIds.Contains(task.Id)).ToListAsync(), freeTimes);
