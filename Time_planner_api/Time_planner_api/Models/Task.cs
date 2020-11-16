@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,5 +24,11 @@ namespace Time_planner_api.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
+        [NotMapped]
+        public int Days { get { return Id % 255; } }
+        [NotMapped]
+        public double Time { get { return (double)Id / 100.0; } }
+        [NotMapped]
+        public int Split { get { return Id % 7; } }
     }
 }

@@ -1,0 +1,20 @@
+@import "../../../colors.css";
+
+.btn-primary {
+  background-color: var(--yellow);
+}
+
+.pass-icon {
+}
+
+.notpassed {
+  color: var(--yellow)
+}
+
+.passed {
+  color: var(--color-light-green)
+}
+
+.overpassed {
+  color: var(--color-dark-green)
+}
