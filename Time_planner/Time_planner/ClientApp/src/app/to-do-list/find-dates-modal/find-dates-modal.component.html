@@ -1,0 +1,93 @@
+<form [formGroup]="findDatesForm" (ngSubmit)="onSubmit()">
+  <kendo-grid style="margin-top:30px;"
+              [kendoGridBinding]="foundDatesModel"
+              [height]="510">
+    <kendo-grid-column width="200" title="Task">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <label>
+          <i *ngIf="dataItem.count < (dataItem.task.split ? dataItem.task.split : 1)" class="fa fa-exclamation-triangle notpassed pass-check-icon"></i>
+          <i *ngIf="dataItem.count == (dataItem.task.split ? dataItem.task.split : 1)" class="fa fa-check-circle passed pass-check-icon"></i>
+          <i *ngIf="dataItem.count > (dataItem.task.split ? dataItem.task.split : 1)" class="fa fa-surprise overpassed pass-check-icon"></i>
+          &nbsp;{{ dataItem.task.title }} ({{ dataItem.count }}/{{dataItem.task.split ? dataItem.task.split : 1}})
+        </label>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column width="50" title="Mon">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div *ngIf="dataItem.dayTimes[0]">
+          <button title={{dataItem.infos[0]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 0)"><i class="fa fa-check"></i></button>
+        </div>
+        <div *ngIf="!dataItem.dayTimes[0]">
+          <button title={{dataItem.infos[0]}}  class="btn checkButton" (click)="checked(dataItem.task.id, 0)"><i class="fa fa-times"></i></button>
+        </div>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column width="50" title="Tue">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div *ngIf="dataItem.dayTimes[1]">
+          <button title={{dataItem.infos[1]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 1)"><i class="fa fa-check"></i></button>
+        </div>
+        <div *ngIf="!dataItem.dayTimes[1]">
+          <button title={{dataItem.infos[1]}} class="btn checkButton" (click)="checked(dataItem.task.id, 1)"><i class="fa fa-times"></i></button>
+        </div>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column width="50" title="Wed">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div *ngIf="dataItem.dayTimes[2]">
+          <button title={{dataItem.infos[2]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 2)"><i class="fa fa-check"></i></button>
+        </div>
+        <div *ngIf="!dataItem.dayTimes[2]">
+          <button title={{dataItem.infos[2]}} class="btn checkButton" (click)="checked(dataItem.task.id, 2)"><i class="fa fa-times"></i></button>
+        </div>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column width="50" title="Thu">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div *ngIf="dataItem.dayTimes[3]">
+          <button title={{dataItem.infos[3]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 3)"><i class="fa fa-check"></i></button>
+        </div>
+        <div *ngIf="!dataItem.dayTimes[3]">
+          <button title={{dataItem.infos[3]}} class="btn checkButton" (click)="checked(dataItem.task.id, 3)"><i class="fa fa-times"></i></button>
+        </div>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column width="50" title="Fri">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div *ngIf="dataItem.dayTimes[4]">
+          <button title={{dataItem.infos[4]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 4)"><i class="fa fa-check"></i></button>
+        </div>
+        <div *ngIf="!dataItem.dayTimes[4]">
+          <button title={{dataItem.infos[4]}} class="btn checkButton" (click)="checked(dataItem.task.id, 4)"><i class="fa fa-times"></i></button>
+        </div>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column width="50" title="Sat">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div *ngIf="dataItem.dayTimes[5]">
+          <button title={{dataItem.infos[5]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 5)"><i class="fa fa-check"></i></button>
+        </div>
+        <div *ngIf="!dataItem.dayTimes[5]">
+          <button title={{dataItem.infos[5]}} class="btn checkButton" (click)="checked(dataItem.task.id, 5)"><i class="fa fa-times"></i></button>
+        </div>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column width="50" title="Sun">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div *ngIf="dataItem.dayTimes[6]">
+          <button title={{dataItem.infos[6]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 6)"><i class="fa fa-check"></i></button>
+        </div>
+        <div *ngIf="!dataItem.dayTimes[6]">
+          <button title={{dataItem.infos[6]}} class="btn checkButton" (click)="checked(dataItem.task.id, 6)"><i class="fa fa-times"></i></button>
+        </div>
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid>
+
+  <div style="float:right">
+    <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    <button style="margin-top:20px;" class="btn btn-primary" type="submit">Save</button>
+  </div>
+
+</form>
+

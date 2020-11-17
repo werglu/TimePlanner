@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,5 +24,16 @@ namespace Time_planner_api.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
+        public DateTime? Date0 { get; set; }
+        public DateTime? Date1 { get; set; }
+        public DateTime? Date2 { get; set; }
+        public DateTime? Date3 { get; set; }
+        public DateTime? Date4 { get; set; }
+        public DateTime? Date5 { get; set; }
+        public DateTime? Date6 { get; set; }
+
+        public int? Days { get; set; }
+        public int? Time { get; set; }
+        public int? Split { get; set; }
     }
 }

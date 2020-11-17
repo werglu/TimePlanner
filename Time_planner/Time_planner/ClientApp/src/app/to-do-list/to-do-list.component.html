@@ -10,13 +10,17 @@
                         (valueChange)="onCategoryChange($event)">
     </kendo-dropdownlist>
     <button style="margin-left:30px;" class="btn btn-primary" (click)="openAddNewCategoryModal()"><i style="padding-right:7px;font-size:1.1rem" class="fa fa-plus"></i>Add new category</button>
+    <button style="margin-left:30px;" class="btn btn-secondary" (click)="findDates()"><i style="padding-right:7px;font-size:1.1rem" class="fa fa-calendar"></i>Find dates for {{ mySelection.length }} task(s)</button>
   </div>
 
   <kendo-grid style="margin-top:30px;"
               [kendoGridBinding]="gridData"
               [height]="510"
               [sort]="sort"
-              [sortable]="true">
+              [sortable]="true"
+              kendoGridSelectBy="id"
+              [selectable]="true"
+              [selectedKeys]="mySelection">
     <kendo-grid-column field="isDone" width="110" title="Is Done">
       <ng-template kendoGridCellTemplate let-dataItem>
         <div *ngIf="dataItem.isDone">
@@ -87,4 +91,8 @@
     <div><span class="k-icon k-i-user"></span>Edit task</div>
   </kendo-dialog-titlebar>
   <edit-task-modal [editedTask]="currentTask" (onCancel)="closeOpenTaskModal()" (onSave)="editTask($event)"></edit-task-modal>
+</kendo-dialog>
+
+<kendo-dialog title="Week plan proposition" *ngIf="findDatesModalVisible" (close)="closeFindDatesModal()" [minWidth]="250" [width]="700">
+  <find-dates-modal (onCancel)="closeFindDatesModal()" (onSave)="saveDates($event)" [foundDates]="foundDates"></find-dates-modal>
 </kendo-dialog>
