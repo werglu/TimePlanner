@@ -1,9 +1,7 @@
 <form [formGroup]="findDatesForm" (ngSubmit)="onSubmit()">
   <kendo-grid style="margin-top:30px;"
               [kendoGridBinding]="foundDatesModel"
-              [height]="510"
-              [sort]="sort"
-              [sortable]="true">
+              [height]="510">
     <kendo-grid-column width="200" title="Task">
       <ng-template kendoGridCellTemplate let-dataItem>
         <label>
