@@ -1,93 +1,113 @@
-<form [formGroup]="findDatesForm" (ngSubmit)="onSubmit()">
+<div>
   <kendo-grid style="margin-top:30px;"
               [kendoGridBinding]="foundDatesModel"
-              [height]="510">
-    <kendo-grid-column width="200" title="Task">
+              [height]="510"
+              [resizable]="true"
+             >
+    <kendo-grid-column  title="Task" [minResizableWidth]="50">
       <ng-template kendoGridCellTemplate let-dataItem>
         <label>
-          <i *ngIf="dataItem.count < (dataItem.task.split ? dataItem.task.split : 1)" class="fa fa-exclamation-triangle notpassed pass-check-icon"></i>
-          <i *ngIf="dataItem.count == (dataItem.task.split ? dataItem.task.split : 1)" class="fa fa-check-circle passed pass-check-icon"></i>
-          <i *ngIf="dataItem.count > (dataItem.task.split ? dataItem.task.split : 1)" class="fa fa-arrow-circle-up overpassed pass-check-icon"></i>
+          <i *ngIf="dataItem.count < (dataItem.task.split ? dataItem.task.split : 1)" class="fa fa-exclamation-triangle notpassed pass-check-icon">
+            <span class="tooltiptext">
+              Not all parts of task will be executed in planned week. You can change it by selecting more days on the right.
+            </span>
+          </i>
+          <i *ngIf="dataItem.count == (dataItem.task.split ? dataItem.task.split : 1)" class="fa fa-check-circle passed pass-check-icon">
+            <span class="tooltiptext">
+              All parts of task will be executed in planned week.
+            </span>
+          </i>
+          <i *ngIf="dataItem.count > (dataItem.task.split ? dataItem.task.split : 1)" class="fa fa-arrow-circle-up overpassed pass-check-icon">
+            <span class="tooltiptext">
+              You selected more days than planned for this task. You can change it by unselecting some days on the right.
+            </span>
+          </i>
           &nbsp;{{ dataItem.task.title }} ({{ dataItem.count }}/{{dataItem.task.split ? dataItem.task.split : 1}})
         </label>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column width="50" title="Mon">
+    <kendo-grid-column width="58" title="Mon" [minResizableWidth]="50">
       <ng-template kendoGridCellTemplate let-dataItem>
         <div *ngIf="dataItem.dayTimes[0]">
-          <button title={{dataItem.infos[0]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 0)"><i class="fa fa-check"></i></button>
+          <button class="btn checkButton" (click)="unchecked(dataItem.task.id, 0)"><i class="fa fa-check"><span class="tooltiptext">{{dataItem.infos[0]}}</span></i></button>
         </div>
         <div *ngIf="!dataItem.dayTimes[0]">
-          <button title={{dataItem.infos[0]}}  class="btn checkButton" (click)="checked(dataItem.task.id, 0)"><i class="fa fa-times"></i></button>
+          <button class="btn checkButton" (click)="checked(dataItem.task.id, 0)">
+            <i class="fa fa-times">
+              <span class="tooltiptext">
+                {{dataItem.infos[0]}}
+              </span>
+            </i>
+          </button>
         </div>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column width="50" title="Tue">
+    <kendo-grid-column width="57" title="Tue" [minResizableWidth]="50">
       <ng-template kendoGridCellTemplate let-dataItem>
         <div *ngIf="dataItem.dayTimes[1]">
-          <button title={{dataItem.infos[1]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 1)"><i class="fa fa-check"></i></button>
+          <button class="btn checkButton" (click)="unchecked(dataItem.task.id, 1)"><i class="fa fa-check"><span class="tooltiptext">{{dataItem.infos[1]}}</span></i></button>
         </div>
         <div *ngIf="!dataItem.dayTimes[1]">
-          <button title={{dataItem.infos[1]}} class="btn checkButton" (click)="checked(dataItem.task.id, 1)"><i class="fa fa-times"></i></button>
+          <button class="btn checkButton" (click)="checked(dataItem.task.id, 1)"><i class="fa fa-times"><span class="tooltiptext">{{dataItem.infos[1]}}</span></i></button>
         </div>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column width="50" title="Wed">
+    <kendo-grid-column width="58" title="Wed" [minResizableWidth]="50">
       <ng-template kendoGridCellTemplate let-dataItem>
         <div *ngIf="dataItem.dayTimes[2]">
-          <button title={{dataItem.infos[2]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 2)"><i class="fa fa-check"></i></button>
+          <button class="btn checkButton" (click)="unchecked(dataItem.task.id, 2)"><i class="fa fa-check"><span class="tooltiptext">{{dataItem.infos[2]}}</span></i></button>
         </div>
         <div *ngIf="!dataItem.dayTimes[2]">
-          <button title={{dataItem.infos[2]}} class="btn checkButton" (click)="checked(dataItem.task.id, 2)"><i class="fa fa-times"></i></button>
+          <button class="btn checkButton" (click)="checked(dataItem.task.id, 2)"><i class="fa fa-times"><span class="tooltiptext">{{dataItem.infos[2]}}</span></i></button>
         </div>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column width="50" title="Thu">
+    <kendo-grid-column width="57" title="Thu" [minResizableWidth]="50">
       <ng-template kendoGridCellTemplate let-dataItem>
         <div *ngIf="dataItem.dayTimes[3]">
-          <button title={{dataItem.infos[3]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 3)"><i class="fa fa-check"></i></button>
+          <button class="btn checkButton" (click)="unchecked(dataItem.task.id, 3)"><i class="fa fa-check"><span class="tooltiptext">{{dataItem.infos[3]}}</span></i></button>
         </div>
         <div *ngIf="!dataItem.dayTimes[3]">
-          <button title={{dataItem.infos[3]}} class="btn checkButton" (click)="checked(dataItem.task.id, 3)"><i class="fa fa-times"></i></button>
+          <button class="btn checkButton" (click)="checked(dataItem.task.id, 3)"><i class="fa fa-times"><span class="tooltiptext">{{dataItem.infos[3]}}</span></i></button>
         </div>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column width="50" title="Fri">
+    <kendo-grid-column width="57" title="Fri" [minResizableWidth]="50">
       <ng-template kendoGridCellTemplate let-dataItem>
         <div *ngIf="dataItem.dayTimes[4]">
-          <button title={{dataItem.infos[4]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 4)"><i class="fa fa-check"></i></button>
+          <button class="btn checkButton" (click)="unchecked(dataItem.task.id, 4)"><i class="fa fa-check"><span class="tooltiptext">{{dataItem.infos[4]}}</span></i></button>
         </div>
         <div *ngIf="!dataItem.dayTimes[4]">
-          <button title={{dataItem.infos[4]}} class="btn checkButton" (click)="checked(dataItem.task.id, 4)"><i class="fa fa-times"></i></button>
+          <button class="btn checkButton" (click)="checked(dataItem.task.id, 4)"><i class="fa fa-times"><span class="tooltiptext">{{dataItem.infos[4]}}</span></i></button>
         </div>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column width="50" title="Sat">
+    <kendo-grid-column width="57" title="Sat" [minResizableWidth]="50">
       <ng-template kendoGridCellTemplate let-dataItem>
         <div *ngIf="dataItem.dayTimes[5]">
-          <button title={{dataItem.infos[5]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 5)"><i class="fa fa-check"></i></button>
+          <button class="btn checkButton" (click)="unchecked(dataItem.task.id, 5)"><i class="fa fa-check saturday"><span class="tooltiptext" style="margin-left:-90px;">{{dataItem.infos[5]}}</span></i></button>
         </div>
         <div *ngIf="!dataItem.dayTimes[5]">
-          <button title={{dataItem.infos[5]}} class="btn checkButton" (click)="checked(dataItem.task.id, 5)"><i class="fa fa-times"></i></button>
+          <button class="btn checkButton" (click)="checked(dataItem.task.id, 5)"><i class="fa fa-times saturday"><span class="tooltiptext" style="margin-left:-90px;">{{dataItem.infos[5]}}</span></i></button>
         </div>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column width="50" title="Sun">
+    <kendo-grid-column width="58" title="Sun" [minResizableWidth]="50">
       <ng-template kendoGridCellTemplate let-dataItem>
         <div *ngIf="dataItem.dayTimes[6]">
-          <button title={{dataItem.infos[6]}} class="btn checkButton" (click)="unchecked(dataItem.task.id, 6)"><i class="fa fa-check"></i></button>
+          <button class="btn checkButton" (click)="unchecked(dataItem.task.id, 6)"><i class="fa fa-check sunday"><span class="tooltiptext" style="margin-left:-144px;">{{dataItem.infos[6]}}</span></i></button>
         </div>
         <div *ngIf="!dataItem.dayTimes[6]">
-          <button title={{dataItem.infos[6]}} class="btn checkButton" (click)="checked(dataItem.task.id, 6)"><i class="fa fa-times"></i></button>
+          <button class="btn checkButton" (click)="checked(dataItem.task.id, 6)"><i class="fa fa-times sunday"><span class="tooltiptext" style="margin-left:-144px;">{{dataItem.infos[6]}}</span></i></button>
         </div>
       </ng-template>
     </kendo-grid-column>
   </kendo-grid>
-
+</div>
   <div style="float:right">
     <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
-    <button style="margin-top:20px;" class="btn btn-primary" type="submit">Save</button>
+    <button style="margin-top:20px;" class="btn btn-primary" type="submit" (click)="onSubmit()">Save</button>
   </div>
 
-</form>
+
 

@@ -9,15 +9,13 @@
                         [valueField]="'id'"
                         (valueChange)="onCategoryChange($event)">
     </kendo-dropdownlist>
-    <button style="margin-left:30px;" class="btn btn-primary" (click)="openAddNewCategoryModal()"><i style="padding-right:7px;font-size:1.1rem" class="fa fa-plus"></i>Add new category</button>
-    <button style="margin-left:30px;" class="btn btn-secondary" (click)="findDates()"><i style="padding-right:7px;font-size:1.1rem" class="fa fa-calendar"></i>Find dates for {{ mySelection.length }} task(s)</button>
-    <button *ngIf="gridData.length > mySelection.length" style="margin-left:30px;" class="btn btn-info" (click)="selectAll()"><i style="padding-right:7px;font-size:1.1rem" class="fa fa-check-square-o"></i>Select all</button>
-    <button *ngIf="gridData.length <= mySelection.length" style="margin-left:30px;" class="btn btn-info" (click)="deselectAll()"><i style="padding-right:7px;font-size:1.1rem" class="fa fa-minus-square-o"></i>Deselect all</button>
+    <button style="margin-left:30px;" class="btn btn-primary" (click)="openAddNewCategoryModal()"><i class="fa fa-plus"></i>Add new category</button>
+    <button style="margin-left:30px;" class="btn btn-secondary" (click)="findDates()"><i class="fa fa-calendar"></i>Find dates for {{ mySelection.length }} task(s)</button>
   </div>
 
   <kendo-grid style="margin-top:30px;"
               [kendoGridBinding]="gridData"
-              [height]="510"
+              [height]="560"
               [sort]="sort"
               [sortable]="true"
               kendoGridSelectBy="id"
@@ -75,10 +73,11 @@
   </kendo-grid>
 
   <div style="float:right">
+    <button *ngIf="gridData.length > mySelection.length" style="margin-right:30px;margin-top:20px;" class="btn btn-secondary" (click)="selectAll()"><i class="fa fa-check-square-o"></i>Select all</button>
+    <button *ngIf="gridData.length <= mySelection.length" style="margin-right:30px;margin-top:20px;" class="btn btn-secondary" (click)="unselectAll()">Unselect all</button>
     <button style="margin-top:20px;" class="btn btn-primary" (click)="openAddNewTaskModal()"><i style="padding-right:7px;font-size:1.1rem" class="fa fa-plus"></i>Add to-do</button>
   </div>
 </div>
-
 
 <kendo-dialog title="Add new category" *ngIf="addNewCategoryModalVisible" (close)="closeAddNewCategoryModal()" [minWidth]="250" [width]="450">
   <add-new-category-modal (onCancel)="closeAddNewCategoryModal()" (onSave)="addCategory($event)"></add-new-category-modal>

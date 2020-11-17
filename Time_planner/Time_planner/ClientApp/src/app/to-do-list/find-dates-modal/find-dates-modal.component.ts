@@ -1,5 +1,4 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { TaskAssignmentProposition } from '../taskAssignmentProposition';
 import { TaskAssignment } from '../taskAssignment';
 import { TasksService } from '../tasks.service';
@@ -13,20 +12,13 @@ import { TaskAssignmentSave } from '../taskAssignmentSave';
 })
 
 export class FindDatesModalComponent implements OnInit {
-  findDatesForm: FormGroup;
   public foundDatesModel: Array<TaskAssignment> = [];
   @Input() foundDates: Array<TaskAssignmentProposition>;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<TaskAssignmentSave[]>();
 
-  constructor(private formBuilder: FormBuilder,
-    private tasksService: TasksService) {
-    this.findDatesForm = this.formBuilder.group({
-      name: ['', Validators.required]
-    });
+  constructor(private tasksService: TasksService) {
   }
-
-  get name() { return this.findDatesForm.get('name'); }
 
   ngOnInit(): void {
     this.foundDates.forEach(taskAssignmentProposition => {
