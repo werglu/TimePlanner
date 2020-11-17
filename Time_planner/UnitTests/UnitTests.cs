@@ -19,7 +19,7 @@ namespace UnitTests
                 context.Events.Add(new Time_planner_api.Models.Event() { Id = 1, StartDate = new DateTime(), EndDate = new DateTime(), Title = "Event1" });
                 context.SaveChanges();
                 var controller = new EventsController(context);
-                var result = await controller.GetEvents();
+                var result = await controller.GetEvents("1");
                 var count = result.Value.Count();
                 var value = result.Value.ToArray();
                 Assert.Equal(1, count);

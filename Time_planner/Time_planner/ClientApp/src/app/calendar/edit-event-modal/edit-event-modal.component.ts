@@ -4,6 +4,8 @@ import { CalendarEvent } from 'angular-calendar';
 import { Events } from '../events';
 import { EventsService } from '../events.service';
 
+declare var FB: any;
+
 @Component({
   selector: 'edit-event-modal',
   templateUrl: './edit-event-modal.component.html',
@@ -14,6 +16,7 @@ export class EditEventModalComponent implements OnInit {
   editEventForm: FormGroup;
   currentEvent: Events;
   isPublic: boolean;
+  userId: string;
   @Input() editedEvent: CalendarEvent;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Events>();
@@ -39,13 +42,33 @@ export class EditEventModalComponent implements OnInit {
   get streetAddress() { return this.editEventForm.get('streetAddress'); }
 
   ngOnInit(): void {
-    if (this.editedEvent.id != null) {
-      this.eventsService.getEvent(Number(this.editedEvent.id)).subscribe((event) => {
-        this.currentEvent = event;
-        this.isPublic = event.isPublic;
-        this.onChangeVisibility.emit(this.isPublic);
+    (window as any).fbAsyncInit = () => {
+      FB.init({
+        appId: '343708573552335',
+        cookie: true,
+        xfbml: true,
+        version: 'v8.0',
       });
+
+      (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
     }
+
+    FB.api('/me', (response) => {
+      this.userId = response.id;
+      if (this.editedEvent.id != null) {
+        this.eventsService.getEvent(this.userId, Number(this.editedEvent.id)).subscribe((event) => {
+          this.currentEvent = event;
+          this.isPublic = event.isPublic;
+          this.onChangeVisibility.emit(this.isPublic);
+        });
+      }
+    });
   }
 
   validateAllFormControls(formGroup: FormGroup) {
@@ -104,7 +127,9 @@ export class EditEventModalComponent implements OnInit {
       city: (<HTMLInputElement>document.getElementById('city')).value,
       streetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value,
       latitude: 0.0,
-      longitude: 0.0
+      longitude: 0.0,
+      owner: this.currentEvent.owner,
+      ownerId: this.currentEvent.ownerId
     };
   }
 
