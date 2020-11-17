@@ -227,13 +227,18 @@ namespace Time_planner_api.Controllers
             return planningResult;
         }
 
-        // PUT: api/Tasks/weekplan
+        // PUT: api/Tasks/saveDates
         [HttpPut]
         [Route("saveDates")]
         public async Task<ActionResult<IEnumerable<Models.TaskAssignmentSave>>> SaveDates(List<TaskAssignmentSave> tasksToSave)
         {
             foreach (var task in tasksToSave)
             {
+                if (!TaskExists(task.TaskId))
+                {
+                    return NotFound();
+                }
+
                 Models.Task newTask = _context.Tasks.Where(t => t.Id == task.TaskId).Single<Models.Task>();
 
                 newTask.Date0 = task.DayTimes[0] ? GetDate(0) : DateTime.MinValue;
