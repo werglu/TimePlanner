@@ -148,7 +148,7 @@ export class ToDoListComponent implements OnInit {
     this.gridData.forEach(item => this.mySelection.push(item.id));
   }
 
-  deselectAll() {
+  unselectAll() {
     this.mySelection = [];
   }
 }

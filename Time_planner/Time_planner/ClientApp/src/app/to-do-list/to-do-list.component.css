@@ -13,7 +13,7 @@ button {
 }
 
 .btn-info {
-  background-color: var(--color-greyish);
+  background-color: var(--color-light-green);
   border: none;
 }
 
@@ -39,6 +39,7 @@ h2 {
   color: var(--color-light-green) !important;
   text-shadow: 0 0 2px var(--color-light-green);
 }
+
 .fa-circle {
   font-size: 1.5rem;
   text-shadow: 0 0 4px black;
@@ -57,4 +58,24 @@ h2 {
 
 .link:hover {
     cursor:pointer;
+}
+
+.fa-check-square-o {
+  padding-right: 7px;
+  font-size: 1.1rem;
+}
+
+fa-minus-square-o {
+  padding-right: 7px;
+  font-size: 1.1rem;
+}
+
+.fa-plus {
+  padding-right: 7px;
+  font-size: 1.1rem;
+}
+
+.fa-calendar {
+  padding-right: 7px;
+  font-size: 1.1rem;
 }

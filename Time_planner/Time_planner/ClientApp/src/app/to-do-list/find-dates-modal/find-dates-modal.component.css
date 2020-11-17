@@ -18,3 +18,64 @@
 .overpassed {
   color: var(--color-dark-green)
 }
+
+
+/*tooltip*/
+.pass-check-icon, .fa-check, .fa-times {
+  margin-left: 2px;
+  display: inline-block;
+}
+
+.pass-check-icon .tooltiptext, .fa-check .tooltiptext, .fa-times .tooltiptext {
+  visibility: hidden;
+  width: 160px;
+  opacity: 0.9;
+  margin-top: 20px;
+  margin-left: -23px;
+  background-color: var(--color-light-green);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: smaller;
+}
+
+.pass-check-icon .tooltiptext::after, .fa-check .tooltiptext::after, .fa-times .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -61px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent var(--color-light-green) transparent;
+}
+
+.sunday .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: 61px !important;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent var(--color-light-green) transparent;
+}
+
+.saturday .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: 0px !important;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent var(--color-light-green) transparent;
+}
+
+.pass-check-icon:hover .tooltiptext, .fa-check:hover .tooltiptext, .fa-times:hover .tooltiptext {
+  visibility: visible;
+}
