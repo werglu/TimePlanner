@@ -124,7 +124,10 @@ export class AddNewTaskModalComponent implements OnInit {
       categoryId: this.currentCategory.id,
       isDone: false,
       title: (<HTMLInputElement>document.getElementById('title')).value,
-      priority: this.choosenPriority
+      priority: this.choosenPriority,
+      split: this.choosenSplit,
+      days: this.choosenDays,
+      time: this.choosenHour * 60 + this.choosenMinute
     };
   }
   

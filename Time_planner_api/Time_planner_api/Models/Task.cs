@@ -40,10 +40,10 @@ namespace Time_planner_api.Models
         public DateTime? Date6 { get; set; }
 
         [NotMapped]
-        public int Days { get { return Id % 255; } }
+        public int? Days { get; set; }
         [NotMapped]
-        public int Time { get { return Id % 300; } }
+        public int? Time { get; set; }
         [NotMapped]
-        public int Split { get { return Id % 7 + 1; } }
+        public int? Split { get; set; }
     }
 }

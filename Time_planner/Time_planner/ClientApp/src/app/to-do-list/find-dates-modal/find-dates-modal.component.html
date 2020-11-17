@@ -7,10 +7,10 @@
     <kendo-grid-column width="200" title="Task">
       <ng-template kendoGridCellTemplate let-dataItem>
         <label>
-          <i *ngIf="dataItem.count < dataItem.task.split" class="fa fa-exclamation-triangle notpassed pass-check-icon"></i>
-          <i *ngIf="dataItem.count == dataItem.task.split" class="fa fa-check-circle passed pass-check-icon"></i>
-          <i *ngIf="dataItem.count > dataItem.task.split" class="fa fa-surprise overpassed pass-check-icon"></i>
-          &nbsp;{{ dataItem.task.title }} ({{ dataItem.count }}/{{dataItem.task.split}})
+          <i *ngIf="dataItem.count < (dataItem.task.split ? dataItem.task.split : 1)" class="fa fa-exclamation-triangle notpassed pass-check-icon"></i>
+          <i *ngIf="dataItem.count == (dataItem.task.split ? dataItem.task.split : 1)" class="fa fa-check-circle passed pass-check-icon"></i>
+          <i *ngIf="dataItem.count > (dataItem.task.split ? dataItem.task.split : 1)" class="fa fa-surprise overpassed pass-check-icon"></i>
+          &nbsp;{{ dataItem.task.title }} ({{ dataItem.count }}/{{dataItem.task.split ? dataItem.task.split : 1}})
         </label>
       </ng-template>
     </kendo-grid-column>

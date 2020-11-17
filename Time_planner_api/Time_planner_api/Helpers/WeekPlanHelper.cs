@@ -47,9 +47,9 @@ namespace Time_planner_api.Helpers
                     }
                     for (int j = 0; j < freeTimes[i].Count; j++)
                     {
-                        if (freeTimes[i][j] >= task.Time / task.Split && ((task.Days >> j) & 1) == 1)
+                        if (freeTimes[i][j] >= task.Time.Value / task.Split.Value && ((task.Days >> j) & 1) == 1)
                         {
-                            freeTimes[i][j] -= task.Time / task.Split;
+                            freeTimes[i][j] -= task.Time.Value / task.Split.Value;
                             dayTimes[i] = j;
                             count++;
                             break;
@@ -64,14 +64,14 @@ namespace Time_planner_api.Helpers
                 {
                     if (dayTimes[i] >= 0)
                     {
-                        freeTimes[i][dayTimes[i]] -= task.Time / task.Split;
+                        freeTimes[i][dayTimes[i]] -= task.Time.Value / task.Split.Value;
                     }
                 }
             }
 
             public int GetAssignedTime()
             {
-                return dayTimes.Count(x => x >= 0) * (task.Time / task.Split);
+                return dayTimes.Count(x => x >= 0) * (task.Time.Value / task.Split.Value);
             }
 
             public int GetTaskPriority()
@@ -106,7 +106,7 @@ namespace Time_planner_api.Helpers
 
         public static List<(Task, int[])> FindBestWeekPlan(List<Task> tasks, List<int>[] freeTimes, int iterationCount = 1, int populationCount = 20, double worstChromosoms = 0.75)
         {
-            var population = CreatePopulation(tasks, freeTimes, populationCount);
+            var population = CreatePopulation(tasks.Where(task => task.Time != null && task.Split != null && task.Days != null).ToList(), freeTimes, populationCount);
 
             while (iterationCount-- > 0)
             {
@@ -115,7 +115,7 @@ namespace Time_planner_api.Helpers
             }
 
             var bestChromosom = GetBestChromosom(population);
-            var assignedTasks = new List<(Task, int[])>();
+            var assignedTasks = GetTasksWithoutTime(tasks);
 
             foreach (var taskHelper in bestChromosom)
             {
@@ -123,6 +123,11 @@ namespace Time_planner_api.Helpers
             }
 
             return assignedTasks;
+        }
+
+        private static List<(Task, int[])> GetTasksWithoutTime(List<Task> tasks)
+        {
+            return tasks.Where(task => task.Time == null || task.Split == null || task.Days == null).Select(task2 => (task2, new int[] { -1, -1, -1, -1, -1, -1, -1 })).ToList();
         }
 
         private static List<List<TaskHelper>> CreatePopulation(List<Task> tasks, List<int>[] freeTimes, int populationCount)

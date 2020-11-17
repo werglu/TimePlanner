@@ -55,6 +55,16 @@ namespace Time_planner_api.Controllers
             newTask.Priority = task.Priority;
             newTask.StartDate = task.StartDate != null ? task.StartDate?.ToLocalTime() : task.StartDate;
             newTask.EndDate = task.EndDate != null ? task.EndDate?.ToLocalTime() : task.EndDate;
+            newTask.Date0 = task.Date0 != null ? task.Date0?.ToLocalTime() : task.Date0;
+            newTask.Date1 = task.Date1 != null ? task.Date1?.ToLocalTime() : task.Date1;
+            newTask.Date2 = task.Date2 != null ? task.Date2?.ToLocalTime() : task.Date2;
+            newTask.Date3 = task.Date3 != null ? task.Date3?.ToLocalTime() : task.Date3;
+            newTask.Date4 = task.Date4 != null ? task.Date4?.ToLocalTime() : task.Date4;
+            newTask.Date5 = task.Date5 != null ? task.Date5?.ToLocalTime() : task.Date5;
+            newTask.Date6 = task.Date6 != null ? task.Date6?.ToLocalTime() : task.Date6;
+            newTask.Days = task.Days;
+            newTask.Time = task.Time;
+            newTask.Split = task.Split;
 
             _context.Entry(newTask).State = EntityState.Modified;
 
@@ -89,7 +99,17 @@ namespace Time_planner_api.Controllers
                 Category = null,
                 Priority = task.Priority,
                 StartDate = task.StartDate == null ? null : task.StartDate?.ToLocalTime(),
-                EndDate = task.EndDate == null ? null : task.EndDate?.ToLocalTime()
+                EndDate = task.EndDate == null ? null : task.EndDate?.ToLocalTime(),
+                Date0 = task.Date0 == null ? null : task.Date0?.ToLocalTime(),
+                Date1 = task.Date1 == null ? null : task.Date1?.ToLocalTime(),
+                Date2 = task.Date2 == null ? null : task.Date2?.ToLocalTime(),
+                Date3 = task.Date3 == null ? null : task.Date3?.ToLocalTime(),
+                Date4 = task.Date4 == null ? null : task.Date4?.ToLocalTime(),
+                Date5 = task.Date5 == null ? null : task.Date5?.ToLocalTime(),
+                Date6 = task.Date6 == null ? null : task.Date6?.ToLocalTime(),
+                Days = task.Days,
+                Time = task.Time,
+                Split = task.Split
             });
 
             try
@@ -133,13 +153,11 @@ namespace Time_planner_api.Controllers
         [Route("weekplan")]
         public async Task<ActionResult<IEnumerable<Models.TaskAssignmentProposition>>> GetWeekPlannedTasks(List<int> taskIds, double startMinutes = 420.0, double endMinutes = 1320.0)
         {
-            var startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek) + 1); // starts from monday
-
             var events = new List<Event>[7];
             for (int i = 0; i < events.Length; i++)
             {
-                var begin = startOfWeek.AddDays(i);
-                var end = startOfWeek.AddDays(i + 1);
+                var begin = GetDate(i);
+                var end = GetDate(i + 1);
                 events[i] = await _context.Events.Where(ev => ev.StartDate < end && ev.EndDate >= begin).ToListAsync();
                 events[i].Sort((x, y) =>
                 {
@@ -154,9 +172,9 @@ namespace Time_planner_api.Controllers
             var windows = new List<(DateTime, DateTime)>[7];
             for (int i = 0; i < events.Length; i++)
             {
-                var currentWindowStart = startOfWeek.AddDays(i).AddMinutes(startMinutes);
+                var currentWindowStart = GetDate(i).AddMinutes(startMinutes);
                 windows[i] = new List<(DateTime, DateTime)>();
-                var dayEnd = startOfWeek.AddDays(i).AddMinutes(endMinutes);
+                var dayEnd = GetDate(i).AddMinutes(endMinutes);
                 foreach (var ev in events[i])
                 {
                     if (currentWindowStart < ev.StartDate)
@@ -217,9 +235,34 @@ namespace Time_planner_api.Controllers
             foreach (var task in tasksToSave)
             {
                 Models.Task newTask = _context.Tasks.Where(t => t.Id == task.TaskId).Single<Models.Task>();
-                // todo marta
-                //newTask.StartDate = task.StartDate != null ? task.StartDate?.ToLocalTime() : task.StartDate;
-                //newTask.EndDate = task.EndDate != null ? task.EndDate?.ToLocalTime() : task.EndDate;
+                if (task.DayTimes[0])
+                    newTask.Date0 = GetDate(0);
+                else
+                    newTask.Date0 = DateTime.MinValue;
+                if (task.DayTimes[1])
+                    newTask.Date1 = GetDate(1);
+                else
+                    newTask.Date0 = DateTime.MinValue;
+                if (task.DayTimes[2])
+                    newTask.Date2 = GetDate(2);
+                else
+                    newTask.Date0 = DateTime.MinValue;
+                if (task.DayTimes[3])
+                    newTask.Date3 = GetDate(3);
+                else
+                    newTask.Date0 = DateTime.MinValue;
+                if (task.DayTimes[4])
+                    newTask.Date4 = GetDate(4);
+                else
+                    newTask.Date0 = DateTime.MinValue;
+                if (task.DayTimes[5])
+                    newTask.Date5 = GetDate(5);
+                else
+                    newTask.Date0 = DateTime.MinValue;
+                if (task.DayTimes[6])
+                    newTask.Date6 = GetDate(6);
+                else
+                    newTask.Date0 = DateTime.MinValue;
 
                 _context.Entry(newTask).State = EntityState.Modified;
             }
@@ -239,6 +282,11 @@ namespace Time_planner_api.Controllers
         private bool TaskExists(int id)
         {
             return _context.Tasks.Any(t => t.Id == id);
+        }
+
+        private DateTime GetDate(int day)
+        {
+            return DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek) + 1).AddDays(day % 7); // starts from monday
         }
      
     }
