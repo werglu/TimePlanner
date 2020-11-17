@@ -12,6 +12,11 @@ button {
   background-color: var(--color-light-green);
 }
 
+.btn-info {
+  background-color: var(--color-greyish);
+  border: none;
+}
+
 i.fa {
   white-space: normal;
   text-align: center;
