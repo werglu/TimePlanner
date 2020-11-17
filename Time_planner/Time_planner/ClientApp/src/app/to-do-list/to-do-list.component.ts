@@ -142,4 +142,13 @@ export class ToDoListComponent implements OnInit {
   saveDates(taskAssignmentPropositions: any) {
     this.closeFindDatesModal();
   }
+
+  selectAll() {
+    this.mySelection = [];
+    this.gridData.forEach(item => this.mySelection.push(item.id));
+  }
+
+  deselectAll() {
+    this.mySelection = [];
+  }
 }
