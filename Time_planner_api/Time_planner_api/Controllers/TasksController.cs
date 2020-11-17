@@ -235,34 +235,15 @@ namespace Time_planner_api.Controllers
             foreach (var task in tasksToSave)
             {
                 Models.Task newTask = _context.Tasks.Where(t => t.Id == task.TaskId).Single<Models.Task>();
-                if (task.DayTimes[0])
-                    newTask.Date0 = GetDate(0);
-                else
-                    newTask.Date0 = DateTime.MinValue;
-                if (task.DayTimes[1])
-                    newTask.Date1 = GetDate(1);
-                else
-                    newTask.Date0 = DateTime.MinValue;
-                if (task.DayTimes[2])
-                    newTask.Date2 = GetDate(2);
-                else
-                    newTask.Date0 = DateTime.MinValue;
-                if (task.DayTimes[3])
-                    newTask.Date3 = GetDate(3);
-                else
-                    newTask.Date0 = DateTime.MinValue;
-                if (task.DayTimes[4])
-                    newTask.Date4 = GetDate(4);
-                else
-                    newTask.Date0 = DateTime.MinValue;
-                if (task.DayTimes[5])
-                    newTask.Date5 = GetDate(5);
-                else
-                    newTask.Date0 = DateTime.MinValue;
-                if (task.DayTimes[6])
-                    newTask.Date6 = GetDate(6);
-                else
-                    newTask.Date0 = DateTime.MinValue;
+
+                newTask.Date0 = task.DayTimes[0] ? GetDate(0) : DateTime.MinValue;
+                newTask.Date1 = task.DayTimes[1] ? GetDate(1) : DateTime.MinValue;
+                newTask.Date2 = task.DayTimes[2] ? GetDate(2) : DateTime.MinValue;
+                newTask.Date3 = task.DayTimes[3] ? GetDate(3) : DateTime.MinValue;
+                newTask.Date4 = task.DayTimes[4] ? GetDate(4) : DateTime.MinValue;
+                newTask.Date5 = task.DayTimes[5] ? GetDate(5) : DateTime.MinValue;
+                newTask.Date6 = task.DayTimes[6] ? GetDate(6) : DateTime.MinValue;
+
 
                 _context.Entry(newTask).State = EntityState.Modified;
             }

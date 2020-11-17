@@ -24,26 +24,16 @@ namespace Time_planner_api.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
-        [NotMapped]
         public DateTime? Date0 { get; set; }
-        [NotMapped]
         public DateTime? Date1 { get; set; }
-        [NotMapped]
         public DateTime? Date2 { get; set; }
-        [NotMapped]
         public DateTime? Date3 { get; set; }
-        [NotMapped]
         public DateTime? Date4 { get; set; }
-        [NotMapped]
         public DateTime? Date5 { get; set; }
-        [NotMapped]
         public DateTime? Date6 { get; set; }
 
-        [NotMapped]
         public int? Days { get; set; }
-        [NotMapped]
         public int? Time { get; set; }
-        [NotMapped]
         public int? Split { get; set; }
     }
 }
