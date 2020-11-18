@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace UnitTests
 {
-    public class UnitTests
+    public class EventControllerTests
     {
         [Fact]
         public async void CanGetAllEvents()
@@ -24,26 +24,6 @@ namespace UnitTests
                 var value = result.Value.ToArray();
                 Assert.Equal(1, count);
                 Assert.Equal("Event1", ((Time_planner_api.Models.Event)value[0]).Title);
-            }
-        }
-
-        [Fact]
-        public async void CanGetAllTasks()
-        {
-            var options = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(databaseName: "Test").Options;
-
-            using (var context = new DatabaseContext(options))
-            {
-                context.Tasks.Add(new Time_planner_api.Models.Task() { Id = 1, Category = new ListCategory() { Id = 1, Category = "CategoryName" },
-                    Title = "Task1", CategoryId = 1, IsDone = false });
-                context.SaveChanges();
-                var controller = new TasksController(context);
-                var result = await controller.GetTasks();
-                var count = result.Value.Count();
-                var value = result.Value.ToArray();
-                Assert.Equal(1, count);
-                Assert.Equal("Task1", ((Time_planner_api.Models.Task)value[0]).Title);
-                Assert.Equal(false, ((Time_planner_api.Models.Task)value[0]).IsDone);
             }
         }
     }

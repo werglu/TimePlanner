@@ -8,49 +8,49 @@ namespace Time_planner_api.Helpers
 {
     public class WeekPlanHelper
     {
-        private class TaskHelper
+        public class TaskHelper
         {
-            private Task task;
-            private int[] dayTimes;
+            public Task Task { get; set; }
+            public int[] DayTimes { get; set; }
 
             public TaskHelper(Task task)
             {
-                this.task = task;
+                this.Task = task;
                 Cleanup();
             }
 
             public TaskHelper(TaskHelper taskHelper)
             {
-                task = taskHelper.GetTask();
-                dayTimes = taskHelper.GetDayTimes();
+                Task = taskHelper.GetTask();
+                DayTimes = taskHelper.GetDayTimes();
             }
 
             public void AddAssignedTask(List<(Task, int[])> list)
             {
-                if (dayTimes.All(x => x < 0))
+                if (DayTimes.All(x => x < 0))
                 {
                     return;
                 }
-                list.Add((task, dayTimes));
+                list.Add((Task, DayTimes));
             }
 
             public void FindPlaceIfAny(List<int>[] freeTimes)
             {
                 // todo: optimize
                 int count = 0;
-                for (int i = 0; i < freeTimes.Length && count < task.Split; i++)
+                for (int i = 0; i < freeTimes.Length && count < Task.Split; i++)
                 {
-                    if (dayTimes[i] >= 0)
+                    if (DayTimes[i] >= 0)
                     {
                         count++;
                         continue;
                     }
                     for (int j = 0; j < freeTimes[i].Count; j++)
                     {
-                        if (freeTimes[i][j] >= task.Time.Value / task.Split.Value && ((task.Days >> j) & 1) == 1)
+                        if (freeTimes[i][j] >= Task.Time.Value / Task.Split.Value && ((Task.Days >> j) & 1) == 1)
                         {
-                            freeTimes[i][j] -= task.Time.Value / task.Split.Value;
-                            dayTimes[i] = j;
+                            freeTimes[i][j] -= Task.Time.Value / Task.Split.Value;
+                            DayTimes[i] = j;
                             count++;
                             break;
                         }
@@ -62,44 +62,44 @@ namespace Time_planner_api.Helpers
             {
                 for (int i = 0; i < freeTimes.Length; i++)
                 {
-                    if (dayTimes[i] >= 0)
+                    if (DayTimes[i] >= 0)
                     {
-                        freeTimes[i][dayTimes[i]] -= task.Time.Value / task.Split.Value;
+                        freeTimes[i][DayTimes[i]] -= Task.Time.Value / Task.Split.Value;
                     }
                 }
             }
 
             public int GetAssignedTime()
             {
-                return dayTimes.Count(x => x >= 0) * (task.Time.Value / task.Split.Value);
+                return DayTimes.Count(x => x >= 0) * (Task.Time.Value / Task.Split.Value);
             }
 
             public int GetTaskPriority()
             {
-                return task.Priority;
+                return Task.Priority;
             }
 
             public Task GetTask()
             {
-                return task;
+                return Task;
             }
 
             public int[] GetDayTimes()
             {
-                var result = new int[dayTimes.Length];
+                var result = new int[DayTimes.Length];
                 for (int i = 0; i < result.Length; i++)
                 {
-                    result[i] = dayTimes[i];
+                    result[i] = DayTimes[i];
                 }
                 return result;
             }
 
             public void Cleanup()
             {
-                dayTimes = new int[7];
-                for (int i = 0; i < dayTimes.Length; i++)
+                DayTimes = new int[7];
+                for (int i = 0; i < DayTimes.Length; i++)
                 {
-                    dayTimes[i] = -1;
+                    DayTimes[i] = -1;
                 }
             }
         }
@@ -151,8 +151,12 @@ namespace Time_planner_api.Helpers
             return population;
         }
 
-        private static void RemoveWorstChromosoms(List<List<TaskHelper>> population, double worstChromosoms)
+        public static void RemoveWorstChromosoms(List<List<TaskHelper>> population, double worstChromosoms)
         {
+            if (population.Count == 0)
+            {
+                return;
+            }
             population.Sort((x, y) => GetChromosomGoodness(y).CompareTo(GetChromosomGoodness(x)));
             var chromosomsToBeRemoved = (int)(worstChromosoms * (double)population.Count);
             var removeIndex = Math.Max(population.Count - (int)(worstChromosoms * (double)population.Count - 1), 0);
@@ -206,7 +210,7 @@ namespace Time_planner_api.Helpers
             population.AddRange(mutatedChromosoms);
         }
 
-        private static List<TaskHelper> GetBestChromosom(List<List<TaskHelper>> population)
+        public static List<TaskHelper> GetBestChromosom(List<List<TaskHelper>> population)
         {
             if (population.Count == 0)
             {
@@ -229,10 +233,10 @@ namespace Time_planner_api.Helpers
             return bestChromosom;
         }
 
-        private static int GetChromosomGoodness(List<TaskHelper> chromosom)
+        public static int GetChromosomGoodness(List<TaskHelper> chromosom)
         {
             // todo: do it better
-            return (int)(chromosom.Sum(taskHelper => taskHelper.GetTaskPriority() * taskHelper.GetAssignedTime()));
+            return (int)(chromosom.Sum(taskHelper => (3 - taskHelper.GetTaskPriority()) * taskHelper.GetAssignedTime()));
         }
     }
 }
