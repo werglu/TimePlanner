@@ -31,3 +31,13 @@
   background-color: transparent;
   margin-left: 27px;
 }
+
+.input-date {
+  width: 40%;
+  margin-right: 10px;
+}
+
+.parent-date {
+    padding: 2px;
+    display: grid;
+}

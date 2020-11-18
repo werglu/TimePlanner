@@ -100,21 +100,23 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   getTasks() {
     this.tasksService.getTasks().subscribe(t => {
       t.forEach(task => {
-        if (task.startDate != null) {
-          this.events.push({
-            id: task.id,
-            title: task.title,
-            start: new Date(task.startDate),
-            end: new Date(task.endDate),
-            actions: this.actions,
-            color: {
-              primary: '#2c786c',
-              secondary: '#ff9642'
-            },
-            meta: {
-              type: 'task'
-            }
-          })
+        for (var date of [task.date0, task.date1, task.date2, task.date3, task.date4, task.date5, task.date6]) {
+          if (date != null) {
+            this.events.push({
+              id: task.id,
+              title: task.title,
+              start: new Date(date),
+              end: new Date(date),
+              actions: this.actions,
+              color: {
+                primary: '#2c786c',
+                secondary: '#ff9642'
+              },
+              meta: {
+                type: 'task'
+              }
+            })
+          }
         }
       })
       this.refresh.next();
@@ -192,20 +194,24 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.closeOpenTaskModal();
     this.events = this.events.filter(e => e.id !== task.id);
     if (!task.isDone) {
-      this.events.push({
-        id: task.id,
-        title: task.title,
-        start: new Date(task.startDate),
-        end: new Date(task.endDate),
-        actions: this.actions,
-        color: {
-          primary: '#2c786c',
-          secondary: '#ff9642'
-        },
-        meta: {
-          type: 'task'
+      for (var date of [task.date0, task.date1, task.date2, task.date3, task.date4, task.date5, task.date6]) {
+        if (date != null) {
+          this.events.push({
+            id: task.id,
+            title: task.title,
+            start: new Date(date),
+            end: new Date(date),
+            actions: this.actions,
+            color: {
+              primary: '#2c786c',
+              secondary: '#ff9642'
+            },
+            meta: {
+              type: 'task'
+            }
+          });
         }
-      });
+      }
     }
     this.activeDayIsOpen = false;
     this.refresh.next();
