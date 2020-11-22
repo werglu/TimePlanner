@@ -42,46 +42,43 @@
                     (valueChange)="onPriorityChange($event)">
     </kendo-combobox>
   </div>
-  <div style="padding-top: 10px;" *ngIf="getStartDate() == null" >
+  <div style="padding-top: 10px;">
     <label>
-      Add start and end date
+      Chosen days
     </label>
-    <button *ngIf="addDatesOff" class="btn" style="background-color:transparent;" (click)="turnOnAddDates()"><i class="fa fa-toggle-off"></i></button>
-    <button *ngIf="!addDatesOff" class="btn" style="background-color:transparent" (click)="turnOffAddDates()"><i class="fa fa-toggle-on"></i></button>
-  </div>
-  <div *ngIf="!addDatesOff || getStartDate() != null"  style="display:grid">
-    <label style="padding-top: 10px;" for="name">
-      Start date <span class="required">*</span>
-    </label>
-    <div>
-      <input style="width:40%;margin-right:10px" type="date" id="startDate" name="startDate" [value]="getStartDate()">
-      <input type="time" id="startDateTime" name="startDateTime" value="00:00" [value]="getStartTime()">
-    </div>
-    <div *ngIf="startDateInvalid() && startDate.touched"
-         class="alert alert-danger">
+    <div class="parent-date" *ngIf="getDate(0) != null">
       <div>
-        Start date is reqired.
+        <input class="input-date" type="date" id="date0" name="date0" [value]="getDate(0)">
       </div>
     </div>
-  </div>
-  <div *ngIf="!addDatesOff || getStartDate() != null" style="display:grid">
-    <label style="padding-top: 10px;" for="name">
-      End date <span class="required">*</span>
-    </label>
-    <div>
-      <input style="width:40%;margin-right:10px" type="date" id="endDate" name="endDate" [value]="getEndDate()">
-      <input type="time" id="endDateTime" name="appt" value="00:00" [value]="getEndTime()">
-    </div>
-    <div *ngIf="endDateInvalid() && endDate.touched"
-         class="alert alert-danger">
+    <div class="parent-date" *ngIf="getDate(1) != null">
       <div>
-        End date is reqired.
+        <input class="input-date" type="date" id="date1" name="date1" [value]="getDate(1)">
       </div>
     </div>
-    <div *ngIf="dateInvalid()"
-         class="alert alert-danger">
+    <div class="parent-date" *ngIf="getDate(2) != null">
       <div>
-        End date must be greathen than start date.
+        <input class="input-date" type="date" id="date2" name="date2" [value]="getDate(2)">
+      </div>
+    </div>
+    <div class="parent-date" *ngIf="getDate(3) != null">
+      <div>
+        <input class="input-date" type="date" id="date3" name="date3" [value]="getDate(3)">
+      </div>
+    </div>
+    <div class="parent-date" *ngIf="getDate(4) != null">
+      <div>
+        <input class="input-date" type="date" id="date4" name="date4" [value]="getDate(4)">
+      </div>
+    </div>
+    <div class="parent-date" *ngIf="getDate(5) != null">
+      <div>
+        <input class="input-date" type="date" id="date5" name="date5" [value]="getDate(5)">
+      </div>
+    </div>
+    <div class="parent-date" *ngIf="getDate(6) != null">
+      <div>
+        <input class="input-date" type="date" id="date6" name="date6" [value]="getDate(6)">
       </div>
     </div>
   </div>

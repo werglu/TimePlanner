@@ -19,7 +19,6 @@ export class EditTaskAaEventModalComponent implements OnInit {
   currentCategory: ListCategory;
   currentTask: Task;
   isDone = false;
-  addDatesOff = true;
   choosenPriority = 1;
   @Input() editedTask: CalendarEvent;
   @Output() onCancel = new EventEmitter();
@@ -32,16 +31,24 @@ export class EditTaskAaEventModalComponent implements OnInit {
       category: '',
       title: ['title', Validators.required],
       priority: '',
-      startDate: '',
-      endDate: ''
+      date0: '',
+      date1: '',
+      date2: '',
+      date3: '',
+      date4: '',
+      date5: '',
+      date6: ''
     });
   }
 
   get title() { return this.editTaskForm.get('title'); }
-  get startDate() { return this.editTaskForm.get('startDate'); }
-  get startDateTime() { return this.editTaskForm.get('startDateTime'); }
-  get endDate() { return this.editTaskForm.get('endDate'); }
-  get endDateTime() { return this.editTaskForm.get('endDateTime'); }
+  get date0() { return this.editTaskForm.get('date0'); }
+  get date1() { return this.editTaskForm.get('date1'); }
+  get date2() { return this.editTaskForm.get('date2'); }
+  get date3() { return this.editTaskForm.get('date3'); }
+  get date4() { return this.editTaskForm.get('date4'); }
+  get date5() { return this.editTaskForm.get('date5'); }
+  get date6() { return this.editTaskForm.get('date6'); }
 
   ngOnInit(): void {
     this.getCategories();
@@ -61,49 +68,33 @@ export class EditTaskAaEventModalComponent implements OnInit {
     this.isDone = isDone;
   }
 
-  getStartDate(): string {
-    if (this.editedTask.start == null) {
-        return null;
+  getDate(ind: number): string {
+    if (!this.currentTask) {
+      return null;
     }
-    var d = this.editedTask.start.toLocaleDateString();
-    if (d.indexOf('.') >= 0) {
-      var date = d.split('.');
+    if (ind == 0)
+      var d = this.currentTask.date0;
+    else if (ind == 1)
+      var d = this.currentTask.date1;
+    else if (ind == 2)
+      var d = this.currentTask.date2;
+    else if (ind == 3)
+      var d = this.currentTask.date3;
+    else if (ind == 4)
+      var d = this.currentTask.date4;
+    else if (ind == 5)
+      var d = this.currentTask.date5;
+    else if (ind == 6)
+      var d = this.currentTask.date6;
+    if (!d) {
+      return null;
+    }
+    var dLocale = (new Date(d)).toLocaleDateString();
+    if (dLocale.indexOf('.') >= 0) {
+      var date = dLocale.split('.');
       return date[2] + '-' + (date[1].length == 1 ? '0' + date[1] : date[1]) + '-' + (date[0].length == 1 ? '0' + date[0] : date[0]);
     }
-    var date = d.split('/');
-    return date[2] + '-' + (date[0].length == 1 ? '0' + date[0] : date[0]) + '-' + (date[1].length == 1 ? '0' + date[1] : date[1]);
-  }
-
-  getStartTime(): string {
-    if (this.editedTask.start == null) {
-      return null;
-    }
-    var h = this.editedTask.start.getHours();
-    var m = this.editedTask.start.getMinutes();
-    var time = ((h.toString().length == 1 ? '0' + h.toString() : h.toString()) + ":" + (m.toString().length == 1 ? '0' + m.toString() : m.toString()));
-    return time;
-  }
-
-  getEndTime(): string {
-    if (this.editedTask.end == null) {
-      return null;
-    }
-    var h = this.editedTask.end.getHours();
-    var m = this.editedTask.end.getMinutes();
-    var time = ((h.toString().length == 1 ? '0' + h.toString() : h.toString()) + ":" + (m.toString().length == 1 ? '0' + m.toString() : m.toString()));
-    return time;
-  }
-
-  getEndDate(): string {
-    if (this.editedTask.end == null) {
-      return null;
-    }
-    var d = this.editedTask.end.toLocaleDateString();
-    if (d.indexOf('.') >= 0) {
-      var date = d.split('.');
-      return date[2] + '-' + (date[1].length == 1 ? '0' + date[1] : date[1]) + '-' + (date[0].length == 1 ? '0' + date[0] : date[0]);
-    }
-    var date = d.split('/');
+    var date = dLocale.split('/');
     return date[2] + '-' + (date[0].length == 1 ? '0' + date[0] : date[0]) + '-' + (date[1].length == 1 ? '0' + date[1] : date[1]);
   }
 
@@ -119,7 +110,6 @@ export class EditTaskAaEventModalComponent implements OnInit {
   onCategoryChange(category: ListCategory) {
     this.currentCategory = category;
   }
-
 
   onPriorityChange(priority: string) {
     if (priority == this.priorities[0]) {
@@ -141,8 +131,13 @@ export class EditTaskAaEventModalComponent implements OnInit {
       isDone: this.isDone,
       title: (<HTMLInputElement>document.getElementById('title')).value,
       priority: this.choosenPriority,
-      startDate: new Date(this.setDate('startDate')),
-      endDate: new Date(this.setDate('endDate'))
+      date0: new Date(this.setDate('date0')),
+      date1: new Date(this.setDate('date1')),
+      date2: new Date(this.setDate('date2')),
+      date3: new Date(this.setDate('date3')),
+      date4: new Date(this.setDate('date4')),
+      date5: new Date(this.setDate('date5')),
+      date6: new Date(this.setDate('date6'))
     };
   }
   
@@ -168,39 +163,6 @@ export class EditTaskAaEventModalComponent implements OnInit {
   }
 
   setDate(value: string): Date {
-    if (this.addDatesOff) return null;
-    var time = (<HTMLInputElement>document.getElementById(value + 'Time')).value;
-    var date = (<HTMLInputElement>document.getElementById(value)).valueAsDate;
-    var t = time.split(':');
-    if (date != null) {
-      date.setHours(Number(t[0]));
-      date.setMinutes(Number(t[1]));
-    }
-    return date;
-  }
-
-  startDateInvalid(): boolean {
-    return this.setDate('startDate') == null;
-  }
-
-  endDateInvalid(): boolean {
-    return this.setDate('endDate') == null;
-  }
-
-  dateInvalid(): boolean {
-    var startDate = this.setDate('startDate');
-    var endDate = this.setDate('endDate');
-    if (startDate > endDate) {
-      return true;
-    }
-    return false;
-  }
-
-  turnOnAddDates() {
-    this.addDatesOff = false;
-  }
-
-  turnOffAddDates() {
-    this.addDatesOff = true;
+    return (<HTMLInputElement>document.getElementById(value)).valueAsDate;
   }
 }
