@@ -69,8 +69,18 @@
 
   <!-- begin friends list -->
   <div class="container friendsContainer" *ngIf="isPublic">
+    <!-- search -->
+    <div class="p-0 bg-light rounded rounded-pill shadow-sm mb-1">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <button id="button-addon2" type="button" (click)="search()" class="btn btn-link text-warning"><i class="fa fa-search"></i></button>
+        </div>
+        <input type="search" id="searchInput" placeholder="Find friends!" aria-describedby="button-addon2" class="form-control border-0 bg-light">
+      </div>
+    </div>
+    <!-- end search -->
     <div class="row">
-      <ul id="friendsList" class="list-group row-md-12" style="height: 200px; overflow-y: scroll">
+      <ul id="friendsList" class="list-group row-md-12 col-md-12" style="height: 200px; overflow-y: scroll">
         <li id="block_container" class="list-group-item" *ngFor="let friend of friends">
           <div class="col-md-3 col-sm-3">
             <img src={{friend.photoUrl}} alt="friend's photo" class="profile-photo-lg">
@@ -79,7 +89,7 @@
             <label class="profile-link">{{friend.name}}</label>
           </div>
           <div class="col-md-2 col-sm-2">
-            <button  type="button"  class="btn btn-primary pull-right" (click)="sendInvitation(friend)">Invite</button>
+            <button type="button" class="btn btn-primary pull-right" (click)="sendInvitation(friend)">Invite</button>
           </div>
         </li>
       </ul>

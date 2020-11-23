@@ -19,6 +19,7 @@ export class AddEventModalComponent implements OnInit {
   invalidDate = false;
   isPublic = false;
   friends: Friend[];
+  allFriends: Friend[];
 
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService,
@@ -32,6 +33,7 @@ export class AddEventModalComponent implements OnInit {
     });
 
     this.friends = userService.getUserFriends();
+    this.allFriends = userService.getUserFriends();
   }
 
   get title() { return this.editEventForm.get('title'); }
@@ -139,5 +141,22 @@ export class AddEventModalComponent implements OnInit {
 
   sendInvitation(friend: Friend) {
     // TODO!
+  }
+
+  search() {
+    let value = (<HTMLInputElement>document.getElementById("searchInput")).value.toLowerCase();
+
+    if (value == "") {
+      this.friends = this.allFriends.slice();
+      return;
+    }
+
+    this.friends = [];
+
+    this.allFriends.forEach((x) => {
+      if (x.name.toLowerCase().indexOf(value) !== -1) {
+        this.friends.push(x);
+      }
+    });
   }
 }

@@ -16,6 +16,7 @@ export class EditEventModalComponent implements OnInit {
   editEventForm: FormGroup;
   currentEvent: Events;
   isPublic: boolean;
+  allFriends: Friend[];
   friends: Friend[];
   @Input() editedEvent: CalendarEvent;
   @Output() onCancel = new EventEmitter();
@@ -34,6 +35,7 @@ export class EditEventModalComponent implements OnInit {
     });
 
     this.friends = userService.getUserFriends();
+    this.allFriends = userService.getUserFriends();
   }
 
   get title() { return this.editEventForm.get('title'); }
@@ -155,5 +157,22 @@ export class EditEventModalComponent implements OnInit {
 
   sendInvitation(friend: Friend) {
     // TODO!
+  }
+
+  search() {
+    let value = (<HTMLInputElement>document.getElementById("searchInput")).value.toLowerCase();
+
+    if (value == "") {
+      this.friends = this.allFriends.slice();
+      return;
+    }
+
+    this.friends = [];
+
+    this.allFriends.forEach((x) => {
+      if (x.name.toLowerCase().indexOf(value) !== -1) {
+        this.friends.push(x);
+      }
+    });
   }
 }
