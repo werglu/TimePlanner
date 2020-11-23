@@ -1,3 +1,5 @@
+import { User } from "../user/user";
+
 export interface Events {
   id: number;
   startDate: Date;
@@ -8,4 +10,6 @@ export interface Events {
   streetAddress: string;
   latitude: number;
   longitude: number;
+  ownerId: string;
+  owner: User;
 }

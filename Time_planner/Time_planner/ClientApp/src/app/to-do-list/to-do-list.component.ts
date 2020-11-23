@@ -4,8 +4,9 @@ import { ListCategory } from './listCategory';
 import { TasksService } from './tasks.service';
 import { Task } from './task';
 import { Observable, Subject } from 'rxjs';
-import { GridDataResult, DataStateChangeEvent, GridComponent, DataBindingDirective } from '@progress/kendo-angular-grid';
+import { GridDataResult } from '@progress/kendo-angular-grid';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { TaskAssignmentProposition } from './taskAssignmentProposition';
 
 @Component({
   selector: 'to-do-list-component',
@@ -21,11 +22,15 @@ export class ToDoListComponent implements OnInit {
   public tasks: Array<Task> = [];
   public view: Observable<GridDataResult>;
   public gridData: any[] = [];
-  defaultItem: string;
+  openTask = false;
+  currentTask: Task;
+  public mySelection: number[] = [];
   refresh: Subject<any> = new Subject();
   addNewCategoryModalVisible = false;
   addNewTaskModalVisible = false;
+  findDatesModalVisible = false;
   currentCategory = 1;
+  foundDates: Array<TaskAssignmentProposition> = [];
   public sort: SortDescriptor[] = [{
     field: 'isDone',
     dir: 'asc'
@@ -58,6 +63,7 @@ export class ToDoListComponent implements OnInit {
           this.gridData.push(task);
         }
       });
+      this.refresh.next();
     });
   }
 
@@ -89,6 +95,10 @@ export class ToDoListComponent implements OnInit {
     this.addNewTaskModalVisible = true;
   }
 
+  closeFindDatesModal() {
+    this.findDatesModalVisible = false;
+  }
+
   addTask(task: any) {
     this.closeAddNewTaskModal();
     this.getTasks(this.currentCategory);
@@ -104,5 +114,41 @@ export class ToDoListComponent implements OnInit {
     this.listCategories = [];
     this.getCategories();
     this.refresh.next();
+  }
+
+  closeOpenTaskModal() {
+    this.openTask = false;
+  }
+
+  openEditTaskModal(task: Task) {
+    this.openTask = true;
+    this.currentTask = task;
+  }
+
+  editTask(task: Task) {
+    this.closeOpenTaskModal();
+    this.gridData = this.gridData.filter(t => t.id != task.id);
+    if (this.currentCategory == 1 || this.currentCategory == task.categoryId) { this.gridData.push(task); }
+    this.refresh.next();
+  }
+
+  findDates() {
+    this.tasksService.findDates(this.mySelection).subscribe(taskAssignmentPropositions => {
+      this.foundDates = taskAssignmentPropositions;
+      this.findDatesModalVisible = true;
+    });
+  }
+
+  saveDates(taskAssignmentPropositions: any) {
+    this.closeFindDatesModal();
+  }
+
+  selectAll() {
+    this.mySelection = [];
+    this.gridData.forEach(item => this.mySelection.push(item.id));
+  }
+
+  unselectAll() {
+    this.mySelection = [];
   }
 }

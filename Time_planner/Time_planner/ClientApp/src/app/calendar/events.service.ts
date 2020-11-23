@@ -12,15 +12,14 @@ export class EventsService {
   constructor(public http: HttpClient) {
   }
 
-  getAllEvents(): Observable<Events[]> {
+  getAllEvents(userId: string): Observable<Events[]> {
     var baseUrl: string = environment.apiBaseUrl;
-    var x = this.http.get<Events[]>(baseUrl + 'api/Events');
-    return x;
+    return this.http.get<Events[]>(baseUrl + 'api/Events/' + userId);
   }
 
-  getEvent(id: number): Observable<Events> {
+  getEvent(userId: string, id: number): Observable<Events> {
     var baseUrl: string = environment.apiBaseUrl;
-    return this.http.get<Events>(baseUrl + 'api/Events/' + id.toString());
+    return this.http.get<Events>(baseUrl + 'api/Events/' + userId + '/' + id.toString());
   }
 
   deleteEvent(id: number): Observable<Events> {

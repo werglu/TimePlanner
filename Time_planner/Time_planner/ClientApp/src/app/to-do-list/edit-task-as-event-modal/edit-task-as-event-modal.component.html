@@ -1,0 +1,90 @@
+<form [formGroup]="editTaskForm" (ngSubmit)="onSubmit()">
+  <div style="display:flex">
+    <label>
+      Mark as done
+    </label>
+    <div *ngIf="isDone">
+      <button class="btn checkButton" (click)="checked(false)"><i class="fa fa-check-circle"></i></button>
+    </div>
+    <div *ngIf="!isDone">
+      <button class="btn checkButton" (click)="checked(true)"><i class="fa fa-circle"></i></button>
+    </div>
+  </div>
+  <div style="display:grid">
+    <label style="padding-top: 10px;" for="category">
+      Category
+    </label>
+    <kendo-combobox [data]="listCategories"
+                    [value]="currentCategory"
+                    [textField]="'category'"
+                    [valueField]="'id'"
+                    (valueChange)="onCategoryChange($event)">
+    </kendo-combobox>
+  </div>
+  <div style="display:grid">
+    <label style="padding-top: 10px;" for="title">
+      Title <span class="required">*</span>
+    </label>
+    <input id="title" type="text" formControlName="title" [value]="editedTask.title" required>
+    <div *ngIf="title.invalid && (title.dirty || title.touched) && title.value == null"
+         class="alert alert-danger">
+      <div *ngIf="title.errors.required">
+        Title is required.
+      </div>
+    </div>
+  </div>
+  <div style="display:grid" *ngIf="this.currentTask != null">
+    <label for="priority" style="padding-top: 10px;">
+      Choose priority:
+    </label>
+    <kendo-combobox [data]="priorities"
+                    [value]="priorities[this.currentTask.priority]"
+                    (valueChange)="onPriorityChange($event)">
+    </kendo-combobox>
+  </div>
+  <div style="padding-top: 10px;">
+    <label>
+      Chosen days
+    </label>
+    <div class="parent-date" *ngIf="getDate(0) != null">
+      <div>
+        <input class="input-date" type="date" id="date0" name="date0" [value]="getDate(0)">
+      </div>
+    </div>
+    <div class="parent-date" *ngIf="getDate(1) != null">
+      <div>
+        <input class="input-date" type="date" id="date1" name="date1" [value]="getDate(1)">
+      </div>
+    </div>
+    <div class="parent-date" *ngIf="getDate(2) != null">
+      <div>
+        <input class="input-date" type="date" id="date2" name="date2" [value]="getDate(2)">
+      </div>
+    </div>
+    <div class="parent-date" *ngIf="getDate(3) != null">
+      <div>
+        <input class="input-date" type="date" id="date3" name="date3" [value]="getDate(3)">
+      </div>
+    </div>
+    <div class="parent-date" *ngIf="getDate(4) != null">
+      <div>
+        <input class="input-date" type="date" id="date4" name="date4" [value]="getDate(4)">
+      </div>
+    </div>
+    <div class="parent-date" *ngIf="getDate(5) != null">
+      <div>
+        <input class="input-date" type="date" id="date5" name="date5" [value]="getDate(5)">
+      </div>
+    </div>
+    <div class="parent-date" *ngIf="getDate(6) != null">
+      <div>
+        <input class="input-date" type="date" id="date6" name="date6" [value]="getDate(6)">
+      </div>
+    </div>
+  </div>
+  <div style="float:right">
+    <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    <button style="margin-top:20px;" class="btn btn-primary" type="submit">Save</button>
+  </div>
+</form>
+

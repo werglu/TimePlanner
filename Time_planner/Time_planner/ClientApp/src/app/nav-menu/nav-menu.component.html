@@ -21,38 +21,28 @@
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"
            [ngClass]="{ show: isExpanded }">
         <ul class="navbar-nav flex-grow">
-          <li class="nav-item"
-              [routerLinkActive]="['link-active']"
-              [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link header-font-color" [routerLink]="['/']">Home</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link header-font-color" [routerLink]="['/counter']">Counter</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link header-font-color" [routerLink]="['/fetch-data']">Fetch data</a>
-          </li>
-
           <li class="nav-item">
-            <div id="notificationBtn" class="dropdown" style="display: none;">
-              <button *ngIf="noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none"><i style="font-size:1.4rem;margin-top:-9px;" class="fa fa-bell-slash navbar-brand"></i></button>
-              <button *ngIf="!noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none"><i style="font-size:1.4rem;margin-top:-9px;" class="fa fa-bell navbar-brand"></i></button>
-
+            <div id="notificationBtn" class="dropdown" style="display:none;margin-top:-8px">
+              <button *ngIf="noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none;"><i style="font-size:1.4rem;" class="fa fa-bell-slash navbar-brand"></i></button>
+              <button *ngIf="!noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none;"><i style="font-size:1.4rem;" class="fa fa-bell navbar-brand"></i></button>
               <div *ngIf="showNotificationsList" class="dropdown-content" style="right:0;left:auto;min-width:290px;display:block">
                 <notifications-component (onChange)="notificationsChanged($event)"></notifications-component>
               </div>
             </div>
           </li>
-
           <li>
-            <a id="loginBtn" (click)="fbLogin()" class="fb btn" style="display: none;">
-              <i class="fa fa-facebook fa-fw"></i> Log In
-            </a>
+            <div>
+              <button id="loginBtn" (click)="fbLogin()" class="fb btn" style="display:none;margin-top:8px;">
+                <i class="fa fa-facebook fa-fw" style="margin-left:-5px;"></i> Log In
+              </button>
+            </div>
           </li>
           <li>
-            <a id="logoutBtn" (click)="fbLogout()" class="fb btn" style="display: none;">
-              <i class="fa fa-facebook fa-fw"></i> Log Out
-            </a>
+            <div>
+              <button id="logoutBtn" (click)="fbLogout()" class="fb btn" style="display:none;margin-top:8px;">
+                <i class="fa fa-facebook fa-fw" style="margin-left:-5px;"></i> Log Out
+              </button>
+            </div>
           </li>
         </ul>
         <!-- Load the JS SDK asynchronously -->

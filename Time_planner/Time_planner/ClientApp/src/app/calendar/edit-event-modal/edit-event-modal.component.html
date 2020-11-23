@@ -1,7 +1,7 @@
 <form [formGroup]="editEventForm" (ngSubmit)="onSubmit()">
   <div>
     <label>
-      Set as public
+      Set as public <i class=" fa fa-info-circle"><span class="tooltiptext">When event is public all your friends can see it.</span></i>
     </label>
     <button *ngIf="!isPublic" class="btn" style="background-color:transparent;" (click)="changeVisibility()"><i class="fa fa-toggle-off"></i></button>
     <button *ngIf="isPublic" class="btn" style="background-color:transparent;" (click)="changeVisibility()"><i class="fa fa-toggle-on"></i></button>
@@ -35,7 +35,7 @@
       <input style="width:40%;margin-right:10px" type="date" id="endDate" name="endDate" [value]="getEndDate()">
       <input type="time" id="endDateTime" name="appt" [value]="getEndTime()">
     </div>
-    <div *ngIf="dateInvalid()"
+    <div *ngIf="currentEvent != null && dateInvalid()"
          class="alert alert-danger">
       <div>
         End date must be greathen than start date.

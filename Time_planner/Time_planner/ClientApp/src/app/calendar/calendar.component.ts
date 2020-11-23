@@ -1,12 +1,14 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { CalendarEvent, CalendarView, CalendarMonthViewBeforeRenderEvent, CalendarEventAction } from 'angular-calendar';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { CalendarEvent, CalendarView, CalendarEventAction } from 'angular-calendar';
 import { EventsService } from './events.service';
 import { Events } from './events';
 import { HttpClient } from '@angular/common/http';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { isSameDay, isSameMonth } from 'date-fns';
 import { TasksService } from '../to-do-list/tasks.service';
 import { Task } from '../to-do-list/task';
+
+declare var FB: any;
 
 @Component({
   selector: 'app-calendar-component',
@@ -38,22 +40,43 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       },
     },
   ];
+  userId: string;
 
   constructor(public eventsService: EventsService,
     public tasksService: TasksService,
     public http: HttpClient) {
   }
 
-  ngOnInit(): void {    
-    this.getTasks();
-    this.getEvents();
+  ngOnInit(): void {
+    (window as any).fbAsyncInit = () => {
+      FB.init({
+        appId: '343708573552335',
+        cookie: true,
+        xfbml: true,
+        version: 'v8.0',
+      });
+
+      (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    }
+
+    FB.api('/me', (response) => {
+      this.userId = response.id;
+      this.getTasks();
+      this.getEvents();
+    });
   }
 
   ngAfterViewInit(): void {
   }
 
   getEvents(): void {
-    this.eventsService.getAllEvents().subscribe(e => {
+    this.eventsService.getAllEvents(this.userId).subscribe(e => {
       e.forEach(ee => {
           this.events.push({
             id: ee.id,
@@ -77,21 +100,23 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   getTasks() {
     this.tasksService.getTasks().subscribe(t => {
       t.forEach(task => {
-        if (task.startDate != null) {
-          this.events.push({
-            id: task.id,
-            title: task.title,
-            start: new Date(task.startDate),
-            end: new Date(task.endDate),
-            actions: this.actions,
-            color: {
-              primary: '#2c786c',
-              secondary: '#ff9642'
-            },
-            meta: {
-              type: 'task'
-            }
-          })
+        for (var date of [task.date0, task.date1, task.date2, task.date3, task.date4, task.date5, task.date6]) {
+          if (date != null) {
+            this.events.push({
+              id: task.id,
+              title: task.title,
+              start: new Date(date),
+              end: new Date(date),
+              actions: this.actions,
+              color: {
+                primary: '#2c786c',
+                secondary: '#ff9642'
+              },
+              meta: {
+                type: 'task'
+              }
+            })
+          }
         }
       })
       this.refresh.next();
@@ -169,20 +194,24 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.closeOpenTaskModal();
     this.events = this.events.filter(e => e.id !== task.id);
     if (!task.isDone) {
-      this.events.push({
-        id: task.id,
-        title: task.title,
-        start: new Date(task.startDate),
-        end: new Date(task.endDate),
-        actions: this.actions,
-        color: {
-          primary: '#2c786c',
-          secondary: '#ff9642'
-        },
-        meta: {
-          type: 'task'
+      for (var date of [task.date0, task.date1, task.date2, task.date3, task.date4, task.date5, task.date6]) {
+        if (date != null) {
+          this.events.push({
+            id: task.id,
+            title: task.title,
+            start: new Date(date),
+            end: new Date(date),
+            actions: this.actions,
+            color: {
+              primary: '#2c786c',
+              secondary: '#ff9642'
+            },
+            meta: {
+              type: 'task'
+            }
+          });
         }
-      });
+      }
     }
     this.activeDayIsOpen = false;
     this.refresh.next();

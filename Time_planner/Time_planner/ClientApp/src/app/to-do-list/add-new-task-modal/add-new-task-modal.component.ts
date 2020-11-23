@@ -15,9 +15,17 @@ export class AddNewTaskModalComponent implements OnInit {
   addTaskForm: FormGroup;
   public listCategories: Array<ListCategory> = [];
   public priorities: Array<string> = ['High priority', 'Medium priority', 'Low priority'];
+  public splits: Array<number> = [1, 2, 3, 4, 5, 6];
+  public hours: Array<number> = Array.from({ length: 169 }, (v, k) => k)
+  public minutes: Array<number> = Array.from({ length: 60 }, (v, k) => k)
   currentCategory: ListCategory;
   choosenPriority = 1;
+  choosenSplit = 1;
+  choosenHour = 1;
+  choosenMinute = 0;
+  choosenDays = 1 + 2 + 4 + 8 + 16;
   public addDatesOff = true;
+  public addDateConstraintsOff = true;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Task>();
 
@@ -27,17 +35,11 @@ export class AddNewTaskModalComponent implements OnInit {
     this.addTaskForm = this.formBuilder.group({
       category: '',
       title: ['', Validators.required],
-      priority: '',
-      startDate: '',
-      endDate: ''
+      priority: ''
     });
   }
 
   get title() { return this.addTaskForm.get('title'); }
-  get startDate() { return this.addTaskForm.get('startDate'); }
-  get startDateTime() { return this.addTaskForm.get('startDateTime'); }
-  get endDate() { return this.addTaskForm.get('endDate'); }
-  get endDateTime() { return this.addTaskForm.get('endDateTime'); }
 
   ngOnInit(): void {
     this.getCategories();
@@ -66,6 +68,14 @@ export class AddNewTaskModalComponent implements OnInit {
     this.addDatesOff = true;
   }
 
+  turnOnAddDateConstraints() {
+    this.addDateConstraintsOff = false;
+    this.splits = [1, 2, 3, 4, 5];
+  }
+
+  turnOffAddDateConstraints() {
+    this.addDateConstraintsOff = true;
+  }
 
   onPriorityChange(priority: string) {
     if (priority == this.priorities[0]) {
@@ -79,6 +89,34 @@ export class AddNewTaskModalComponent implements OnInit {
     }
   }
 
+  onSplitChange(split: number) {
+    this.choosenSplit = split;
+  }
+
+  onHourChange(hour: number) {
+    this.choosenHour = hour;
+  }
+
+  onMinuteChange(minute: number) {
+    this.choosenMinute = minute;
+  }
+
+  onDayChange() {
+    var days = 0;
+    var count = 0;
+    var daysOfWeek = ["sun", "sat", "fri", "thu", "wed", "tue", "mon"];
+    daysOfWeek.forEach(function (dayOfWeek) {
+      days *= 2;
+      var element = document.getElementById('weekday-' + dayOfWeek) as HTMLInputElement
+      if (element.checked) {
+        days += 1;
+        count += 1;
+      }
+    });
+    this.choosenDays = days;
+    this.splits = Array.from({ length: count }, (v, k) => k + 1)
+  }
+
   getFormValue(): Task {
     return {
       id: 13,
@@ -87,8 +125,9 @@ export class AddNewTaskModalComponent implements OnInit {
       isDone: false,
       title: (<HTMLInputElement>document.getElementById('title')).value,
       priority: this.choosenPriority,
-      startDate: this.setDate('startDate'),
-      endDate: this.setDate('endDate')
+      split: this.choosenSplit,
+      days: this.choosenDays,
+      time: this.choosenHour * 60 + this.choosenMinute
     };
   }
   
@@ -115,30 +154,7 @@ export class AddNewTaskModalComponent implements OnInit {
 
   setDate(value: string): Date {
     if (this.addDatesOff) return null;
-    var time = (<HTMLInputElement>document.getElementById(value + 'Time')).value;
     var date = (<HTMLInputElement>document.getElementById(value)).valueAsDate;
-    var t = time.split(':');
-    if (date != null) {
-      date.setHours(Number(t[0]));
-      date.setMinutes(Number(t[1]));
-    }
     return date;
-  }
-
-  startDateInvalid(): boolean {
-    return this.setDate('startDate') == null;
-  }
-
-  endDateInvalid(): boolean {
-    return this.setDate('endDate') == null;
-  }
-
-  dateInvalid(): boolean {
-    var startDate = this.setDate('startDate');
-    var endDate = this.setDate('endDate');
-    if (startDate > endDate) {
-      return true;
-    }
-    return false;
   }
 }

@@ -7,21 +7,20 @@ import { TasksService } from '../tasks.service';
 import { CalendarEvent } from 'angular-calendar';
 
 @Component({
-  selector: 'edit-task-modal',
-  templateUrl: './edit-task-modal.component.html',
-  styleUrls: ['./edit-task-modal.component.css']
+  selector: 'edit-task-as-event-modal',
+  templateUrl: './edit-task-as-event-modal.component.html',
+  styleUrls: ['./edit-task-as-event-modal.component.css']
 })
 
-export class EditTaskModalComponent implements OnInit {
+export class EditTaskAaEventModalComponent implements OnInit {
   editTaskForm: FormGroup;
   public listCategories: Array<ListCategory> = [];
   public priorities: Array<string> = ['High priority', 'Medium priority', 'Low priority'];
   currentCategory: ListCategory;
   currentTask: Task;
   isDone = false;
-  addDatesOff = true;
   choosenPriority = 1;
-  @Input() editedTask: Task;
+  @Input() editedTask: CalendarEvent;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Task>();
 
@@ -31,11 +30,25 @@ export class EditTaskModalComponent implements OnInit {
     this.editTaskForm = this.formBuilder.group({
       category: '',
       title: ['title', Validators.required],
-      priority: ''
+      priority: '',
+      date0: '',
+      date1: '',
+      date2: '',
+      date3: '',
+      date4: '',
+      date5: '',
+      date6: ''
     });
   }
 
   get title() { return this.editTaskForm.get('title'); }
+  get date0() { return this.editTaskForm.get('date0'); }
+  get date1() { return this.editTaskForm.get('date1'); }
+  get date2() { return this.editTaskForm.get('date2'); }
+  get date3() { return this.editTaskForm.get('date3'); }
+  get date4() { return this.editTaskForm.get('date4'); }
+  get date5() { return this.editTaskForm.get('date5'); }
+  get date6() { return this.editTaskForm.get('date6'); }
 
   ngOnInit(): void {
     this.getCategories();
@@ -53,6 +66,36 @@ export class EditTaskModalComponent implements OnInit {
 
   checked(isDone: boolean) {
     this.isDone = isDone;
+  }
+
+  getDate(ind: number): string {
+    if (!this.currentTask) {
+      return null;
+    }
+    if (ind == 0)
+      var d = this.currentTask.date0;
+    else if (ind == 1)
+      var d = this.currentTask.date1;
+    else if (ind == 2)
+      var d = this.currentTask.date2;
+    else if (ind == 3)
+      var d = this.currentTask.date3;
+    else if (ind == 4)
+      var d = this.currentTask.date4;
+    else if (ind == 5)
+      var d = this.currentTask.date5;
+    else if (ind == 6)
+      var d = this.currentTask.date6;
+    if (!d) {
+      return null;
+    }
+    var dLocale = (new Date(d)).toLocaleDateString();
+    if (dLocale.indexOf('.') >= 0) {
+      var date = dLocale.split('.');
+      return date[2] + '-' + (date[1].length == 1 ? '0' + date[1] : date[1]) + '-' + (date[0].length == 1 ? '0' + date[0] : date[0]);
+    }
+    var date = dLocale.split('/');
+    return date[2] + '-' + (date[0].length == 1 ? '0' + date[0] : date[0]) + '-' + (date[1].length == 1 ? '0' + date[1] : date[1]);
   }
 
   getCategories() {
@@ -87,7 +130,14 @@ export class EditTaskModalComponent implements OnInit {
       categoryId: this.currentCategory.id,
       isDone: this.isDone,
       title: (<HTMLInputElement>document.getElementById('title')).value,
-      priority: this.choosenPriority
+      priority: this.choosenPriority,
+      date0: new Date(this.setDate('date0')),
+      date1: new Date(this.setDate('date1')),
+      date2: new Date(this.setDate('date2')),
+      date3: new Date(this.setDate('date3')),
+      date4: new Date(this.setDate('date4')),
+      date5: new Date(this.setDate('date5')),
+      date6: new Date(this.setDate('date6'))
     };
   }
   
@@ -110,5 +160,9 @@ export class EditTaskModalComponent implements OnInit {
         control.markAllAsTouched();
       }
     })
+  }
+
+  setDate(value: string): Date {
+    return (<HTMLInputElement>document.getElementById(value)).valueAsDate;
   }
 }

@@ -5,6 +5,8 @@ import { EventsService } from '../events.service';
 import { Friend } from '../../shared/friend';
 import { UserService } from '../../user/user.service';
 
+declare var FB: any;
+
 @Component({
   selector: 'add-event-modal',
   templateUrl: './add-event-modal.component.html',
@@ -18,6 +20,7 @@ export class AddEventModalComponent implements OnInit {
   @Output() onSave = new EventEmitter<Events>();
   invalidDate = false;
   isPublic = false;
+  userId: string;
   friends: Friend[];
   allFriends: Friend[];
 
@@ -28,8 +31,8 @@ export class AddEventModalComponent implements OnInit {
       title: ['', Validators.required],
       startDate: '',
       endDate: '',
-      city: [' ', Validators.required],
-      streetAddress: [' ', Validators.required]
+      city: ['', Validators.required],
+      streetAddress: ['', Validators.required]
     });
 
     this.friends = userService.getUserFriends();
@@ -46,6 +49,26 @@ export class AddEventModalComponent implements OnInit {
 
 
   ngOnInit(): void {
+    (window as any).fbAsyncInit = () => {
+      FB.init({
+        appId: '343708573552335',
+        cookie: true,
+        xfbml: true,
+        version: 'v8.0',
+      });
+
+      (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    }
+
+    FB.api('/me', (response) => {
+      this.userId = response.id;
+    });
   }
 
   getFormValue(): Events {
@@ -58,7 +81,9 @@ export class AddEventModalComponent implements OnInit {
       city: (<HTMLInputElement>document.getElementById('city')).value,
       streetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value,
       latitude: 0.0,
-      longitude: 0.0
+      longitude: 0.0,
+      owner: null,
+      ownerId: this.userId
     };
   }
 
@@ -99,7 +124,7 @@ export class AddEventModalComponent implements OnInit {
   dateInvalid(): boolean {
     var startDate = this.setDate('startDate');
     var endDate = this.setDate('endDate');
-    if (startDate > endDate) {
+    if (startDate >= endDate) {
       return true;
     }
     return false;
@@ -115,7 +140,6 @@ export class AddEventModalComponent implements OnInit {
     }
     return date;
   }
-
 
   getStartDate(): string {
     let d: Date = new Date();
