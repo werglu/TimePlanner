@@ -82,12 +82,12 @@
   <!-- begin friends list -->
   <div class="container friendsContainer" *ngIf="isPublic">
     <!-- search -->
-    <div class="p-0 bg-light rounded rounded-pill shadow-sm mb-1">
+    <div class="p-0 bg-light rounded rounded-pill shadow-sm mb-1 searchBar">
       <div class="input-group">
         <div class="input-group-prepend">
           <button id="button-addon2" type="button" (click)="search()" class="btn btn-link text-warning"><i class="fa fa-search"></i></button>
         </div>
-        <input type="search" id="searchInput" placeholder="Find friends!" aria-describedby="button-addon2" class="form-control border-0 bg-light">
+        <input type="search" id="searchInput" placeholder="Find friends!" class="form-control border-0 bg-light">
       </div>
     </div>
     <!-- end search -->

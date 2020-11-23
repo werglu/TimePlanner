@@ -81,3 +81,7 @@ img.profile-photo-lg {
   color: var(--color-gray);
   font-style: italic;
 }
+
+.searchBar {
+  margin-top: 10px;
+}
