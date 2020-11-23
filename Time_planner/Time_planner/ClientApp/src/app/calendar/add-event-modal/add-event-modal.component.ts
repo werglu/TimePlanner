@@ -2,6 +2,8 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Events } from '../events';
 import { EventsService } from '../events.service';
+import { Friend } from '../../shared/friend';
+import { UserService } from '../../user/user.service';
 
 declare var FB: any;
 
@@ -19,9 +21,12 @@ export class AddEventModalComponent implements OnInit {
   invalidDate = false;
   isPublic = false;
   userId: string;
+  friends: Friend[];
+  allFriends: Friend[];
 
   constructor(private formBuilder: FormBuilder,
-    public eventsService: EventsService) {
+    public eventsService: EventsService,
+    public userService: UserService) {
     this.editEventForm = this.formBuilder.group({
       title: ['', Validators.required],
       startDate: '',
@@ -29,6 +34,9 @@ export class AddEventModalComponent implements OnInit {
       city: ['', Validators.required],
       streetAddress: ['', Validators.required]
     });
+
+    this.friends = userService.getUserFriends();
+    this.allFriends = userService.getUserFriends();
   }
 
   get title() { return this.editEventForm.get('title'); }
@@ -153,5 +161,26 @@ export class AddEventModalComponent implements OnInit {
   changeVisibility() {
     this.isPublic = !this.isPublic;
     this.onChangeVisibility.emit(this.isPublic);
+  }
+
+  sendInvitation(friend: Friend) {
+    // TODO!
+  }
+
+  search() {
+    let value = (<HTMLInputElement>document.getElementById("searchInput")).value.toLowerCase();
+
+    if (value == "") {
+      this.friends = this.allFriends.slice();
+      return;
+    }
+
+    this.friends = [];
+
+    this.allFriends.forEach((x) => {
+      if (x.name.toLowerCase().indexOf(value) !== -1) {
+        this.friends.push(x);
+      }
+    });
   }
 }

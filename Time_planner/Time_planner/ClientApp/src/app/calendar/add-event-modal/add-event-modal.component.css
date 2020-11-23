@@ -14,3 +14,74 @@
   font-size: 1.6rem;
   color: var(--color-dark-green);
 }
+
+/*friends list*/
+.friendsContainer {
+  padding-top: 10px;
+}
+
+img.profile-photo-lg {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+}
+
+#block_container {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  background-color: var(--color-light-beige);
+}
+
+#friendsList {
+  border-width: 10px;
+  border-color: var(--color-light-orange);
+  border-image: initial;
+}
+
+/*scrollbar*/
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: linear-gradient(120deg, var(--color-light-orange2) 0%, var(--color-light-orange) 100%);
+  /*rgba(255,0,0,0.8);*/
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+  ::-webkit-scrollbar-thumb:window-inactive {
+    background: linear-gradient(120deg, var(--color-light-orange2) 0%, var(--color-light-orange) 100%);
+  }
+
+/*search bar*/
+.form-control:focus {
+  box-shadow: none;
+}
+
+.form-control-underlined {
+  border-width: 0;
+  border-bottom-width: 1px;
+  border-radius: 0;
+  padding-left: 0;
+}
+
+.form-control::placeholder {
+  font-size: 0.95rem;
+  color: var(--color-gray);
+  font-style: italic;
+}
+
+.searchBar {
+  margin-top: 10px;
+}
