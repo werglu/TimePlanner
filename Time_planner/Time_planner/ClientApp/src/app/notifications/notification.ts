@@ -6,4 +6,6 @@ export interface Notification {
   eventId: number | null;
   event: Events;
   isDismissed: boolean;
+  receiverId: string;
+  senderId: string;
 }

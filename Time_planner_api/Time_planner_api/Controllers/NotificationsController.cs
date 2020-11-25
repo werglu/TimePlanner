@@ -18,13 +18,57 @@ namespace Time_planner_api.Controllers
             _context = context;
         }
 
-        // GET: api/Notifications
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Notification>>> GetNotifications()
+        // GET: api/Notifications/userId
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<IEnumerable<Notification>>> GetNotifications(string userId)
         {
-            return await _context.Notifications.Where(n => n.IsDismissed == false).ToListAsync();
+            return await _context.Notifications.Where(n => n.IsDismissed == false && n.ReceiverId == userId).ToListAsync();
         }
 
+        [HttpGet("{userId}/{id}")]
+        public async Task<ActionResult<Notification>> GetNotification(string userId, int id)
+        {
+            var notification = await _context.Notifications.FindAsync(id);
+
+            if (notification == null)
+            {
+                return NotFound();
+            }
+
+            return notification;
+        }
+
+        [HttpPost]
+        [Route("add")]
+        public async Task<ActionResult<Notification>> PostNotification(Notification ourNotification)
+        {
+            await _context.Notifications.AddAsync(new Notification()
+            {
+                IsDismissed = ourNotification.IsDismissed,
+                MessageType = ourNotification.MessageType,
+                SenderId = ourNotification.SenderId,
+                ReceiverId = ourNotification.ReceiverId,
+                EventId = ourNotification.EventId
+            });
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (NotificationExists(ourNotification.Id))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return CreatedAtAction("GetNotification", new { userId = ourNotification.SenderId, id = ourNotification.Id }, ourNotification);
+        }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> PutNotification([FromRoute]int id, Notification notification)
@@ -35,6 +79,8 @@ namespace Time_planner_api.Controllers
             newNotification.EventId = notification.EventId;
             newNotification.Event = notification.Event;
             newNotification.Id = notification.Id;
+            newNotification.ReceiverId = notification.ReceiverId;
+            newNotification.SenderId = notification.SenderId;
 
             _context.Entry(newNotification).State = EntityState.Modified;
 

@@ -1,8 +1,12 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { NotificationsService } from './notifications.service';
 import { Notification } from './notification';
+import { UserService } from '../user/user.service';
+import { Friend } from '../shared/friend';
+
+declare var FB: any;
 
 @Component({
   selector: 'notifications-component',
@@ -13,28 +17,56 @@ import { Notification } from './notification';
 export class NotificationsComponent implements OnInit {
 
   public colors: Array<string> = ['#00ace6', '#00cc99', '#ff4d88'];
-  public messages: Array<string> = ['Some user invites you to join an event jdjkfghjdfhgkjkjghdfkjhgkdfhg', 'Some user accepted your request', 'Some user rejected your request'];
+  public messages: Array<string> = [' invites you to join an event', ' accepted your request', ' rejected your request'];
   public view: Observable<GridDataResult>;
   public gridData: any[] = [];
   refresh: Subject<any> = new Subject();
   notificationDetailsVisible = false;
   notificationDetails: Notification;
+  friends: Friend[] = [];
   @Output() onChange = new EventEmitter <boolean>();
+  @Input() userId: string;
 
-  constructor(private notificationsService: NotificationsService) {
-    this.getNotifications();
+  constructor(private notificationsService: NotificationsService,
+    private userService: UserService) {
+    this.friends = userService.getUserFriends();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    (window as any).fbAsyncInit = () => {
+      FB.init({
+        appId: '343708573552335',
+        cookie: true,
+        xfbml: true,
+        version: 'v8.0',
+      });
 
+      (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    }
+
+    this.getNotifications()
   }
 
   getNotifications() {
-    this.notificationsService.getNotificationss().subscribe(notifications => {
+    this.notificationsService.getNotifications(this.userId).subscribe(notifications => {
       this.gridData = [];
       notifications.forEach(n => this.gridData.push(n));
       this.checkIfThereAreAnyNotifications();
     });
+  }
+
+  getFriendNameById(friendId: string): string {
+    var friend = this.friends.find(f => f.FacebookId.toString() == friendId);
+    if (friend == null) {
+     return ""; 
+    }
+    return friend.name;
   }
 
   dismiss(dataItem: any) {
@@ -77,6 +109,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   emitNotification(notification: Notification) {
-
+    this.closeNotificationDetailsModal();
+    this.dismiss(notification);
   }
 }

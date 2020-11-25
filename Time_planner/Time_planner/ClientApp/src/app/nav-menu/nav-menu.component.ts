@@ -16,16 +16,16 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   showNotificationsList = false;
   noNotifications = true;
   subscription: Subscription;
+  userId: string;
 
-  constructor(private router: Router, private notificationsService: NotificationsService,
+  constructor(private router: Router,
+    private notificationsService: NotificationsService,
     public userService: UserService) {
-    const source = interval(5000);
-    this.subscription = source.subscribe(val => this.getNotifications());
   }
 
   ngOnInit(): void {
 
-    (window as any).fbAsyncInit = function () {
+    (window as any).fbAsyncInit = () => {
       FB.init({
         appId: '343708573552335',
         cookie: true,
@@ -42,6 +42,11 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         let loginBtn = document.getElementById("loginBtn");
         let logoutBtn = document.getElementById("logoutBtn");
         let notificationsBtn = document.getElementById("notificationBtn");
+        if (response.authResponse != null) {
+          this.userId = response.authResponse.userID;
+        }
+        const source = interval(5000);
+        this.subscription = source.subscribe(val => this.getNotifications());
 
         if (response.status === 'connected') {
           loginBtn.style.display = "none";
@@ -62,6 +67,10 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       js.src = "https://connect.facebook.net/en_US/sdk.js";
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
+
+    //FB.getLoginStatus('/me', (response) => {
+    //  this.userId = response.id;
+    //});
   }
 
   fbLogout() {
@@ -87,6 +96,9 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         let notificationsBtn = document.getElementById("notificationBtn");
         notificationsBtn.style.display = "block";
 
+        if (response.authResponse != null) {
+          this.userId = response.authResponse.userID;
+        }
         this.userService.putUser(response.authResponse.userID).subscribe(() => this.router.navigate(['/']));
       }
     }, {
@@ -100,7 +112,8 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   getNotifications() {
-    this.notificationsService.getNotificationss().subscribe(n => {
+
+    this.notificationsService.getNotifications(this.userId).subscribe(n => {
       if (n.length == 0) {
         this.noNotifications = true;
       }

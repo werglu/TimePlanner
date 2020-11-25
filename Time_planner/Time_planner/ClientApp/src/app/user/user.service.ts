@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment.prod';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Friend } from '../shared/friend';
+import { User } from './user';
 
 declare var FB: any;
 
