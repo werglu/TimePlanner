@@ -23,6 +23,7 @@ export class AddEventModalComponent implements OnInit {
   userId: string;
   friends: Friend[];
   allFriends: Friend[];
+  invited: Friend[];
 
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService,
@@ -182,5 +183,15 @@ export class AddEventModalComponent implements OnInit {
         this.friends.push(x);
       }
     });
+  }
+
+  checkIfCanInvite(friend: Friend) {
+    let canInvite = true;
+    this.invited.forEach((x) => {
+      if (x.FacebookId == friend.FacebookId)
+        canInvite = false;
+    });
+
+    return canInvite;
   }
 }

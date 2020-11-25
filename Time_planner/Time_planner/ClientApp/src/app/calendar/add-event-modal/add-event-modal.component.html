@@ -6,6 +6,17 @@
     <button *ngIf="!isPublic" class="btn" style="background-color:transparent;" (click)="changeVisibility()"><i class="fa fa-toggle-off"></i></button>
     <button *ngIf="isPublic" class="btn" style="background-color:transparent;" (click)="changeVisibility()"><i class="fa fa-toggle-on"></i></button>
   </div>
+
+  <!-- invited friends -->
+  <ul class="invitedfriends" *ngIf="isPublic">
+    <ng-container *ngFor="let friend of invited">
+      <li class="invitedFriend">
+        <img src={{friend.photoUrl}} alt="invited friend's photo" class="profile-photo-s">
+        <span class="nameTooltip">{{friend.name}}</span>
+      </li>
+    </ng-container>
+  </ul>
+
   <div style="display:grid">
     <label style="padding-top:10px;" for="name">
       Title <span class="required">*</span>
@@ -93,17 +104,19 @@
     <!-- end search -->
     <div class="row">
       <ul id="friendsList" class="list-group row-md-12 col-md-12" style="height: 200px; overflow-y: scroll">
-        <li id="block_container" class="list-group-item" *ngFor="let friend of friends">
-          <div class="col-md-3 col-sm-3">
-            <img src={{friend.photoUrl}} alt="friend's photo" class="profile-photo-lg">
-          </div>
-          <div class="col-md-7 col-sm-7">
-            <label class="profile-link">{{friend.name}}</label>
-          </div>
-          <div class="col-md-2 col-sm-2">
-            <button type="button" class="btn btn-primary pull-right" (click)="sendInvitation(friend)">Invite</button>
-          </div>
-        </li>
+        <ng-container *ngFor="let friend of friends">
+          <li id="block_container" class="list-group-item" *ngIf="checkIfCanInvite(friend)">
+            <div class="col-md-3 col-sm-3">
+              <img src={{friend.photoUrl}} alt="friend's photo" class="profile-photo-lg">
+            </div>
+            <div class="col-md-7 col-sm-7">
+              <label class="profile-link">{{friend.name}}</label>
+            </div>
+            <div class="col-md-2 col-sm-2">
+              <button type="button" class="btn btn-primary pull-right" (click)="sendInvitation(friend)">Invite</button>
+            </div>
+          </li>
+         </ng-container>
       </ul>
     </div>
   </div>

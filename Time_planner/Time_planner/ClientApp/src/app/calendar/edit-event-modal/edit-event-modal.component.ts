@@ -21,6 +21,7 @@ export class EditEventModalComponent implements OnInit {
   userId: string;
   allFriends: Friend[];
   friends: Friend[];
+  invited: Friend[];
   @Input() editedEvent: CalendarEvent;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Events>();
@@ -39,6 +40,7 @@ export class EditEventModalComponent implements OnInit {
 
     this.friends = userService.getUserFriends();
     this.allFriends = userService.getUserFriends();
+    this.invited = userService.getUserFriends(); // todo Ania
   }
 
   get title() { return this.editEventForm.get('title'); }
@@ -199,5 +201,15 @@ export class EditEventModalComponent implements OnInit {
         this.friends.push(x);
       }
     });
+  }
+
+  checkIfCanInvite(friend: Friend) {
+    let canInvite = true;
+    this.invited.forEach((x) => {
+      if (x.FacebookId == friend.FacebookId)
+        canInvite = false;
+    });
+
+    return canInvite;
   }
 }
