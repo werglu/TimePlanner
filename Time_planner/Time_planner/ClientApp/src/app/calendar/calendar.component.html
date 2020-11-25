@@ -45,7 +45,7 @@
   </div>
 </div>
 
-<kendo-dialog *ngIf="openEvent" (close)="closeOpenEventModal()" [minWidth]="250" [width]="450">
+<kendo-dialog *ngIf="openEvent" (close)="closeOpenEventModal()" [minWidth]="250" [width]="450" [maxHeight]="650">
   <kendo-dialog-titlebar>
     <div *ngIf="isPublic"><span class="k-icon k-i-myspace"></span>Edit event</div>
     <div *ngIf="!isPublic"><span class="k-icon k-i-user"></span>Edit event</div>
@@ -60,10 +60,10 @@
   <edit-task-as-event-modal [editedTask]="editedEvent" (onCancel)="closeOpenTaskModal()" (onSave)="editTask($event)"></edit-task-as-event-modal>
 </kendo-dialog>
 
-<kendo-dialog *ngIf="addNewEventModalVisible" (close)="closeAddNewEventModal()" [minWidth]="250" [width]="450">
+<kendo-dialog *ngIf="addNewEventModalVisible" (close)="closeAddNewEventModal()" [minWidth]="250" [width]="450" [maxHeight]="650">
   <kendo-dialog-titlebar>
     <div *ngIf="isPublic"><span class="k-icon k-i-myspace"></span>Create new event</div>
     <div *ngIf="!isPublic"><span class="k-icon k-i-user"></span>Create new event</div>
   </kendo-dialog-titlebar>
-    <add-event-modal (onCancel)="closeAddNewEventModal()" (onSave)="addEvent($event)" (onChangeVisibility)="eventVisibilityChanged($event)"></add-event-modal>
+  <add-event-modal (onCancel)="closeAddNewEventModal()" (onSave)="addEvent($event)" (onChangeVisibility)="eventVisibilityChanged($event)"></add-event-modal>
 </kendo-dialog>
