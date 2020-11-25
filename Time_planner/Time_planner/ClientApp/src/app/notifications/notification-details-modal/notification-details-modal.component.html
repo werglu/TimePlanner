@@ -1,5 +1,5 @@
 <div>
-  <label>{{messages[notificationDetails.messageType]}}</label>
+  <label>{{getFriendNameById(notificationDetails.senderId)}}{{messages[notificationDetails.messageType]}}</label>
   <div *ngIf="notificationEvent !=null && messageType == 0">
     <label>{{notificationEvent.title}}</label>
   </div>

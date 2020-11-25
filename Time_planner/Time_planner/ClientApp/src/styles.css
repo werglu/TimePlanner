@@ -121,3 +121,16 @@ code {
   visibility: visible;
 }
 /*tooltip*/
+
+input {
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: solid 3px var(--color-light-green);
+  background-color: var(--color-background);
+}
+
+input:focus {
+    border-color: var(--color-dark-green);
+    border: solid 1px var(--color-dark-green) !important;
+}

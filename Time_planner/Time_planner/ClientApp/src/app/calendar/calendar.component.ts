@@ -96,7 +96,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       this.refresh.next();
     });
   }
-
+  
   getTasks() {
     this.tasksService.getTasks().subscribe(t => {
       t.forEach(task => {
@@ -105,12 +105,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             this.events.push({
               id: task.id,
               title: task.title,
-              start: new Date(date),
-              end: new Date(date),
+              start: new Date(new Date(date).setHours(0, 0)),
+              end: new Date(new Date(date).setHours(0, 30)),
               actions: this.actions,
               color: {
                 primary: '#2c786c',
-                secondary: '#ff9642'
+                secondary: '#2c786c'
               },
               meta: {
                 type: 'task'

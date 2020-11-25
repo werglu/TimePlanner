@@ -26,7 +26,7 @@
               <button *ngIf="noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none;"><i style="font-size:1.4rem;" class="fa fa-bell-slash navbar-brand"></i></button>
               <button *ngIf="!noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none;"><i style="font-size:1.4rem;" class="fa fa-bell navbar-brand"></i></button>
               <div *ngIf="showNotificationsList" class="dropdown-content" style="right:0;left:auto;min-width:290px;display:block">
-                <notifications-component (onChange)="notificationsChanged($event)"></notifications-component>
+                <notifications-component [userId]="userId" (onChange)="notificationsChanged($event)"></notifications-component>
               </div>
             </div>
           </li>
