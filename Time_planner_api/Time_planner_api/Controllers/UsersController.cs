@@ -30,7 +30,7 @@ namespace Time_planner_api.Controllers
 
         // GET:  api/Users/103609784907565/62
         [HttpGet("{userId}/{eventId}")]
-        public async Task<ActionResult<int>> GetUsersAttendedInEvent([FromRoute]string userId, [FromRoute]string eventId)
+        public async Task<ActionResult<int>> GetIfUserAttendsInEvent([FromRoute]string userId, [FromRoute]string eventId)
         {
             if (!UserExists(userId))
                 return -1;
