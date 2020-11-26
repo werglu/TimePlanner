@@ -25,7 +25,9 @@ export class NotificationDetailsModalComponent implements OnInit {
   constructor(private eventsService: EventsService,
     private userService: UserService,
     private notificationService: NotificationsService) {
-    this.friends = this.userService.getUserFriends();
+    this.userService.getUserFriends().subscribe((friends) => {
+      this.friends = friends;
+    });
   }
 
   ngOnInit(): void {
