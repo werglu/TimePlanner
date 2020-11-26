@@ -41,11 +41,11 @@ namespace Time_planner_api.Controllers
             if (user.AttendedEvents.Contains(eventItem))
                 return 1;
 
-            return 0;            
+            return 0;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUsers([FromRoute]string id)
+        public async Task<ActionResult<User>> GetUser([FromRoute]string id)
         {
             var user = await _context.Users.FindAsync(id);
 
@@ -143,6 +143,36 @@ namespace Time_planner_api.Controllers
             }
 
             return NoContent();
+        }
+
+        // DELETE: api/Users/103609784907565/62
+        [HttpDelete("{userId}")]
+        public async Task<ActionResult<User>> DeleteUser([FromRoute] string userId)
+        {
+            if (!UserExists(userId))
+            {
+                return NoContent();
+            }
+
+            var user = await _context.Users.FindAsync(userId);
+            try
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (UserExists(user.FacebookId))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return user;
         }
     }
 }
