@@ -13,6 +13,8 @@ namespace Time_planner_api.Models
 
         public string UserId { get; set; }
 
+        public int Status { get; set; } // 0-unknown, 1 - accepted. 2 - rejected
+
     }
 
 }
