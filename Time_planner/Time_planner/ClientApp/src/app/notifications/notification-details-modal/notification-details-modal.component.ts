@@ -1,10 +1,11 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Notification } from '../notification';
-import { Events } from '../../calendar/events';
+import { Events, UsersEvents } from '../../calendar/events';
 import { EventsService } from '../../calendar/events.service';
 import { UserService } from '../../user/user.service';
 import { Friend } from '../../shared/friend';
 import { NotificationsService } from '../notifications.service';
+import { UserEventsService } from '../../calendar/userEvents.service';
 
 @Component({
   selector: 'notification-details-modal',
@@ -24,7 +25,8 @@ export class NotificationDetailsModalComponent implements OnInit {
 
   constructor(private eventsService: EventsService,
     private userService: UserService,
-    private notificationService: NotificationsService) {
+    private notificationService: NotificationsService,
+    private userEventsService: UserEventsService) {
     this.friends = this.userService.getUserFriends();
   }
 
@@ -53,10 +55,20 @@ export class NotificationDetailsModalComponent implements OnInit {
 
   save(accepted: boolean) {
     if (accepted) {
-      this.notificationService.addNotification(this.getNotificationToAdd(accepted)).subscribe(() => this.onSave.emit(this.notificationDetails));
+      this.notificationService.addNotification(this.getNotificationToAdd(accepted)).subscribe(() => {
+        this.eventsService.getEvent(this.notificationDetails.senderId, this.notificationDetails.eventId).subscribe((event) => {
+          this.eventsService.addEvent(this.getEvent(event, this.notificationDetails.receiverId)).subscribe();
+          this.userEventsService.addUserEvent(this.getUserEvent(this.notificationDetails.eventId, 1)).subscribe(); // accept event
+        })
+        this.onSave.emit(this.notificationDetails)
+      });
+
     }
     else {
-      this.notificationService.addNotification(this.getNotificationToAdd(accepted)).subscribe(() => this.onSave.emit(this.notificationDetails));
+      this.notificationService.addNotification(this.getNotificationToAdd(accepted)).subscribe(() => {
+        this.onSave.emit(this.notificationDetails)
+        this.userEventsService.addUserEvent(this.getUserEvent(this.notificationDetails.eventId, 2)).subscribe(); // reject event
+      });
     }
   }
 
@@ -66,5 +78,30 @@ export class NotificationDetailsModalComponent implements OnInit {
       return "";
     }
     return friend.name;
+  }
+
+  getEvent(event: Events, ownerId: string): Events {
+    return {
+      endDate: event.endDate,
+      city: event.city,
+      startDate: event.startDate,
+      streetAddress: event.streetAddress,
+      id: event.id,
+      isPublic: event.isPublic,
+      latitude: event.latitude,
+      longitude: event.longitude,
+      owner: null,
+      ownerId: ownerId,
+      title: event.title
+    }
+  }
+
+  getUserEvent(eventId: number, status: number): UsersEvents {
+    return {
+      id: 1,
+      eventId: eventId,
+      userId: this.notificationDetails.receiverId,
+      status: status
+    }
   }
 }
