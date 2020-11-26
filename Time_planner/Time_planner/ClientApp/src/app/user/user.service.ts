@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.prod';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Friend } from '../shared/friend';
 
 declare var FB: any;
@@ -36,12 +36,12 @@ export class UserService {
 
   }
 
-  public putUser(id: number): Observable<any> {
+  public putUser(id: string): Observable<any> {
     let baseUrl: string = environment.apiBaseUrl;
-    return this.http.post(baseUrl + 'api/Users/' + id.toString(), {});
+    return this.http.post(baseUrl + 'api/Users/' + id, {});
   }
 
-  public getUserFriends(): Friend[] {
+  public getUserFriends(): Observable<Friend[]> {
     let friends = [];
 
     FB.api(
@@ -60,6 +60,16 @@ export class UserService {
         }
       });
 
-    return friends;
+    return of(friends);
+  }
+
+  public getAttendingFriends(friendId: string, eventId: any): Observable<any> {
+    let baseUrl: string = environment.apiBaseUrl;
+    return this.http.get(baseUrl + 'api/Users/' + friendId + '/' + eventId);
+  }
+
+  public addAttendingEvent(friendId: string, eventId: any): Observable<any> {
+    let baseUrl: string = environment.apiBaseUrl;
+    return this.http.post(baseUrl + 'api/Users/' + friendId + '/' + eventId, {});
   }
 }

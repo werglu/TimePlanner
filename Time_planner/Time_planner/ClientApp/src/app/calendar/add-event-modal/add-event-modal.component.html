@@ -10,7 +10,7 @@
   <!-- invited friends -->
   <ul class="invitedfriends" *ngIf="isPublic">
     <ng-container *ngFor="let friend of invited">
-      <li class="invitedFriend">
+      <li class="invitedFriend" *ngIf="!checkIfCanInvite(friend)">
         <img src={{friend.photoUrl}} alt="invited friend's photo" class="profile-photo-s">
         <span class="nameTooltip">{{friend.name}}</span>
       </li>

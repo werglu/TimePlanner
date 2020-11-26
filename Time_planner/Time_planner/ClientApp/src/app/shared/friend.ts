@@ -1,6 +1,6 @@
 // for friendsList
 export interface Friend {
-  FacebookId: number,
+  FacebookId: string,
   name: string,
   photoUrl: string
 }

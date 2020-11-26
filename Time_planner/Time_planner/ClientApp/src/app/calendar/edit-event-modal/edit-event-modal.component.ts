@@ -22,6 +22,7 @@ export class EditEventModalComponent implements OnInit {
   allFriends: Friend[];
   friends: Friend[];
   invited: Friend[];
+  private wasInvitedInitialized = false;
   @Input() editedEvent: CalendarEvent;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Events>();
@@ -38,9 +39,11 @@ export class EditEventModalComponent implements OnInit {
       streetAddress: [' ', Validators.required]
     });
 
-    this.friends = userService.getUserFriends();
-    this.allFriends = userService.getUserFriends();
-    this.invited = userService.getUserFriends(); // todo Ania
+    userService.getUserFriends().subscribe((friendArray) => {
+      this.allFriends = friendArray;
+      this.friends = friendArray;
+    });
+    this.invited = [];
   }
 
   get title() { return this.editEventForm.get('title'); }
@@ -184,6 +187,10 @@ export class EditEventModalComponent implements OnInit {
 
   sendInvitation(friend: Friend) {
     // TODO!
+    this.userService.addAttendingEvent(friend.FacebookId, this.editedEvent.id).subscribe(() => {
+      this.invited.push(friend);
+      this.friends.splice(this.friends.indexOf(friend), 1);
+    });
   }
 
   search() {
@@ -204,6 +211,17 @@ export class EditEventModalComponent implements OnInit {
   }
 
   checkIfCanInvite(friend: Friend) {
+    if (!this.wasInvitedInitialized) {
+      this.wasInvitedInitialized = true;
+      this.allFriends.forEach((x) => this.userService.getAttendingFriends(x.FacebookId, this.editedEvent.id)
+        .subscribe((y) => {
+          if (y > 0) {
+            this.invited.push(x);
+            this.friends.splice(this.friends.indexOf(x), 1);
+          }
+        }));
+    }
+
     let canInvite = true;
     this.invited.forEach((x) => {
       if (x.FacebookId == friend.FacebookId)

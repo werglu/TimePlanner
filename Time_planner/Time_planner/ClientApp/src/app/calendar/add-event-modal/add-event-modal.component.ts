@@ -14,9 +14,9 @@ declare var FB: any;
 })
 
 export class AddEventModalComponent implements OnInit {
-  editEventForm: FormGroup;  
+  editEventForm: FormGroup;
   @Output() onCancel = new EventEmitter();
-  @Output() onChangeVisibility = new EventEmitter <boolean>();
+  @Output() onChangeVisibility = new EventEmitter<boolean>();
   @Output() onSave = new EventEmitter<Events>();
   invalidDate = false;
   isPublic = false;
@@ -36,8 +36,10 @@ export class AddEventModalComponent implements OnInit {
       streetAddress: ['', Validators.required]
     });
 
-    this.friends = userService.getUserFriends();
-    this.allFriends = userService.getUserFriends();
+    userService.getUserFriends().subscribe((friendArray) => {
+      this.allFriends = friendArray;
+      this.friends = friendArray;
+    });
   }
 
   get title() { return this.editEventForm.get('title'); }
@@ -151,12 +153,12 @@ export class AddEventModalComponent implements OnInit {
 
   getStartTime() {
     let date: Date = new Date();
-    return (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' + (date.getMinutes() < 10 ? '0' +  date.getMinutes() : date.getMinutes());
+    return (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
   }
 
   getEndTime() {
     let date: Date = new Date();
-    return (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' + (date.getMinutes()+1 < 10 ? '0' + (date.getMinutes()+1) : (date.getMinutes()+1));
+    return (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' + (date.getMinutes() + 1 < 10 ? '0' + (date.getMinutes() + 1) : (date.getMinutes() + 1));
   }
 
   changeVisibility() {
@@ -166,6 +168,8 @@ export class AddEventModalComponent implements OnInit {
 
   sendInvitation(friend: Friend) {
     // TODO!
+    this.invited.push(friend);
+    this.friends.splice(this.friends.indexOf(friend), 1);
   }
 
   search() {
@@ -187,10 +191,9 @@ export class AddEventModalComponent implements OnInit {
 
   checkIfCanInvite(friend: Friend) {
     let canInvite = true;
-    this.invited.forEach((x) => {
-      if (x.FacebookId == friend.FacebookId)
-        canInvite = false;
-    });
+    if (this.invited.indexOf(friend) !== -1) {
+      canInvite = false;
+    };
 
     return canInvite;
   }
