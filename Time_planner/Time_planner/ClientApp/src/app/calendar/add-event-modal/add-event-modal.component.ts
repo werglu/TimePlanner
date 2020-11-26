@@ -40,6 +40,7 @@ export class AddEventModalComponent implements OnInit {
       this.allFriends = friendArray;
       this.friends = friendArray;
     });
+    this.invited = [];
   }
 
   get title() { return this.editEventForm.get('title'); }
