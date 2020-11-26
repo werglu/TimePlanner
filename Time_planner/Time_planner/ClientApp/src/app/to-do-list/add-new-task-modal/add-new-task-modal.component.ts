@@ -16,8 +16,8 @@ export class AddNewTaskModalComponent implements OnInit {
   public listCategories: Array<ListCategory> = [];
   public priorities: Array<string> = ['High priority', 'Medium priority', 'Low priority'];
   public splits: Array<number> = [1, 2, 3, 4, 5, 6];
-  public hours: Array<number> = Array.from({ length: 169 }, (v, k) => k)
-  public minutes: Array<number> = Array.from({ length: 60 }, (v, k) => k)
+  public hours: Array<number> = Array.from({ length: 51 }, (v, k) => k)
+  public minutes: Array<number> = [0, 5, 15, 30, 45]
   currentCategory: ListCategory;
   choosenPriority = 1;
   choosenSplit = 1;
