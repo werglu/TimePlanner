@@ -37,7 +37,7 @@ namespace Time_planner_api.Controllers
         {
             var ourEvent = await _context.Events.FindAsync(id);
 
-            if (ourEvent == null || ourEvent.OwnerId != userId)
+            if (ourEvent == null)
             {
                 return NotFound();
             }

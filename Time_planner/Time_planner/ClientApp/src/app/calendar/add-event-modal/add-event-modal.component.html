@@ -98,7 +98,7 @@
         <div class="input-group-prepend">
           <button id="button-addon2" type="button" (click)="search()" class="btn btn-link text-warning"><i class="fa fa-search"></i></button>
         </div>
-        <input type="search" id="searchInput" placeholder="Find friends!" class="form-control border-0 bg-light">
+        <input type="search" id="searchInput" placeholder="search friends..." class="form-control border-0 bg-light">
       </div>
     </div>
     <!-- end search -->
@@ -113,7 +113,7 @@
               <label class="profile-link">{{friend.name}}</label>
             </div>
             <div class="col-md-2 col-sm-2">
-              <button type="button" class="btn btn-primary pull-right" (click)="sendInvitation(friend)">Invite</button>
+              <button type="button" class="btn btn-primary pull-right" style="background-color: var(--color-light-green);" (click)="sendInvitation(friend)">Invite</button>
             </div>
           </li>
          </ng-container>
@@ -123,7 +123,7 @@
   <!-- end friends list  -->
 
   <div style="float:right">
-    <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    <button style="margin-top:20px;margin-right:10px;opacity:0.6" class="btn btn-secondary" (click)="cancel()">Cancel</button>
     <button style="margin-top:20px;" class="btn btn-primary" type="submit">Save</button>
   </div>
 </form>

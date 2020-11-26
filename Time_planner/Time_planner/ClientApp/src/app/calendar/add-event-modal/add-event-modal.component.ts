@@ -4,6 +4,8 @@ import { Events } from '../events';
 import { EventsService } from '../events.service';
 import { Friend } from '../../shared/friend';
 import { UserService } from '../../user/user.service';
+import { NotificationsService } from '../../notifications/notifications.service';
+import { Notification } from '../../notifications/notification';
 
 declare var FB: any;
 
@@ -23,11 +25,13 @@ export class AddEventModalComponent implements OnInit {
   userId: string;
   friends: Friend[];
   allFriends: Friend[];
+  invitedFriendsIds: string[] = [];
   invited: Friend[];
 
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService,
-    public userService: UserService) {
+    public userService: UserService,
+    private notificationService: NotificationsService) {
     this.editEventForm = this.formBuilder.group({
       title: ['', Validators.required],
       startDate: '',
@@ -91,10 +95,25 @@ export class AddEventModalComponent implements OnInit {
     };
   }
 
+  sendInvitations(eventId: number) {
+    var id = 1;
+    this.invitedFriendsIds.forEach(friendId => {
+      this.notificationService.addNotification(this.getNotificationToSend(this.invitedFriendsIds[0], eventId, id)).subscribe(() => {
+      });
+    });
+  }
+
   onSubmit() {
     this.validateAllFormControls(this.editEventForm);
     if (this.editEventForm.valid && !this.startDateInvalid() && !this.endDateInvalid() && !this.dateInvalid()) {
-      this.eventsService.addEvent(this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
+      var event = this.getFormValue();
+      this.eventsService.addEvent(event).subscribe(() => {
+        this.onSave.emit(event);
+        this.eventsService.getAllEvents(this.userId).subscribe((events) => {
+          var eventId = events.sort((e1, e2) => e2.id - e1.id)[0].id;
+          this.sendInvitations(eventId);
+        });  
+      });
     }
     else {
       this.validateAllFormControls(this.editEventForm);
@@ -167,7 +186,20 @@ export class AddEventModalComponent implements OnInit {
     this.onChangeVisibility.emit(this.isPublic);
   }
 
+  getNotificationToSend(friendId: string, eventId: number, id: number): Notification {
+    return {
+      id: id,
+      eventId: eventId,
+      event: null,
+      senderId: this.userId,
+      receiverId: friendId,
+      isDismissed: false,
+      messageType: 0
+    }
+  }
+
   sendInvitation(friend: Friend) {
+    this.invitedFriendsIds.push(friend.FacebookId.toString());
     // TODO!
     this.invited.push(friend);
     this.friends.splice(this.friends.indexOf(friend), 1);

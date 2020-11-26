@@ -7,11 +7,10 @@
     <kendo-grid-column [headerStyle]="{'color': '#004445','font-weight': '500'}"
                        [footerStyle]="{'padding': '2px','color': '#faf5e4'}"
                        [style]="{'padding': '0px 0px 1px 0px'}"
-                       field="messageType" title="Notifications"
-                       >
+                       field="messageType" title="Notifications">
       <ng-template kendoGridCellTemplate let-dataItem>
         <div style="display:block;border-left:5px red solid;padding:0.75rem" [style.border-color]="colors[dataItem.messageType]">
-          <label>{{threeDotsWrap(messages[dataItem.messageType])}}</label>
+          <label>{{getFriendNameById(dataItem.senderId)}}{{threeDotsWrap(messages[dataItem.messageType])}}</label>
           <div>
             <button class="seeMore btn" (click)="showNotificationDetailsModal(dataItem)">See more</button>
             <button class="dismiss btn" (click)="dismiss(dataItem)">Dismiss</button>
@@ -23,12 +22,8 @@
           Dismiss all
         </button>
       </ng-template>
-
     </kendo-grid-column>
-
   </kendo-grid>
-
-
 </div>
 
 <kendo-dialog title="Notification details" *ngIf="notificationDetailsVisible" (close)="closeNotificationDetailsModal()" [minWidth]="250" [width]="450">
