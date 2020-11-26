@@ -13,3 +13,10 @@ export interface Events {
   ownerId: string;
   owner: User;
 }
+
+export interface UsersEvents {
+  id: number;
+  eventId: number;
+  userId: string;
+  status: number;
+}
