@@ -42,11 +42,11 @@ export class TasksService {
 
   findDates(ids: number[]): Observable<TaskAssignmentProposition[]> {
     var baseUrl: string = environment.apiBaseUrl;
-    return this.http.put<TaskAssignmentProposition[]>(baseUrl + 'api/Tasks/weekplan/', ids);
+    return this.http.put<TaskAssignmentProposition[]>(baseUrl + 'api/planning/weekplan/', ids);
   }
 
   saveDates(taskAssignemntsSave: TaskAssignmentSave[]): Observable<TaskAssignmentSave[]> {
     var baseUrl: string = environment.apiBaseUrl;
-    return this.http.put<TaskAssignmentSave[]>(baseUrl + 'api/Tasks/saveDates', taskAssignemntsSave);
+    return this.http.put<TaskAssignmentSave[]>(baseUrl + 'api/planning/saveDates', taskAssignemntsSave);
   }
 }

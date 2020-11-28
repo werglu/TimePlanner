@@ -39,6 +39,6 @@ export class EventsService {
 
   public getSortedEvents(): Observable<Events[]> {
     var baseUrl: string = environment.apiBaseUrl;
-    return this.http.get<Events[]>(baseUrl + 'api/Events/sort/');
+    return this.http.get<Events[]>(baseUrl + 'api/planning/sortEvents/');
   }
 }

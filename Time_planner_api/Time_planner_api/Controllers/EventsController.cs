@@ -128,14 +128,6 @@ namespace Time_planner_api.Controllers
             return ourEvent;
         }
 
-        // GET: api/Events/sort
-        [HttpGet]
-        [Route("sort")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetSortedEvents()
-        {
-            return SalesmanHelper.FindShortestRoute(await _context.Events.ToListAsync());
-        }
-
         private bool EventExists(int id)
         {
             return _context.Events.Any(e => e.Id == id);
