@@ -98,21 +98,21 @@ export class HomeComponent implements AfterViewInit {
       navigator.geolocation.getCurrentPosition(position => {
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
-        this.eventsService.getSortedEvents().subscribe(e => {
-          var ind = 1;
-          e.forEach(ee => {
-            // todo: to be changed when there will be proper location in Event
-            // only ee.latitude and ee.longitude should be assigned
-            this.points.push({
-              lat: ee.latitude + this.lat,
-              lng: ee.longitude + this.lng,
-              label: ind.toString(),
-              id: ee.id,
-              title: ee.title
-            })
-            ind++;
-          });
-        });
+        //this.eventsService.getSortedEvents().subscribe(e => {
+        //  var ind = 1;
+        //  e.forEach(ee => {
+        //    // todo: to be changed when there will be proper location in Event
+        //    // only ee.latitude and ee.longitude should be assigned
+        //    this.points.push({
+        //      lat: ee.latitude + this.lat,
+        //      lng: ee.longitude + this.lng,
+        //      label: ind.toString(),
+        //      id: ee.id,
+        //      title: ee.title
+        //    })
+        //    ind++;
+        //  });
+        //});
       });
     }
     else {

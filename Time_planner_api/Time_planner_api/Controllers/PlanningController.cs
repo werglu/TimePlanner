@@ -53,7 +53,7 @@ namespace Time_planner_api.Controllers
                 {
                     if (currentWindowStart < ev.StartDate)
                     {
-                        var currentWindowEnd = ev.EndDate;
+                        var currentWindowEnd = ev.StartDate;
                         if (dayEnd < currentWindowEnd)
                         {
                             currentWindowEnd = dayEnd;
@@ -144,12 +144,39 @@ namespace Time_planner_api.Controllers
             return DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek) + 1).AddDays(day % 7); // starts from monday
         }
 
-        // GET: api/Planning/sortEvents
-        [HttpGet]
-        [Route("sortEvents")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetSortedEvents()
+        // GET: api/Planning/dayplan
+        [HttpGet("{userId}")]
+        [Route("dayplan")]
+        public async Task<ActionResult<IEnumerable<CalendarItem>>> FindShortestRoute(string userId, double startMinutes = 420.0, double endMinutes = 1320.0)
         {
-            return SalesmanHelper.FindShortestRoute(await _context.Events.ToListAsync());
+            return DayPlanHelper.FindShortestRoute(await _context.Events.Where(x => x.OwnerId == userId && IsCurrentDay(x)).ToListAsync(),
+                await _context.Tasks.Where(y => y.Category.OwnerId == userId && IsCurrentDay(y)).ToListAsync(), startMinutes, endMinutes);
+        }
+
+        private bool IsCurrentDay(Event ev)
+        {
+            return ev.StartDate < DateTime.Today.AddDays(1) && ev.EndDate >= DateTime.Today;
+        }
+
+        private bool IsCurrentDay(Models.Task task)
+        {
+            var days = new List<DateTime?>()
+            {
+                task.Date0, task.Date1, task.Date2, task.Date3, task.Date4, task.Date5, task.Date6
+            };
+            foreach (var day in days)
+            {
+                if (day.HasValue && day.Value >= DateTime.Today && day.Value < DateTime.Today.AddDays(1))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool TaskExists(int id)
+        {
+            return _context.Tasks.Any(t => t.Id == id);
         }
 
     }

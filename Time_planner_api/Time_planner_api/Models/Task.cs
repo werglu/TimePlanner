@@ -35,5 +35,11 @@ namespace Time_planner_api.Models
         public int? Days { get; set; }
         public int? Time { get; set; }
         public int? Split { get; set; }
+
+        [NotMapped]
+        public double? Longitude { get; set; }
+
+        [NotMapped]
+        public double? Latitude { get; set; }
     }
 }
