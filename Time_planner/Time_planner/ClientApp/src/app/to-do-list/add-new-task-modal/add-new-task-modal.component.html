@@ -33,7 +33,7 @@
   </div>
   <div style="padding-top: 10px;">
     <label>
-      Add date constraints
+      Add date constraints <i class=" fa fa-info-circle"><span class="tooltiptext">Specify on which days and how many times you want to do this task.</span></i>
     </label>
     <button *ngIf="addDateConstraintsOff" class="btn" style="background-color:transparent;" (click)="turnOnAddDateConstraints()"><i class="fa fa-toggle-off"></i></button>
     <button *ngIf="!addDateConstraintsOff" class="btn" style="background-color:transparent" (click)="turnOffAddDateConstraints()"><i class="fa fa-toggle-on"></i></button>
@@ -61,30 +61,33 @@
   </div>
   <div *ngIf="!addDateConstraintsOff" style="display:grid">
     <label style="padding-top: 10px;" for="name">
-      Total duration <span class="required">*</span>
+      Total duration <span class="required" style="margin-left:1px;margin-right:5px">*</span> <i class=" fa fa-info-circle"><span class="tooltiptext">Choose how much time it will take to do your task in total.</span></i>
     </label>
     <div>
       <kendo-combobox [data]="hours"
                       [value]="hours[1]"
-                      (valueChange)="onHourChange($event)">
+                      (valueChange)="onHourChange($event)"
+                      style="width: 100px;margin-bottom:10px">
       </kendo-combobox>
       <label style="margin-left:1em">hours</label>
     </div>
     <div>
       <kendo-combobox [data]="minutes"
                       [value]="minutes[0]"
-                      (valueChange)="onMinuteChange($event)">
+                      (valueChange)="onMinuteChange($event)"
+                      style="width: 100px;">
       </kendo-combobox>
       <label style="margin-left:1em">minutes</label>
     </div>
   </div>
   <div *ngIf="!addDateConstraintsOff" style="display:grid">
     <label style="padding-top: 10px;" for="name">
-      Split into days<span class="required">*</span>
+      Split into days<span class="required" style="margin-left:3px;margin-right:5px">*</span> <i class=" fa fa-info-circle"><span class="tooltiptext">Choose how many days from selected you want to do your task.</span></i>
     </label>
     <kendo-combobox [data]="splits"
                     [value]="splits[0]"
-                    (valueChange)="onSplitChange($event)">
+                    (valueChange)="onSplitChange($event)"
+                    style="width: 100px;">
     </kendo-combobox>
   </div>
   <div style="float:right">

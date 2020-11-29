@@ -89,7 +89,7 @@
 
 <kendo-dialog *ngIf="openTask" (close)="closeOpenTaskModal()" [minWidth]="250" [width]="450">
   <kendo-dialog-titlebar>
-    <div><span class="k-icon k-i-user"></span>Edit task</div>
+    <div style="margin-left: 5px;"><span class="k-icon k-i-user" style="margin-top:-6px;padding-right: 5px;"></span>Edit task</div>
   </kendo-dialog-titlebar>
   <edit-task-modal [editedTask]="currentTask" (onCancel)="closeOpenTaskModal()" (onSave)="editTask($event)"></edit-task-modal>
 </kendo-dialog>

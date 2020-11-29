@@ -98,11 +98,10 @@ export class AddEventModalComponent implements OnInit {
   sendInvitations(eventId: number) {
     var id = 1;
     this.invitedFriendsIds.forEach(friendId => {
-      this.notificationService.addNotification(this.getNotificationToSend(this.invitedFriendsIds[0], eventId, id)).subscribe(() => {
-      });
+      this.notificationService.addNotification(this.getNotificationToSend(this.invitedFriendsIds[0], eventId, id)).subscribe();
     });
   }
-
+  
   onSubmit() {
     this.validateAllFormControls(this.editEventForm);
     if (this.editEventForm.valid && !this.startDateInvalid() && !this.endDateInvalid() && !this.dateInvalid()) {
@@ -110,7 +109,7 @@ export class AddEventModalComponent implements OnInit {
       this.eventsService.addEvent(event).subscribe(() => {
         this.onSave.emit(event);
         this.eventsService.getAllEvents(this.userId).subscribe((events) => {
-          var eventId = events.sort((e1, e2) => e2.id - e1.id)[0].id;
+          var eventId = events.sort((e1, e2) => e2.id - e1.id)[0].id; // get new event id
           this.sendInvitations(eventId);
         });  
       });
