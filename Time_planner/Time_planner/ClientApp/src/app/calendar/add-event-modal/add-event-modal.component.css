@@ -128,3 +128,18 @@ img.profile-photo-s {
 .invitedFriend:hover .nameTooltip {
   visibility: visible;
 }
+
+.invitedFriend {
+  position: relative;
+}
+
+.status {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.unknow {
+  color: var(--yellow);
+}
+

@@ -8,10 +8,11 @@
   </div>
 
   <!-- invited friends -->
-  <ul class="invitedfriends" *ngIf="isPublic">
+  <ul class="invitedfriends" >
     <ng-container *ngFor="let friend of invited">
-      <li class="invitedFriend" *ngIf="!checkIfCanInvite(friend)">
+      <li class="invitedFriend">
         <img src={{friend.photoUrl}} alt="invited friend's photo" class="profile-photo-s">
+        <i class="fa fa-question-circle status unknow"></i>
         <span class="nameTooltip">{{friend.name}}</span>
       </li>
     </ng-container>
@@ -91,7 +92,7 @@
   </div>
 
   <!-- begin friends list -->
-  <div class="container friendsContainer" *ngIf="isPublic">
+  <div class="container friendsContainer">
     <!-- search -->
     <div class="p-0 bg-light rounded rounded-pill shadow-sm mb-1 searchBar">
       <div class="input-group">

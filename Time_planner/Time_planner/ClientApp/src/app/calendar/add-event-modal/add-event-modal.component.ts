@@ -199,7 +199,6 @@ export class AddEventModalComponent implements OnInit {
 
   sendInvitation(friend: Friend) {
     this.invitedFriendsIds.push(friend.FacebookId.toString());
-    // TODO!
     this.invited.push(friend);
     this.friends.splice(this.friends.indexOf(friend), 1);
   }
@@ -223,7 +222,7 @@ export class AddEventModalComponent implements OnInit {
 
   checkIfCanInvite(friend: Friend) {
     let canInvite = true;
-    if (this.invited.indexOf(friend) !== -1) {
+    if (this.invitedFriendsIds.indexOf(friend.FacebookId) !== -1) {
       canInvite = false;
     };
 
