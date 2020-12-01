@@ -10,7 +10,7 @@
   <!-- invited friends -->
   <ul class="invitedfriends">
     <ng-container *ngFor="let friend of invited">
-      <li class="invitedFriend" *ngIf="!checkIfCanInvite(friend)">
+      <li class="invitedFriend">
         <img src={{friend.photoUrl}} alt="invited friend's photo" class="profile-photo-s" />
         <i *ngIf="friend.status == 1" class="fa fa-check-circle status accepted"></i>
         <i *ngIf="friend.status == 2"  class="fa fa-times-circle status rejected"></i>

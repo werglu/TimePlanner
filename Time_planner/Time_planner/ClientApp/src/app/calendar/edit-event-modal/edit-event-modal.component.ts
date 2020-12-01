@@ -6,6 +6,8 @@ import { EventsService } from '../events.service';
 import { Friend, InvitedFriend } from '../../shared/friend';
 import { UserService } from '../../user/user.service';
 import { UserEventsService, Status } from '../userEvents.service';
+import { NotificationsService } from '../../notifications/notifications.service';
+import { Notification } from '../../notifications/notification';
 
 declare var FB: any;
 
@@ -32,7 +34,8 @@ export class EditEventModalComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService,
     public userService: UserService,
-    public userEventsService: UserEventsService) {
+    public userEventsService: UserEventsService,
+    private notificationService: NotificationsService) {
     this.editEventForm = this.formBuilder.group({
       title: [' ', Validators.required],
       startDate: '',
@@ -187,8 +190,21 @@ export class EditEventModalComponent implements OnInit {
     this.onChangeVisibility.emit(this.isPublic);
   }
 
+  getNotificationToSend(friendId: string, eventId: number, id: number): Notification {
+    return {
+      id: id,
+      eventId: eventId,
+      event: null,
+      senderId: this.userId,
+      receiverId: friendId,
+      isDismissed: false,
+      messageType: 0
+    }
+  }
+
   sendInvitation(friend: Friend) {
-    // TODO notification
+    let id = 1;
+    this.notificationService.addNotification(this.getNotificationToSend(friend.FacebookId, this.currentEvent.id, id)).subscribe();
     this.userEventsService.addUserEvent({
       id: 1,
       eventId: this.currentEvent.id,
