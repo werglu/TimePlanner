@@ -6,6 +6,7 @@ import { Friend } from '../../shared/friend';
 import { UserService } from '../../user/user.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { Notification } from '../../notifications/notification';
+import { Status, UserEventsService } from '../userEvents.service';
 
 declare var FB: any;
 
@@ -31,6 +32,7 @@ export class AddEventModalComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService,
     public userService: UserService,
+    public userEventsService: UserEventsService,
     private notificationService: NotificationsService) {
     this.editEventForm = this.formBuilder.group({
       title: ['', Validators.required],
@@ -99,6 +101,12 @@ export class AddEventModalComponent implements OnInit {
     var id = 1;
     this.invitedFriendsIds.forEach(friendId => {
       this.notificationService.addNotification(this.getNotificationToSend(this.invitedFriendsIds[0], eventId, id)).subscribe();
+      this.userEventsService.addUserEvent({
+        id: 1,
+        eventId: eventId,
+        userId: friendId,
+        status: Status.Unknow,
+      }).subscribe();
     });
   }
   

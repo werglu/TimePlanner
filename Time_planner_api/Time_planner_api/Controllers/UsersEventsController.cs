@@ -104,6 +104,40 @@ namespace Time_planner_api.Controllers
             return NoContent();
         }
 
+        // PUT: api/UsersEvents
+        /// <summary>
+        /// Updates status.
+        /// 1 - accepted, 2 - rejected
+        /// </summary>
+        /// <param name="oldEvent"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<ActionResult> PutUserEventStatus (UsersEvents oldEvent)
+        {
+            UsersEvents newEvent = _context.UsersEvents.Where(ue => ue.EventId == oldEvent.EventId && ue.UserId == oldEvent.UserId).Single();
+            newEvent.Status = oldEvent.Status;
+
+            _context.Entry(newEvent).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserEventExists(newEvent.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
