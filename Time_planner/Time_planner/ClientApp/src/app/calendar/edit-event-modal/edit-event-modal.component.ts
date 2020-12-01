@@ -25,6 +25,7 @@ export class EditEventModalComponent implements OnInit {
   allFriends: Friend[];
   friends: Friend[];
   invited: InvitedFriend[];
+  isOwner: boolean;
   private wasInvitedInitialized = false;
   @Input() editedEvent: CalendarEvent;
   @Output() onCancel = new EventEmitter();
@@ -238,9 +239,10 @@ export class EditEventModalComponent implements OnInit {
     });
   }
 
-  checkIfCanInvite(friend: Friend) {
+  initializeInvitedList(): boolean {
     if (!this.wasInvitedInitialized) {
-      this.wasInvitedInitialized = true;
+      this.userEventsService.getUserEvents(this.userId, (this.editedEvent.id as number))
+        .subscribe((x) => { this.isOwner = (x.status == Status.Owner); });
       this.allFriends.forEach((x) => this.userEventsService.getUserEvents(x.FacebookId, (this.editedEvent.id as number))
         .subscribe((y) => {
           if (y.id > -1) {
@@ -253,8 +255,14 @@ export class EditEventModalComponent implements OnInit {
             this.friends.splice(this.friends.indexOf(x), 1);
           }
         }));
-    }
 
+      if (this.allFriends.length > 0)
+        this.wasInvitedInitialized = true;
+    }
+    return true;
+  }
+
+  checkIfCanInvite(friend: Friend) {
     let canInvite = true;
     this.invited.forEach((x) => {
       if (x.FacebookId == friend.FacebookId)

@@ -118,6 +118,12 @@ export class AddEventModalComponent implements OnInit {
         this.onSave.emit(event);
         this.eventsService.getAllEvents(this.userId).subscribe((events) => {
           var eventId = events.sort((e1, e2) => e2.id - e1.id)[0].id; // get new event id
+          this.userEventsService.addUserEvent({
+            id: 1,
+            eventId: eventId,
+            userId: this.userId,
+            status: Status.Owner,
+          }).subscribe();
           this.sendInvitations(eventId);
         });  
       });
