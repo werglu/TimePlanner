@@ -127,3 +127,25 @@ img.profile-photo-s {
 .invitedFriend:hover .nameTooltip {
   visibility: visible;
 }
+
+.invitedFriend {
+  position: relative;
+}
+
+.status {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.accepted {
+  color: var(--color-light-green);
+}
+
+.rejected {
+    color: red;
+}
+
+.unknow {
+  color: var(--yellow);
+}

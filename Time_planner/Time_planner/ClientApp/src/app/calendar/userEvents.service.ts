@@ -28,3 +28,10 @@ export class UserEventsService {
   }
 
 }
+
+export enum Status {
+  Unknow,
+  Accepted,
+  Rejected,
+  Owner
+}

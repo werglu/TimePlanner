@@ -32,14 +32,16 @@ namespace Time_planner_api.Controllers
         [HttpGet("{userId}/{eventId}")]
         public async Task<ActionResult<UsersEvents>> GetUserEvent(string userId, int eventId)
         {
-            var userEvent = await _context.UsersEvents.FirstAsync(ue => ue.EventId == eventId && userId == ue.UserId);
-
-            if (userEvent == null)
+            if (!_context.UsersEvents.Any(ue => ue.EventId == eventId && userId == ue.UserId))
             {
-                return NotFound();
+                return new UsersEvents() {
+                    Id = -1
+                };
             }
-
-            return userEvent;
+            else
+            {
+                return await _context.UsersEvents.FirstAsync(ue => ue.EventId == eventId && userId == ue.UserId);
+            }
         }
 
         // POST: api/UsersEvents
@@ -50,7 +52,7 @@ namespace Time_planner_api.Controllers
             {
                 EventId = userEvent.EventId,
                 UserId = userEvent.UserId,
-                Status = userEvent.Status            
+                Status = userEvent.Status
             });
 
             try

@@ -3,8 +3,9 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { CalendarEvent } from 'angular-calendar';
 import { Events } from '../events';
 import { EventsService } from '../events.service';
-import { Friend } from '../../shared/friend';
+import { Friend, InvitedFriend } from '../../shared/friend';
 import { UserService } from '../../user/user.service';
+import { UserEventsService, Status } from '../userEvents.service';
 
 declare var FB: any;
 
@@ -21,7 +22,7 @@ export class EditEventModalComponent implements OnInit {
   userId: string;
   allFriends: Friend[];
   friends: Friend[];
-  invited: Friend[];
+  invited: InvitedFriend[];
   private wasInvitedInitialized = false;
   @Input() editedEvent: CalendarEvent;
   @Output() onCancel = new EventEmitter();
@@ -30,7 +31,8 @@ export class EditEventModalComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService,
-    public userService: UserService) {
+    public userService: UserService,
+    public userEventsService: UserEventsService) {
     this.editEventForm = this.formBuilder.group({
       title: [' ', Validators.required],
       startDate: '',
@@ -186,9 +188,19 @@ export class EditEventModalComponent implements OnInit {
   }
 
   sendInvitation(friend: Friend) {
-    // TODO!
-    this.userService.addAttendingEvent(friend.FacebookId, this.editedEvent.id).subscribe(() => {
-      this.invited.push(friend);
+    // TODO notification
+    this.userEventsService.addUserEvent({
+      id: 1,
+      eventId: this.currentEvent.id,
+      userId: friend.FacebookId,
+      status: Status.Unknow, 
+    }).subscribe(() => {
+      this.invited.push({
+        FacebookId: friend.FacebookId,
+        name: friend.name,
+        photoUrl: friend.photoUrl,
+        status: Status.Unknow,
+      });
       this.friends.splice(this.friends.indexOf(friend), 1);
     });
   }
@@ -213,10 +225,15 @@ export class EditEventModalComponent implements OnInit {
   checkIfCanInvite(friend: Friend) {
     if (!this.wasInvitedInitialized) {
       this.wasInvitedInitialized = true;
-      this.allFriends.forEach((x) => this.userService.getAttendingFriends(x.FacebookId, this.editedEvent.id)
+      this.allFriends.forEach((x) => this.userEventsService.getUserEvents(x.FacebookId, (this.editedEvent.id as number))
         .subscribe((y) => {
-          if (y > 0) {
-            this.invited.push(x);
+          if (y.id > -1) {
+            this.invited.push({
+              FacebookId: x.FacebookId,
+              name: x.name,
+              photoUrl: x.photoUrl,
+              status: y.status,
+            });
             this.friends.splice(this.friends.indexOf(x), 1);
           }
         }));

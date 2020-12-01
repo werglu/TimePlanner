@@ -4,3 +4,7 @@ export interface Friend {
   name: string,
   photoUrl: string
 }
+
+export interface InvitedFriend extends Friend{
+  status: number,
+}
