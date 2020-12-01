@@ -63,14 +63,4 @@ export class UserService {
 
     return of(friends);
   }
-
-  public getAttendingFriends(friendId: string, eventId: any): Observable<any> {
-    let baseUrl: string = environment.apiBaseUrl;
-    return this.http.get(baseUrl + 'api/Users/' + friendId + '/' + eventId);
-  }
-
-  public addAttendingEvent(friendId: string, eventId: any): Observable<any> {
-    let baseUrl: string = environment.apiBaseUrl;
-    return this.http.post(baseUrl + 'api/Users/' + friendId + '/' + eventId, {});
-  }
 }

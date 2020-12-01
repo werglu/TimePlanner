@@ -72,7 +72,7 @@ namespace Time_planner_api.Controllers
 
                 return Ok();
             }
-            catch (Exception e) //(DbUpdateConcurrencyException)
+            catch (Exception e)
             {
                 if (!UserExists(id))
                 {
@@ -123,75 +123,6 @@ namespace Time_planner_api.Controllers
             }
 
             return user;
-        }
-
-        // GET:  api/Users/103609784907565/62
-        [HttpGet("{userId}/{eventId}")]
-        public async Task<ActionResult<int>> GetIfUserAttendsInEvent([FromRoute]string userId, [FromRoute]string eventId)
-        {
-            if (!UserExists(userId))
-                return -1;
-
-            var user = await _context.Users.FindAsync(userId);
-            var eventItem = await _context.Events.FindAsync(eventId);
-
-            if (user.AttendedEvents.Contains(eventItem))
-                return 1;
-
-            return 0;
-        }
-
-        [HttpPost("{id}/{eventId}")]
-        public async Task<IActionResult> AddAttendingEvent([FromRoute]string id, [FromRoute]int eventId)
-        {
-            if (!UserExists(id))
-            {
-                return NoContent();
-            }
-
-            var user = await _context.Users.FindAsync(id);
-            var eventItem = await _context.Events.FindAsync(eventId);
-            user.AttendedEvents.Add(eventItem);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (UserExists(user.FacebookId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return Ok();
-        }
-
-        // DELETE: api/Users/103609784907565/62
-
-        [HttpDelete("{userId}/{eventId}")]
-        public async Task<ActionResult<User>> DeleteEvent([FromRoute] string userId, [FromRoute] int eventId)
-        {
-            if (!UserExists(userId))
-            {
-                return NoContent();
-            }
-
-            var user = await _context.Users.FindAsync(userId);
-            var eventItem = await _context.Events.FindAsync(eventId);
-            if (user.AttendedEvents.Contains(eventItem))
-            {
-                user.AttendedEvents.Remove(eventItem);
-                await _context.SaveChangesAsync();
-                return user;
-            }
-
-            return NoContent();
         }
     }
 }
