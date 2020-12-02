@@ -27,4 +27,9 @@ export class NotificationsService {
     var baseUrl: string = environment.apiBaseUrl;
     return this.http.post<Notification>(baseUrl + 'api/Notifications/add', notification);
   }
+
+  deleteAllNotificationWithSpecifiedEventId(eventId: number): Observable<Notification> {
+    var baseUrl: string = environment.apiBaseUrl;
+    return this.http.delete<Notification>(baseUrl + 'api/Notifications/deleteAll/' + eventId.toString());
+  }
 }
