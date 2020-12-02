@@ -103,6 +103,23 @@ namespace Time_planner_api.Controllers
             return NoContent();
         }
 
+
+        // DELETE: api/Notifications/deleteAll
+        [HttpDelete("deleteAll/{eventId}")]
+        public async Task<ActionResult<IEnumerable<Notification>>> DeleteAllNotificationsWithSpecifiedEventId([FromRoute] int eventId)
+        {
+            var notifications = _context.Notifications.Where(n => n.EventId == eventId);
+            if (notifications == null)
+            {
+                return NotFound();
+            }
+
+            _context.Notifications.RemoveRange(notifications);
+            await _context.SaveChangesAsync();
+
+            return notifications.ToList();
+        }
+
         private bool NotificationExists(int id)
         {
             return _context.Notifications.Any(n => n.Id == id);

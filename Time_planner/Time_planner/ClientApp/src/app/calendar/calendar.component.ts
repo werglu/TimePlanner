@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 import { isSameDay, isSameMonth } from 'date-fns';
 import { TasksService } from '../to-do-list/tasks.service';
 import { Task } from '../to-do-list/task';
+import { NotificationsService } from '../notifications/notifications.service';
 
 declare var FB: any;
 
@@ -44,7 +45,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   constructor(public eventsService: EventsService,
     public tasksService: TasksService,
-    public http: HttpClient) {
+    public http: HttpClient,
+    private notificationsService: NotificationsService) {
   }
 
   ngOnInit(): void {
@@ -235,13 +237,16 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.addNewEventModalVisible = false;
   }
 
-  deleteEvent(event: CalendarEvent) {
-    this.eventsService.deleteEvent(+event.id).subscribe(response => {
-      this.closeOpenEventModal();
-      this.events = this.events.filter(e => e.id !== event.id);
-      this.activeDayIsOpen = false;
-      this.refresh.next();
-    });
+  async deleteEvent(event: CalendarEvent) {
+    //first need to remove all notifications with this event
+    this.notificationsService.deleteAllNotificationWithSpecifiedEventId(+event.id).subscribe(() => {
+      this.eventsService.deleteEvent(+event.id).subscribe(response => {
+        this.closeOpenEventModal();
+        this.events = this.events.filter(e => e.id !== event.id);
+        this.activeDayIsOpen = false;
+        this.refresh.next();
+      });
+    }); 
   }
 
   eventVisibilityChanged(event: boolean) {

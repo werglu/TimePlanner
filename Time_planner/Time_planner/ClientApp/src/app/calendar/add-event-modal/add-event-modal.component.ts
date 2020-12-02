@@ -92,9 +92,8 @@ export class AddEventModalComponent implements OnInit {
   }
 
   sendInvitations(eventId: number) {
-    var id = 1;
     this.invitedFriendsIds.forEach(friendId => {
-      this.notificationService.addNotification(this.getNotificationToSend(this.invitedFriendsIds[0], eventId, id)).subscribe();
+      this.notificationService.addNotification(this.getNotificationToSend(friendId, eventId, 1)).subscribe();
     });
   }
   
