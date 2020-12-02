@@ -3,11 +3,11 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { CalendarEvent } from 'angular-calendar';
 import { Events, UsersEvents } from '../events';
 import { EventsService } from '../events.service';
-import { Friend } from '../../shared/friend';
+import { Friend, InvitedFriend } from '../../shared/friend';
 import { UserService } from '../../user/user.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { Notification } from '../../notifications/notification';
-import { UserEventsService } from '../userEvents.service';
+import { UserEventsService, Status  } from '../userEvents.service';
 
 declare var FB: any;
 
@@ -24,6 +24,9 @@ export class EditEventModalComponent implements OnInit {
   userId: string;
   allFriends: Friend[];
   friends: Friend[];
+  invited: InvitedFriend[];
+  isOwner: boolean;
+  private wasInvitedInitialized = false;
   @Input() editedEvent: CalendarEvent;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Events>();
@@ -42,8 +45,11 @@ export class EditEventModalComponent implements OnInit {
       streetAddress: [' ', Validators.required]
     });
 
-    this.friends = userService.getUserFriends();
-    this.allFriends = userService.getUserFriends();
+    userService.getUserFriends().subscribe((friendArray) => {
+      this.allFriends = friendArray;
+      this.friends = friendArray;
+    });
+    this.invited = [];
   }
 
   get title() { return this.editEventForm.get('title'); }
@@ -188,9 +194,17 @@ export class EditEventModalComponent implements OnInit {
   }
 
   sendInvitation(friend: Friend) {
-    this.notificationService.addNotification(this.getNotificationToSend(friend.FacebookId.toString(), +this.editedEvent.id)).subscribe();
+      this.notificationService.addNotification(this.getNotificationToSend(friend.FacebookId.toString(), +this.editedEvent.id)).subscribe();
     // add user event with unknown status to know that invitation has been sent
-    this.userEventsService.addUserEvent(this.getUserEvent(+this.editedEvent.id, 0, friend.FacebookId.toString())).subscribe();   
+      this.userEventsService.addUserEvent(this.getUserEvent(+this.editedEvent.id, 0, friend.FacebookId.toString())).subscribe(() => {
+          this.invited.push({
+              FacebookId: friend.FacebookId,
+              name: friend.name,
+              photoUrl: friend.photoUrl,
+              status: Status.Unknow,
+          });
+          this.friends.splice(this.friends.indexOf(friend), 1);
+      });
   }
 
   getUserEvent(eventId: number, status: number, userId: string): UsersEvents {
@@ -229,5 +243,38 @@ export class EditEventModalComponent implements OnInit {
         this.friends.push(x);
       }
     });
+  }
+
+  initializeInvitedList(): boolean {
+    if (!this.wasInvitedInitialized) {
+      this.userEventsService.getUserEvents(this.userId, (this.editedEvent.id as number))
+        .subscribe((x) => { this.isOwner = (x.status == Status.Owner); });
+      this.allFriends.forEach((x) => this.userEventsService.getUserEvents(x.FacebookId, (this.editedEvent.id as number))
+        .subscribe((y) => {
+          if (y.id > -1) {
+            this.invited.push({
+              FacebookId: x.FacebookId,
+              name: x.name,
+              photoUrl: x.photoUrl,
+              status: y.status,
+            });
+            this.friends.splice(this.friends.indexOf(x), 1);
+          }
+        }));
+
+      if (this.allFriends.length > 0)
+        this.wasInvitedInitialized = true;
+    }
+    return true;
+  }
+
+  checkIfCanInvite(friend: Friend) {
+    let canInvite = true;
+    this.invited.forEach((x) => {
+      if (x.FacebookId == friend.FacebookId)
+        canInvite = false;
+    });
+
+    return canInvite;
   }
 }

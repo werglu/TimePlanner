@@ -1,6 +1,10 @@
 // for friendsList
 export interface Friend {
-  FacebookId: number,
+  FacebookId: string,
   name: string,
   photoUrl: string
+}
+
+export interface InvitedFriend extends Friend{
+  status: number,
 }

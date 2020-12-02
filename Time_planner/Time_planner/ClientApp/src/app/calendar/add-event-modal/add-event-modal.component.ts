@@ -6,6 +6,7 @@ import { Friend } from '../../shared/friend';
 import { UserService } from '../../user/user.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { Notification } from '../../notifications/notification';
+import { Status, UserEventsService } from '../userEvents.service';
 
 declare var FB: any;
 
@@ -16,9 +17,9 @@ declare var FB: any;
 })
 
 export class AddEventModalComponent implements OnInit {
-  editEventForm: FormGroup;  
+  editEventForm: FormGroup;
   @Output() onCancel = new EventEmitter();
-  @Output() onChangeVisibility = new EventEmitter <boolean>();
+  @Output() onChangeVisibility = new EventEmitter<boolean>();
   @Output() onSave = new EventEmitter<Events>();
   invalidDate = false;
   isPublic = false;
@@ -26,10 +27,12 @@ export class AddEventModalComponent implements OnInit {
   friends: Friend[];
   allFriends: Friend[];
   invitedFriendsIds: string[] = [];
+  invited: Friend[];
 
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService,
     public userService: UserService,
+    public userEventsService: UserEventsService,
     private notificationService: NotificationsService) {
     this.editEventForm = this.formBuilder.group({
       title: ['', Validators.required],
@@ -39,8 +42,11 @@ export class AddEventModalComponent implements OnInit {
       streetAddress: ['', Validators.required]
     });
 
-    this.friends = userService.getUserFriends();
-    this.allFriends = userService.getUserFriends();
+    userService.getUserFriends().subscribe((friendArray) => {
+      this.allFriends = friendArray;
+      this.friends = friendArray;
+    });
+    this.invited = [];
   }
 
   get title() { return this.editEventForm.get('title'); }
@@ -93,6 +99,12 @@ export class AddEventModalComponent implements OnInit {
 
   sendInvitations(eventId: number) {
     this.invitedFriendsIds.forEach(friendId => {
+      this.userEventsService.addUserEvent({
+        id: 1,
+        eventId: eventId,
+        userId: friendId,
+        status: Status.Unknow,
+      }).subscribe();
       this.notificationService.addNotification(this.getNotificationToSend(friendId, eventId, 1)).subscribe();
     });
   }
@@ -105,6 +117,12 @@ export class AddEventModalComponent implements OnInit {
         this.onSave.emit(event);
         this.eventsService.getAllEvents(this.userId).subscribe((events) => {
           var eventId = events.sort((e1, e2) => e2.id - e1.id)[0].id; // get new event id
+          this.userEventsService.addUserEvent({
+            id: 1,
+            eventId: eventId,
+            userId: this.userId,
+            status: Status.Owner,
+          }).subscribe();
           this.sendInvitations(eventId);
         });  
       });
@@ -167,12 +185,12 @@ export class AddEventModalComponent implements OnInit {
 
   getStartTime() {
     let date: Date = new Date();
-    return (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' + (date.getMinutes() < 10 ? '0' +  date.getMinutes() : date.getMinutes());
+    return (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
   }
 
   getEndTime() {
     let date: Date = new Date();
-    return (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' + (date.getMinutes()+1 < 10 ? '0' + (date.getMinutes()+1) : (date.getMinutes()+1));
+    return (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' + (date.getMinutes() + 1 < 10 ? '0' + (date.getMinutes() + 1) : (date.getMinutes() + 1));
   }
 
   changeVisibility() {
@@ -194,6 +212,8 @@ export class AddEventModalComponent implements OnInit {
 
   sendInvitation(friend: Friend) {
     this.invitedFriendsIds.push(friend.FacebookId.toString());
+    this.invited.push(friend);
+    this.friends.splice(this.friends.indexOf(friend), 1);
   }
 
   search() {
@@ -211,5 +231,14 @@ export class AddEventModalComponent implements OnInit {
         this.friends.push(x);
       }
     });
+  }
+
+  checkIfCanInvite(friend: Friend) {
+    let canInvite = true;
+    if (this.invitedFriendsIds.indexOf(friend.FacebookId) !== -1) {
+      canInvite = false;
+    };
+
+    return canInvite;
   }
 }

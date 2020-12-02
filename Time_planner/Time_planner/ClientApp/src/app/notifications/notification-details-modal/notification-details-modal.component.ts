@@ -27,7 +27,9 @@ export class NotificationDetailsModalComponent implements OnInit {
     private userService: UserService,
     private notificationService: NotificationsService,
     private userEventsService: UserEventsService) {
-    this.friends = this.userService.getUserFriends();
+    this.userService.getUserFriends().subscribe((friends) => {
+      this.friends = friends;
+    });
   }
 
   ngOnInit(): void {
@@ -58,7 +60,7 @@ export class NotificationDetailsModalComponent implements OnInit {
       this.notificationService.addNotification(this.getNotificationToAdd(accepted)).subscribe(() => {
         this.eventsService.getEvent(this.notificationDetails.senderId, this.notificationDetails.eventId).subscribe((event) => {
           this.eventsService.addEvent(this.getEvent(event, this.notificationDetails.receiverId)).subscribe();
-          this.userEventsService.addUserEvent(this.getUserEvent(this.notificationDetails.eventId, 1)).subscribe(); // accept event
+          this.userEventsService.updateUserEventStatus(this.getUserEvent(this.notificationDetails.eventId, 1)).subscribe(); // accept event
         })
         this.onSave.emit(this.notificationDetails)
       });
@@ -67,7 +69,7 @@ export class NotificationDetailsModalComponent implements OnInit {
     else {
       this.notificationService.addNotification(this.getNotificationToAdd(accepted)).subscribe(() => {
         this.onSave.emit(this.notificationDetails)
-        this.userEventsService.addUserEvent(this.getUserEvent(this.notificationDetails.eventId, 2)).subscribe(); // reject event
+        this.userEventsService.updateUserEventStatus(this.getUserEvent(this.notificationDetails.eventId, 2)).subscribe(); // reject event
       });
     }
   }

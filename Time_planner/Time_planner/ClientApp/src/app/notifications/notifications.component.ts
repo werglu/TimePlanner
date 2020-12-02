@@ -29,7 +29,9 @@ export class NotificationsComponent implements OnInit {
 
   constructor(private notificationsService: NotificationsService,
     private userService: UserService) {
-    this.friends = userService.getUserFriends();
+    this.userService.getUserFriends().subscribe((friends) => {
+      this.friends = friends;
+    });
   }
 
   ngOnInit(): void {

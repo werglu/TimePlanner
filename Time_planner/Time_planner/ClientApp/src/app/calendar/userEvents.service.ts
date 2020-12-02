@@ -32,4 +32,15 @@ export class UserEventsService {
     return this.http.post<UsersEvents>(baseUrl + 'api/UsersEvents/', userEvent);
   }
 
+  updateUserEventStatus(userEvent: UsersEvents): Observable<UsersEvents> {
+    var baseUrl: string = environment.apiBaseUrl;
+    return this.http.put<UsersEvents>(baseUrl + 'api/UsersEvents/', userEvent);
+  }
+}
+
+export enum Status {
+  Unknow,
+  Accepted,
+  Rejected,
+  Owner
 }
