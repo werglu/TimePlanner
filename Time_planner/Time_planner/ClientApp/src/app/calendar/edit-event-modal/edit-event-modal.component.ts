@@ -193,18 +193,6 @@ export class EditEventModalComponent implements OnInit {
     this.onChangeVisibility.emit(this.isPublic);
   }
 
-  getNotificationToSend(friendId: string, eventId: number, id: number): Notification {
-    return {
-      id: id,
-      eventId: eventId,
-      event: null,
-      senderId: this.userId,
-      receiverId: friendId,
-      isDismissed: false,
-      messageType: 0
-    }
-  }
-
   sendInvitation(friend: Friend) {
       this.notificationService.addNotification(this.getNotificationToSend(friend.FacebookId.toString(), +this.editedEvent.id)).subscribe();
     // add user event with unknown status to know that invitation has been sent
