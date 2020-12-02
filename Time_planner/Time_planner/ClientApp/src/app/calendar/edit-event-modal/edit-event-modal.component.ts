@@ -1,13 +1,13 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CalendarEvent } from 'angular-calendar';
-import { Events } from '../events';
+import { Events, UsersEvents } from '../events';
 import { EventsService } from '../events.service';
 import { Friend, InvitedFriend } from '../../shared/friend';
 import { UserService } from '../../user/user.service';
-import { UserEventsService, Status } from '../userEvents.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { Notification } from '../../notifications/notification';
+import { UserEventsService, Status  } from '../userEvents.service';
 
 declare var FB: any;
 
@@ -35,8 +35,8 @@ export class EditEventModalComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService,
     public userService: UserService,
-    public userEventsService: UserEventsService,
-    private notificationService: NotificationsService) {
+    private notificationService: NotificationsService,
+    private userEventsService: UserEventsService) {
     this.editEventForm = this.formBuilder.group({
       title: [' ', Validators.required],
       startDate: '',
@@ -155,7 +155,9 @@ export class EditEventModalComponent implements OnInit {
   onSubmit() {
     this.validateAllFormControls(this.editEventForm);
     if (this.editEventForm.valid && !this.dateInvalid()) {
-      this.eventsService.editEvent(Number(this.editedEvent.id), this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
+        this.eventsService.editEvent(Number(this.editedEvent.id), this.getFormValue()).subscribe(() => {
+          this.onSave.emit(this.getFormValue());
+        });
     }
     else {
       this.validateAllFormControls(this.editEventForm);
@@ -204,24 +206,40 @@ export class EditEventModalComponent implements OnInit {
   }
 
   sendInvitation(friend: Friend) {
-    let id = 1;
-    this.notificationService.addNotification(this.getNotificationToSend(friend.FacebookId, this.currentEvent.id, id)).subscribe();
-    this.userEventsService.addUserEvent({
-      id: 1,
-      eventId: this.currentEvent.id,
-      userId: friend.FacebookId,
-      status: Status.Unknow, 
-    }).subscribe(() => {
-      this.invited.push({
-        FacebookId: friend.FacebookId,
-        name: friend.name,
-        photoUrl: friend.photoUrl,
-        status: Status.Unknow,
+      this.notificationService.addNotification(this.getNotificationToSend(friend.FacebookId.toString(), +this.editedEvent.id)).subscribe();
+    // add user event with unknown status to know that invitation has been sent
+      this.userEventsService.addUserEvent(this.getUserEvent(+this.editedEvent.id, 0, friend.FacebookId.toString())).subscribe(() => {
+          this.invited.push({
+              FacebookId: friend.FacebookId,
+              name: friend.name,
+              photoUrl: friend.photoUrl,
+              status: Status.Unknow,
+          });
+          this.friends.splice(this.friends.indexOf(friend), 1);
       });
-      this.friends.splice(this.friends.indexOf(friend), 1);
-    });
   }
 
+  getUserEvent(eventId: number, status: number, userId: string): UsersEvents {
+    return {
+      id: 1,
+      eventId: eventId,
+      userId: userId,
+      status: status
+    }
+  }
+
+  getNotificationToSend(friendId: string, eventId: number): Notification {
+    return {
+      id: 1,
+      eventId: eventId,
+      event: null,
+      senderId: this.userId,
+      receiverId: friendId,
+      isDismissed: false,
+      messageType: 0
+    }
+  }
+  
   search() {
     let value = (<HTMLInputElement>document.getElementById("searchInput")).value.toLowerCase();
 

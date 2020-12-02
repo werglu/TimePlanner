@@ -17,6 +17,11 @@ export class UserEventsService {
     return this.http.get<UsersEvents>(baseUrl + 'api/UsersEvents/' + userId + '/' + eventId.toString());
   }
 
+  //getAllUserEventsWithSpecifiedEventId(eventId: number): Observable<UsersEvents[]> {
+  //  var baseUrl: string = environment.apiBaseUrl;
+  //  return this.http.get<UsersEvents[]>(baseUrl + 'api/UsersEvents/' + eventId.toString());
+  //}
+
   editUserEvent(id: number, userEvent: UsersEvents): Observable<UsersEvents> {
     var baseUrl: string = environment.apiBaseUrl;
     return this.http.put<UsersEvents>(baseUrl + 'api/UsersEvents/' + id.toString(), userEvent);

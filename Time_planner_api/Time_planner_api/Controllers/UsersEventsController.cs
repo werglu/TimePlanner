@@ -28,6 +28,14 @@ namespace Time_planner_api.Controllers
             return await _context.UsersEvents.ToListAsync();
         }
 
+        // GET: api/UsersEvents/2
+        //get all records with specified event id
+        [HttpGet("{eventId}")]
+        public async Task<ActionResult<IEnumerable<UsersEvents>>> GetUserEvents(int eventId)
+        {
+            return await _context.UsersEvents.Where(ue => ue.EventId == eventId).ToListAsync();
+        }
+
         // GET: api/UsersEvents/userId/eventId
         [HttpGet("{userId}/{eventId}")]
         public async Task<ActionResult<UsersEvents>> GetUserEvent(string userId, int eventId)

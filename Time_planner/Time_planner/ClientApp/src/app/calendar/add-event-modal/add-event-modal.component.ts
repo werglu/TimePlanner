@@ -98,7 +98,6 @@ export class AddEventModalComponent implements OnInit {
   }
 
   sendInvitations(eventId: number) {
-    var id = 1;
     this.invitedFriendsIds.forEach(friendId => {
       this.userEventsService.addUserEvent({
         id: 1,
@@ -106,7 +105,7 @@ export class AddEventModalComponent implements OnInit {
         userId: friendId,
         status: Status.Unknow,
       }).subscribe();
-      this.notificationService.addNotification(this.getNotificationToSend(this.invitedFriendsIds[0], eventId, id)).subscribe();
+      this.notificationService.addNotification(this.getNotificationToSend(friendId, eventId, 1)).subscribe();
     });
   }
   
