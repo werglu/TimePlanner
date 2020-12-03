@@ -6,6 +6,8 @@ import { Subject } from 'rxjs';
 import { ListCategoriesService } from '../to-do-list/listCategories.service';
 import { TasksService } from '../to-do-list/tasks.service';
 import { Task } from '../to-do-list/task';
+import { PlanningService } from '../planning/planning.service';
+import { CalendarItem } from '../planning/calendarItem';
 
 declare var FB: any;
 
@@ -22,8 +24,12 @@ export class HomeComponent implements AfterViewInit {
   events: Events[] = [];
   userTasksCategoriesIds: number[] = [];
   tasks: Task[] = [];
+  eventPoints: { lat: number, lng: number, label: string, id: number, title: string }[] = [];
+  taskPoints: { lat: number, lng: number, label: string, id: number, title: string }[] = [];
+  assignedPoints: { lat: number, lng: number, label: string, id: number, title: string }[] = [];
 
   constructor(public eventsService: EventsService,
+    public planningService: PlanningService,
     public http: HttpClient,
     private listCategoriesService: ListCategoriesService,
     private tasksService: TasksService) {
@@ -75,6 +81,7 @@ export class HomeComponent implements AfterViewInit {
         });
       });
 
+      this.getLocation();
     });
     
   }
@@ -88,35 +95,79 @@ export class HomeComponent implements AfterViewInit {
     return false;
   }
 
-
-  ngAfterViewInit(): void {
-    this.getLocation();
-  }
-
   getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
-        //this.eventsService.getSortedEvents().subscribe(e => {
-        //  var ind = 1;
-        //  e.forEach(ee => {
-        //    // todo: to be changed when there will be proper location in Event
-        //    // only ee.latitude and ee.longitude should be assigned
-        //    this.points.push({
-        //      lat: ee.latitude + this.lat,
-        //      lng: ee.longitude + this.lng,
-        //      label: ind.toString(),
-        //      id: ee.id,
-        //      title: ee.title
-        //    })
-        //    ind++;
-        //  });
-        //});
+        this.planningService.findPlacesOrder(this.userId).subscribe(result => {
+          this.eventPoints = [];
+          this.taskPoints = [];
+          this.assignedPoints = [];
+          result.forEach(item => {
+            if (item.e) {
+              this.eventPoints.push(this.getEventPoint(item.e));
+            } else if (item.t) {
+              this.taskPoints.push(this.getTaskPoint(item.t));
+            }
+            if (item.assigned) {
+              this.assignedPoints.push(this.getAssignedPoint(item))
+            }
+          });
+          console.log(result);
+        })
       });
     }
     else {
       console.warn("Geolocation is not supported by this browser")
+    }
+  }
+
+  getEventPoint(e: Events) {
+    // todo: to be changed when there will be proper location in Event
+    // only e.latitude and e.longitude should be assigned
+    return {
+      lat: e.latitude + this.lat,
+      lng: e.longitude + this.lng,
+      label: this.eventPoints.length.toString(),
+      id: e.id,
+      title: e.title
+    };
+  }
+
+  getTaskPoint(t: Task) {
+    // todo: to be changed when there will be proper location in Task
+    // only t.latitude and t.longitude should be assigned
+    return {
+      lat: t.latitude + this.lat,
+      lng: t.longitude + this.lng,
+      label: this.taskPoints.length.toString(),
+      id: t.id,
+      title: t.title
+    };
+  }
+
+  getAssignedPoint(i: CalendarItem) {
+    // todo: to be changed when there will be proper location in Task/Event
+    // only task's/event's latitude and longitude should be assigned
+    if (i.e) {
+      return {
+        lat: i.e.latitude + this.lat,
+        lng: i.e.longitude + this.lng,
+        label: this.assignedPoints.length.toString(),
+        id: i.e.id,
+        title: i.e.title
+      };
+    } else if (i.t) {
+      return {
+        lat: i.t.latitude + this.lat,
+        lng: i.t.longitude + this.lng,
+        label: this.assignedPoints.length.toString(),
+        id: i.t.id,
+        title: i.t.title
+      };
+    } else {
+      return null;
     }
   }
 }

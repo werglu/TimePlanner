@@ -144,13 +144,16 @@ namespace Time_planner_api.Controllers
             return DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek) + 1).AddDays(day % 7); // starts from monday
         }
 
-        // GET: api/Planning/dayplan
+        // GET: api/Planning/dayplan/104416411457610
         [HttpGet("{userId}")]
-        [Route("dayplan")]
+        [Route("dayplan/{userId}")]
         public async Task<ActionResult<IEnumerable<CalendarItem>>> FindShortestRoute(string userId, double startMinutes = 420.0, double endMinutes = 1320.0)
         {
-            return DayPlanHelper.FindShortestRoute(await _context.Events.Where(x => x.OwnerId == userId && IsCurrentDay(x)).ToListAsync(),
-                await _context.Tasks.Where(y => y.Category.OwnerId == userId && IsCurrentDay(y)).ToListAsync(), startMinutes, endMinutes);
+            var events = await _context.Events.Where(x => x.OwnerId == userId).ToListAsync();
+            var tasks = await _context.Tasks.Where(y => y.Category.OwnerId == userId).ToListAsync();
+            events = events.Where(x => IsCurrentDay(x)).ToList();
+            tasks = tasks.Where(y => IsCurrentDay(y)).ToList();
+            return DayPlanHelper.FindShortestRoute(events, tasks, startMinutes, endMinutes);
         }
 
         private bool IsCurrentDay(Event ev)

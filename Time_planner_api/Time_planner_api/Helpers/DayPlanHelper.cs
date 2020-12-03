@@ -15,7 +15,7 @@ namespace Time_planner_api.Helpers
             var tasksLeftOut = new List<CalendarItem>();
 
             tasksLeftOut.AddRange(tasks.Where(x => !x.Longitude.HasValue || !x.Latitude.HasValue || !x.Time.HasValue || !x.Split.HasValue).Select(t => new CalendarItem { T = t, Assigned = false }).ToList());
-            tasks.RemoveAll(x => !x.Longitude.HasValue || !x.Latitude.HasValue);
+            tasks.RemoveAll(x => !x.Longitude.HasValue || !x.Latitude.HasValue || !x.Time.HasValue || !x.Split.HasValue);
 
             events.Sort((x, y) =>
             {
