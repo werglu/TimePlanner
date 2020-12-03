@@ -20,6 +20,7 @@ export class EditTaskAaEventModalComponent implements OnInit {
   currentTask: Task;
   isDone = false;
   choosenPriority = 1;
+  @Input() userId: string;
   @Input() editedTask: CalendarEvent;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Task>();
@@ -99,7 +100,7 @@ export class EditTaskAaEventModalComponent implements OnInit {
   }
 
   getCategories() {
-    this.listCategoriesService.getAllListCategories().subscribe(lc => {
+    this.listCategoriesService.getAllListCategoriesPerUser(this.userId).subscribe(lc => {
       lc.forEach(c => this.listCategories.push(c));
       if (this.currentTask != null) {
         this.currentCategory = (this.listCategories.filter(c => c.id == this.currentTask.categoryId))[0];

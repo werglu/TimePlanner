@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ListCategory } from '../listCategory';
 import { ListCategoriesService } from '../listCategories.service';
@@ -10,7 +10,8 @@ import { ListCategoriesService } from '../listCategories.service';
 })
 
 export class AddNewCategoryModalComponent implements OnInit {
-  addCategoryForm: FormGroup;  
+  addCategoryForm: FormGroup;
+  @Input() userId: string;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<ListCategory>();
 
@@ -34,7 +35,8 @@ export class AddNewCategoryModalComponent implements OnInit {
     return {
       id: 1,  
       category: (<HTMLInputElement>document.getElementById('name')).value,
-      tasks: null
+      tasks: null,
+      ownerId: this.userId
     };
   }
   

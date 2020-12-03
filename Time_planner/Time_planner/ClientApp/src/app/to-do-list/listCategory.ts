@@ -4,4 +4,5 @@ export interface ListCategory {
   id: number;
   category: string;
   tasks: Task[];
+  ownerId: string;
 }
