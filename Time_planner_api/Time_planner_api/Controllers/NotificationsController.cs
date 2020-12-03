@@ -111,7 +111,7 @@ namespace Time_planner_api.Controllers
             var notifications = _context.Notifications.Where(n => n.EventId == eventId);
             if (notifications == null)
             {
-                return NotFound();
+                return Enumerable.Empty<Notification>().ToList();
             }
 
             _context.Notifications.RemoveRange(notifications);

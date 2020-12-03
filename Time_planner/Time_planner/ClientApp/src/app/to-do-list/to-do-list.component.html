@@ -80,18 +80,18 @@
 </div>
 
 <kendo-dialog title="Add new category" *ngIf="addNewCategoryModalVisible" (close)="closeAddNewCategoryModal()" [minWidth]="250" [width]="450">
-  <add-new-category-modal (onCancel)="closeAddNewCategoryModal()" (onSave)="addCategory($event)"></add-new-category-modal>
+  <add-new-category-modal [userId]="userId" (onCancel)="closeAddNewCategoryModal()" (onSave)="addCategory($event)"></add-new-category-modal>
 </kendo-dialog>
 
 <kendo-dialog title="Add new to-do" *ngIf="addNewTaskModalVisible" (close)="closeAddNewTaskModal()" [minWidth]="250" [width]="450">
-  <add-new-task-modal (onCancel)="closeAddNewTaskModal()" (onSave)="addTask($event)"></add-new-task-modal>
+  <add-new-task-modal [userId]="userId" (onCancel)="closeAddNewTaskModal()" (onSave)="addTask($event)"></add-new-task-modal>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="openTask" (close)="closeOpenTaskModal()" [minWidth]="250" [width]="450">
   <kendo-dialog-titlebar>
     <div style="margin-left: 5px;"><span class="k-icon k-i-user" style="margin-top:-6px;padding-right: 5px;"></span>Edit task</div>
   </kendo-dialog-titlebar>
-  <edit-task-modal [editedTask]="currentTask" (onCancel)="closeOpenTaskModal()" (onSave)="editTask($event)"></edit-task-modal>
+  <edit-task-modal [userId]="userId" [editedTask]="currentTask" (onCancel)="closeOpenTaskModal()" (onSave)="editTask($event)"></edit-task-modal>
 </kendo-dialog>
 
 <kendo-dialog title="Week plan proposition" *ngIf="findDatesModalVisible" (close)="closeFindDatesModal()" [minWidth]="250" [width]="700">

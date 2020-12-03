@@ -1,4 +1,4 @@
-<div *ngIf="events.length>0">
+<div>
   <div style="width:100%;display:inline-block">
     <div class="btn-group" style="float:left">
       <i class="fa fa-chevron-circle-left"
@@ -57,7 +57,7 @@
   <kendo-dialog-titlebar>
     <div><span class="k-icon k-i-user"></span>Edit task</div>
   </kendo-dialog-titlebar>
-  <edit-task-as-event-modal [editedTask]="editedEvent" (onCancel)="closeOpenTaskModal()" (onSave)="editTask($event)"></edit-task-as-event-modal>
+  <edit-task-as-event-modal [userId]="userId" [editedTask]="editedEvent" (onCancel)="closeOpenTaskModal()" (onSave)="editTask($event)"></edit-task-as-event-modal>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="addNewEventModalVisible" (close)="closeAddNewEventModal()" [minWidth]="250" [width]="450" [maxHeight]="650">

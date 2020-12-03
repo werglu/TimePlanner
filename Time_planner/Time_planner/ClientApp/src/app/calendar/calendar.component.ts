@@ -8,6 +8,8 @@ import { isSameDay, isSameMonth } from 'date-fns';
 import { TasksService } from '../to-do-list/tasks.service';
 import { Task } from '../to-do-list/task';
 import { NotificationsService } from '../notifications/notifications.service';
+import { ListCategoriesService } from '../to-do-list/listCategories.service';
+import { isNullOrUndefined } from 'util';
 
 declare var FB: any;
 
@@ -31,6 +33,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   activeDayIsOpen = false;
   CalendarView = CalendarView;
   refresh: Subject<any> = new Subject();
+  userTasksCateoriesIds: number[]= [];
   events: CalendarEvent[] = [];
   actions: CalendarEventAction[] = [
     {
@@ -46,6 +49,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   constructor(public eventsService: EventsService,
     public tasksService: TasksService,
     public http: HttpClient,
+    private listCategoriesService: ListCategoriesService,
     private notificationsService: NotificationsService) {
   }
 
@@ -100,28 +104,35 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
   
   getTasks() {
-    this.tasksService.getTasks().subscribe(t => {
-      t.forEach(task => {
-        for (var date of [task.date0, task.date1, task.date2, task.date3, task.date4, task.date5, task.date6]) {
-          if (date != null) {
-            this.events.push({
-              id: task.id,
-              title: task.title,
-              start: new Date(new Date(date).setHours(0, 0)),
-              end: new Date(new Date(date).setHours(0, 30)),
-              actions: this.actions,
-              color: {
-                primary: '#2c786c',
-                secondary: '#2c786c'
-              },
-              meta: {
-                type: 'task'
+    this.listCategoriesService.getAllListCategoriesPerUser(this.userId).subscribe((categories) => {
+      categories.forEach(category => this.userTasksCateoriesIds.push(category.id));
+      // get all tasks specified per user
+      this.tasksService.getTasks().subscribe(tasks => {
+        tasks.forEach(task => {
+          // get only tasks per current user - need to filter by categories
+          if (!isNullOrUndefined(this.userTasksCateoriesIds.find(categoryId => categoryId == task.categoryId))) {
+            for (var date of [task.date0, task.date1, task.date2, task.date3, task.date4, task.date5, task.date6]) {
+              if (date != null) {
+                this.events.push({
+                  id: task.id,
+                  title: task.title,
+                  start: new Date(new Date(date).setHours(0, 0)),
+                  end: new Date(new Date(date).setHours(0, 30)),
+                  actions: this.actions,
+                  color: {
+                    primary: '#2c786c',
+                    secondary: '#2c786c'
+                  },
+                  meta: {
+                    type: 'task'
+                  }
+                })
               }
-            })
+            }
           }
-        }
-      })
-      this.refresh.next();
+        })
+        this.refresh.next();
+      });
     });
   }
 
@@ -239,14 +250,24 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   async deleteEvent(event: CalendarEvent) {
     //first need to remove all notifications with this event
-    this.notificationsService.deleteAllNotificationWithSpecifiedEventId(+event.id).subscribe(() => {
-      this.eventsService.deleteEvent(+event.id).subscribe(response => {
+    if (event.meta.type == 'task') {
+      this.tasksService.deleteTask(+event.id).subscribe(() => {
         this.closeOpenEventModal();
         this.events = this.events.filter(e => e.id !== event.id);
         this.activeDayIsOpen = false;
         this.refresh.next();
       });
-    }); 
+    }
+    else {
+      this.notificationsService.deleteAllNotificationWithSpecifiedEventId(+event.id).subscribe(() => {
+        this.eventsService.deleteEvent(+event.id).subscribe(response => {
+          this.closeOpenEventModal();
+          this.events = this.events.filter(e => e.id !== event.id);
+          this.activeDayIsOpen = false;
+          this.refresh.next();
+        });
+      });
+    }
   }
 
   eventVisibilityChanged(event: boolean) {

@@ -28,6 +28,13 @@ namespace Time_planner_api.Controllers
             return await _context.ListCategories.ToListAsync();
         }
 
+        // GET: api/ListCategories/perUser
+        [HttpGet("perUser/{userId}")]
+        public async Task<ActionResult<IEnumerable<ListCategory>>> GetCategoriesPerUser(string userId)
+        {
+            return await _context.ListCategories.Where(lc => lc.OwnerId == userId).ToListAsync();
+        }
+
         // GET: api/ListCategories/5
         [HttpGet("{id}", Name = "Get")]
         public string GetCategory(int id)
@@ -41,7 +48,8 @@ namespace Time_planner_api.Controllers
         {
             await _context.ListCategories.AddAsync(new ListCategory()
             {
-                Category = listCategory.Category
+                Category = listCategory.Category,
+                OwnerId = listCategory.OwnerId
             });
 
             try

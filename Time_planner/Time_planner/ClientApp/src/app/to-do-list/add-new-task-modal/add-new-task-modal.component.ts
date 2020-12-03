@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ListCategory } from '../listCategory';
 import { ListCategoriesService } from '../listCategories.service';
@@ -13,7 +13,7 @@ import { TasksService } from '../tasks.service';
 
 export class AddNewTaskModalComponent implements OnInit {
   addTaskForm: FormGroup;
-  public listCategories: Array<ListCategory> = [];
+  public listCategories: Array<ListCategory> = []; // categories specified per user
   public priorities: Array<string> = ['High priority', 'Medium priority', 'Low priority'];
   public splits: Array<number> = [1, 2, 3, 4, 5, 6];
   public hours: Array<number> = Array.from({ length: 51 }, (v, k) => k)
@@ -26,6 +26,7 @@ export class AddNewTaskModalComponent implements OnInit {
   choosenDays = 1 + 2 + 4 + 8 + 16;
   public addDatesOff = true;
   public addDateConstraintsOff = true;
+  @Input() userId: string;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Task>();
 
@@ -50,9 +51,9 @@ export class AddNewTaskModalComponent implements OnInit {
   }
 
   getCategories() {
-    this.listCategoriesService.getAllListCategories().subscribe(lc => {
+    this.listCategoriesService.getAllListCategoriesPerUser(this.userId).subscribe(lc => {
       lc.forEach(c => this.listCategories.push(c));
-      this.currentCategory = this.listCategories[0];
+      this.currentCategory = this.listCategories[0]; // set default value
     });
   }
 

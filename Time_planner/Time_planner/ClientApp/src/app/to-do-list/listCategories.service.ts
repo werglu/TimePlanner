@@ -17,6 +17,11 @@ export class ListCategoriesService {
     return this.http.get<ListCategory[]>(baseUrl + 'api/ListCategories');
   }
 
+  getAllListCategoriesPerUser(userId: string): Observable<ListCategory[]> {
+    var baseUrl: string = environment.apiBaseUrl;
+    return this.http.get<ListCategory[]>(baseUrl + 'api/ListCategories/perUser/' + userId);
+  }
+
   public addCategory(category: ListCategory): Observable<ListCategory> {
     var baseUrl: string = environment.apiBaseUrl;
     return this.http.post<ListCategory>(baseUrl + 'api/ListCategories/', category);
