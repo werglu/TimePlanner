@@ -91,7 +91,7 @@ namespace Time_planner_api.Helpers
             var bestDistance = double.MaxValue;
             int bestIndex = 0;
             int index = 0;
-            var prevTask = tasks.Last();
+            var prevTask = tasksBetween.Last();
             foreach (var task in tasksBetween)
             {
                 double distance = 0.0;

@@ -16,7 +16,7 @@ declare var FB: any;
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent {
   lat: number = 51.678418;
   lng: number = 7.809007;
   userId: string;
