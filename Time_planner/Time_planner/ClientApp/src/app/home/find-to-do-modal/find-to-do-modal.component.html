@@ -1,0 +1,44 @@
+<div>
+  <kendo-grid style="margin-top:5px;"
+              [kendoGridBinding]="gridData"
+              [height]="510"
+              [resizable]="true"
+              kendoGridSelectBy="id"
+              [selectable]="{ checkboxOnly: true, mode: 'multiple' }"
+              [selectedKeys]="mySelection">
+    <kendo-grid-checkbox-column showSelectAll="true"width="40"></kendo-grid-checkbox-column>
+    <kendo-grid-column field="priority" title="Priority" width="80">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <ng-template [ngIf]="dataItem.priority == 2">
+          <div>
+            <i class="fa fa-star"></i>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="dataItem.priority == 1">
+          <div>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="dataItem.priority == 0">
+          <div>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+          </div>
+        </ng-template>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column title="Task" [minResizableWidth]="50">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <label>
+          {{ dataItem.title }}
+        </label>
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid>
+</div>
+<div style="float:right">
+  <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+  <button style="margin-top:20px;" class="btn btn-primary" type="submit" (click)="onSubmit()">Add for today</button>
+</div>
