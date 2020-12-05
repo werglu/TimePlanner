@@ -6,7 +6,8 @@ import { Task } from './task';
 import { Observable, Subject } from 'rxjs';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { SortDescriptor } from '@progress/kendo-data-query';
-import { TaskAssignmentProposition } from './taskAssignmentProposition';
+import { TaskAssignmentProposition } from '../planning/taskAssignmentProposition';
+import { PlanningService } from '../planning/planning.service';
 import { isNullOrUndefined } from 'util';
 
 declare var FB: any;
@@ -45,7 +46,8 @@ export class ToDoListComponent implements OnInit {
     }];
 
   constructor(private listCategoriesService: ListCategoriesService,
-    private tasksService: TasksService) {
+              private tasksService: TasksService,
+              private planningService: PlanningService) {
   }
 
   ngOnInit() {
@@ -189,7 +191,7 @@ export class ToDoListComponent implements OnInit {
   }
 
   findDates() {
-    this.tasksService.findDates(this.mySelection).subscribe(taskAssignmentPropositions => {
+    this.planningService.findDates(this.mySelection).subscribe(taskAssignmentPropositions => {
       this.foundDates = taskAssignmentPropositions;
       this.findDatesModalVisible = true;
     });

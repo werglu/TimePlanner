@@ -7,10 +7,14 @@ namespace Time_planner_api.Helpers
 {
     public class SalesmanHelper
     {
-        public static List<Event> FindShortestRoute(List<Event> events)
+        public static List<Task> FindShortestRoute(List<Task> tasks)
         {
-            var oldList = events.ToArray();
-            var newList = events.ToArray();
+            if (tasks.Count > 15)
+            {
+                tasks.RemoveRange(15, tasks.Count - 15);
+            }
+            var oldList = tasks.ToArray();
+            var newList = tasks.ToArray();
             var size = oldList.Length;
             var noImprovementCount = 0;
 
@@ -60,15 +64,15 @@ namespace Time_planner_api.Helpers
             return newList.ToList();
         }
 
-        private static double CalculateDistance(Event[] events)
+        private static double CalculateDistance(Task[] tasks)
         {
             double distance = 0;
-            var size = events.Length;
+            var size = tasks.Length;
 
             for (int i = 0; i < size; i++)
             {
-                distance += Math.Sqrt(Math.Pow((events[i].Latitude - events[(i + 1) % size].Latitude), 2) +
-                    Math.Pow((events[i].Longitude - events[(i + 1) % size].Longitude), 2));
+                distance += Math.Sqrt(Math.Pow((tasks[i].Latitude.Value - tasks[(i + 1) % size].Latitude.Value), 2) +
+                    Math.Pow((tasks[i].Longitude.Value - tasks[(i + 1) % size].Longitude.Value), 2));
             }
 
             return distance;

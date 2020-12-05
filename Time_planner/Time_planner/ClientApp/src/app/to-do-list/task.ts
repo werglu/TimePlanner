@@ -19,4 +19,6 @@ export interface Task {
   days?: number;
   time?: number;
   split?: number;
+  latitude?: number;
+  longitude?: number;
 }

@@ -1,9 +1,9 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
-import { TaskAssignmentProposition } from '../taskAssignmentProposition';
-import { TaskAssignment } from '../taskAssignment';
 import { TasksService } from '../tasks.service';
-import { Task } from '../task';
-import { TaskAssignmentSave } from '../taskAssignmentSave';
+import { PlanningService } from '../../planning/planning.service'
+import { TaskAssignmentProposition } from '../../planning/taskAssignmentProposition';
+import { TaskAssignment } from '../../planning/taskAssignment';
+import { TaskAssignmentSave } from '../../planning/taskAssignmentSave';
 
 @Component({
   selector: 'find-dates-modal',
@@ -17,7 +17,8 @@ export class FindDatesModalComponent implements OnInit {
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<TaskAssignmentSave[]>();
 
-  constructor(private tasksService: TasksService) {
+  constructor(private tasksService: TasksService,
+              private planningService: PlanningService) {
   }
 
   ngOnInit(): void {
@@ -57,7 +58,7 @@ export class FindDatesModalComponent implements OnInit {
   }
   
   onSubmit() {
-    this.tasksService.saveDates(this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
+    this.planningService.saveDates(this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
   }
 
   checked(itemInd, dayInd: number) {

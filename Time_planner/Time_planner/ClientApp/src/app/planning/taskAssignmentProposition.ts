@@ -1,5 +1,4 @@
-import { ListCategory } from "./listCategory";
-import { Task } from "./task";
+import { Task } from "../to-do-list/task";
 
 export interface TaskAssignmentProposition {
   task: Task;
