@@ -37,18 +37,21 @@
   </div>
 </div>
 <agm-map [latitude]="lat" [longitude]="lng" style="height:400px">
-  <agm-marker *ngFor="let point of eventPoints" [latitude]="point.lat" [longitude]="point.lng" [label]="point.label">
+  <agm-marker *ngFor="let point of eventPoints" [latitude]="point.lat" [longitude]="point.lng" [iconUrl]="'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|f8b400'">
     <agm-info-window #window>
-      <h6>Id: {{point.id}}</h6>
-      <h6>Title: {{point.title}}</h6>
+      <h6>Event: {{point.title}}</h6>
     </agm-info-window>
   </agm-marker>
-  <agm-polyline [strokeColor]="'#CC0066'">
-    <agm-polyline-point *ngFor="let point of eventPoints" [latitude]="point.lat" [longitude]="point.lng"></agm-polyline-point>
+  <agm-marker *ngFor="let point of taskPoints" [latitude]="point.lat" [longitude]="point.lng" [iconUrl]="'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|004445'">
+    <agm-info-window #window>
+      <h6>Task: {{point.title}}</h6>
+    </agm-info-window>
+  </agm-marker>
+  <agm-polyline [strokeColor]="'#aaa'">
+    <agm-polyline-point *ngFor="let point of assignedPoints" [latitude]="point.lat" [longitude]="point.lng"></agm-polyline-point>
   </agm-polyline>
 
   <!--some possible features to be shown on map:-->
-
   <!--<agm-polygon [paths]="paths" [strokeColor]="'#009999'" [fillColor]="'8080ff'"></agm-polygon>-->
   <!--<agm-direction [origin]="origin" [destination]="destination"></agm-direction>-->
   <!--<agm-transit-layer></agm-transit-layer>-->

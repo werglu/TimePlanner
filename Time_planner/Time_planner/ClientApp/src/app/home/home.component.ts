@@ -107,14 +107,13 @@ export class HomeComponent implements AfterViewInit {
           result.forEach(item => {
             if (item.e) {
               this.eventPoints.push(this.getEventPoint(item.e));
-            } else if (item.t) {
+            } else if (item.t && item.t.latitude && item.t.longitude) {
               this.taskPoints.push(this.getTaskPoint(item.t));
             }
             if (item.assigned) {
               this.assignedPoints.push(this.getAssignedPoint(item))
             }
           });
-          console.log(result);
         })
       });
     }
@@ -129,7 +128,7 @@ export class HomeComponent implements AfterViewInit {
     return {
       lat: e.latitude + this.lat,
       lng: e.longitude + this.lng,
-      label: this.eventPoints.length.toString(),
+      label: 'E' + (this.eventPoints.length + 1).toString(),
       id: e.id,
       title: e.title
     };
@@ -141,7 +140,7 @@ export class HomeComponent implements AfterViewInit {
     return {
       lat: t.latitude + this.lat,
       lng: t.longitude + this.lng,
-      label: this.taskPoints.length.toString(),
+      label: 'T' + (this.taskPoints.length + 1).toString(),
       id: t.id,
       title: t.title
     };
@@ -154,7 +153,7 @@ export class HomeComponent implements AfterViewInit {
       return {
         lat: i.e.latitude + this.lat,
         lng: i.e.longitude + this.lng,
-        label: this.assignedPoints.length.toString(),
+        label: (this.assignedPoints.length + 1).toString(),
         id: i.e.id,
         title: i.e.title
       };
