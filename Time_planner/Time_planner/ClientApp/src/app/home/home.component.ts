@@ -27,6 +27,7 @@ export class HomeComponent {
   eventPoints: { lat: number, lng: number, label: string, id: number, title: string }[] = [];
   taskPoints: { lat: number, lng: number, label: string, id: number, title: string }[] = [];
   assignedPoints: { lat: number, lng: number, label: string, id: number, title: string }[] = [];
+  findToDoModalVisible: boolean = false;
 
   constructor(public eventsService: EventsService,
     public planningService: PlanningService,
@@ -55,35 +56,10 @@ export class HomeComponent {
 
     FB.api('/me', (response) => {
       this.userId = response.id;
-      // get events
-      this.eventsService.getAllEvents(this.userId).subscribe((events) => {
-        events.forEach(e => {
-          if (this.isCurrentDate(e.startDate)) {
-            this.events.push(e);
-          }
-        });
-      });
-
-      // get tasks
-
-      this.listCategoriesService.getAllListCategoriesPerUser(this.userId).subscribe((categories) => {
-        categories.forEach(category => this.userTasksCategoriesIds.push(category.id)); // get all user's categories
-
-        this.tasksService.getTasks().subscribe((tasks) => {
-          tasks.forEach(task => {
-            if (this.isCurrentDate(task.date0) || this.isCurrentDate(task.date1)
-              || this.isCurrentDate(task.date2) || this.isCurrentDate(task.date3)
-              || this.isCurrentDate(task.date4) || this.isCurrentDate(task.date5)
-              || this.isCurrentDate(task.date6)) {
-              this.tasks.push(task);
-            }
-          })
-        });
-      });
-
-      this.getLocation();
+      this.refresh();
     });
-    
+
+    this.getLocation();
   }
 
   private isCurrentDate(startDate: Date): boolean {
@@ -95,26 +71,23 @@ export class HomeComponent {
     return false;
   }
 
+  private containsCurrentDate(startDate: Date, endDate: Date): boolean {
+    if (new Date(startDate).getDate() <= new Date().getDate() &&
+      new Date(startDate).getMonth() <= new Date().getMonth() &&
+      new Date(startDate).getFullYear() <= new Date().getFullYear() &&
+      new Date(endDate).getDate() >= new Date().getDate() &&
+      new Date(endDate).getMonth() >= new Date().getMonth() &&
+      new Date(endDate).getFullYear() >= new Date().getFullYear()) {
+      return true;
+    }
+    return false;
+  }
+
   getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
-        this.planningService.findPlacesOrder(this.userId).subscribe(result => {
-          this.eventPoints = [];
-          this.taskPoints = [];
-          this.assignedPoints = [];
-          result.forEach(item => {
-            if (item.e) {
-              this.eventPoints.push(this.getEventPoint(item.e));
-            } else if (item.t && item.t.latitude && item.t.longitude) {
-              this.taskPoints.push(this.getTaskPoint(item.t));
-            }
-            if (item.assigned) {
-              this.assignedPoints.push(this.getAssignedPoint(item))
-            }
-          });
-        })
       });
     }
     else {
@@ -168,5 +141,63 @@ export class HomeComponent {
     } else {
       return null;
     }
+  }
+
+  showFindToDoModal() {
+    this.findToDoModalVisible = true;
+  }
+
+  closeFindToDoModal() {
+    this.findToDoModalVisible = false;
+  }
+
+  saveTasksForToday() {
+    this.closeFindToDoModal();
+    this.refresh();
+  }
+
+  refresh() {
+    // get events
+    this.eventsService.getAllEvents(this.userId).subscribe((events) => {
+      this.events = [];
+      events.forEach(e => {
+        if (this.containsCurrentDate(e.startDate, e.endDate)) {
+          this.events.push(e);
+        }
+      });
+    });
+
+    // get tasks
+    this.listCategoriesService.getAllListCategoriesPerUser(this.userId).subscribe((categories) => {
+      categories.forEach(category => this.userTasksCategoriesIds.push(category.id)); // get all user's categories
+
+      this.tasksService.getTasks().subscribe((tasks) => {
+        this.tasks = [];
+        tasks.forEach(task => {
+          if (this.isCurrentDate(task.date0) || this.isCurrentDate(task.date1)
+            || this.isCurrentDate(task.date2) || this.isCurrentDate(task.date3)
+            || this.isCurrentDate(task.date4) || this.isCurrentDate(task.date5)
+            || this.isCurrentDate(task.date6)) {
+            this.tasks.push(task);
+          }
+        })
+      });
+    });
+
+    this.planningService.findPlacesOrder(this.userId).subscribe(result => {
+      this.eventPoints = [];
+      this.taskPoints = [];
+      this.assignedPoints = [];
+      result.forEach(item => {
+        if (item.e) {
+          this.eventPoints.push(this.getEventPoint(item.e));
+        } else if (item.t && item.t.latitude && item.t.longitude) {
+          this.taskPoints.push(this.getTaskPoint(item.t));
+        }
+        if (item.assigned) {
+          this.assignedPoints.push(this.getAssignedPoint(item))
+        }
+      });
+    })
   }
 }

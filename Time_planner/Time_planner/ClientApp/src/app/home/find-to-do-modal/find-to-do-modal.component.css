@@ -1,0 +1,5 @@
+@import "../../../colors.css";
+
+.btn-primary {
+  background-color: var(--yellow);
+}

@@ -164,6 +164,8 @@ export class EditTaskAaEventModalComponent implements OnInit {
   }
 
   setDate(value: string): Date {
-    return (<HTMLInputElement>document.getElementById(value)).valueAsDate;
+    var v = (<HTMLInputElement>document.getElementById(value));
+    if (v) return v.valueAsDate;
+    return new Date('0001-01-01T00:00:00Z');
   }
 }

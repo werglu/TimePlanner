@@ -30,6 +30,7 @@ import { LogoutComponent } from './logout/logout.component';
 import { AuthGuard } from './auth.guard';
 import { EditTaskAaEventModalComponent } from './to-do-list/edit-task-as-event-modal/edit-task-as-event-modal.component';
 import { FindDatesModalComponent } from './to-do-list/find-dates-modal/find-dates-modal.component';
+import { FindToDoModalComponent } from './home/find-to-do-modal/find-to-do-modal.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { FindDatesModalComponent } from './to-do-list/find-dates-modal/find-date
     EditTaskAaEventModalComponent,
     AccessDeniedComponent,
     LogoutComponent,
-    FindDatesModalComponent
+    FindDatesModalComponent,
+    FindToDoModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

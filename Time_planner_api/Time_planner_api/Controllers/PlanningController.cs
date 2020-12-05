@@ -106,6 +106,11 @@ namespace Time_planner_api.Controllers
         [Route("saveDates")]
         public async Task<ActionResult<IEnumerable<Models.TaskAssignmentSave>>> SaveDates(List<TaskAssignmentSave> tasksToSave)
         {
+            if (tasksToSave == null)
+            {
+                return NoContent();
+            }
+
             foreach (var task in tasksToSave)
             {
                 if (!TaskExists(task.TaskId))
@@ -177,6 +182,84 @@ namespace Time_planner_api.Controllers
             return false;
         }
 
+        // GET: api/Planning/tasksForToday/104416411457610
+        [HttpGet("{userId}")]
+        [Route("tasksForToday/{userId}")]
+        public async Task<ActionResult<IEnumerable<Models.Task>>> FindTasksForToday(string userId)
+        {
+            return await _context.Tasks.Where(y => y.Category.OwnerId == userId && !y.IsDone &&
+                                              (!y.Date0.HasValue || y.Date0.Value.Year <= 1970 ||
+                                               !y.Date1.HasValue || y.Date1.Value.Year <= 1970 ||
+                                               !y.Date2.HasValue || y.Date2.Value.Year <= 1970 ||
+                                               !y.Date3.HasValue || y.Date3.Value.Year <= 1970 ||
+                                               !y.Date4.HasValue || y.Date4.Value.Year <= 1970 ||
+                                               !y.Date5.HasValue || y.Date5.Value.Year <= 1970 ||
+                                               !y.Date6.HasValue || y.Date6.Value.Year <= 1970)).OrderBy(x => x.Priority).ToListAsync();
+        }
+
+        // PUT: api/Planning/tasksForToday
+        [HttpPut]
+        [Route("tasksForToday")]
+        public async Task<ActionResult<IEnumerable<int>>> SaveTasksForToday(List<int> taskIds)
+        {
+            if (taskIds == null)
+            {
+                return NoContent();
+            }
+
+            foreach (var id in taskIds)
+            {
+                Models.Task newTask = _context.Tasks.Where(t => t.Id == id).Single<Models.Task>();
+
+                if (!newTask.Date0.HasValue || newTask.Date0.Value.Year <= 1970)
+                {
+                    newTask.Date0 = DateTime.Today;
+                    _context.Entry(newTask).State = EntityState.Modified;
+                }
+                else if (!newTask.Date1.HasValue || newTask.Date1.Value.Year <= 1970)
+                {
+                    newTask.Date1 = DateTime.Today;
+                    _context.Entry(newTask).State = EntityState.Modified;
+                }
+                else if (!newTask.Date2.HasValue || newTask.Date2.Value.Year <= 1970)
+                {
+                    newTask.Date2 = DateTime.Today;
+                    _context.Entry(newTask).State = EntityState.Modified;
+                }
+                else if (!newTask.Date3.HasValue || newTask.Date3.Value.Year <= 1970)
+                {
+                    newTask.Date3 = DateTime.Today;
+                    _context.Entry(newTask).State = EntityState.Modified;
+                }
+                else if (!newTask.Date4.HasValue || newTask.Date4.Value.Year <= 1970)
+                {
+                    newTask.Date4 = DateTime.Today;
+                    _context.Entry(newTask).State = EntityState.Modified;
+                }
+                else if (!newTask.Date5.HasValue || newTask.Date5.Value.Year <= 1970)
+                {
+                    newTask.Date5 = DateTime.Today;
+                    _context.Entry(newTask).State = EntityState.Modified;
+                }
+                else if (!newTask.Date6.HasValue || newTask.Date6.Value.Year <= 1970)
+                {
+                    newTask.Date6 = DateTime.Today;
+                    _context.Entry(newTask).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
+            return NoContent();
+        }
+        
         private bool TaskExists(int id)
         {
             return _context.Tasks.Any(t => t.Id == id);
@@ -184,5 +267,3 @@ namespace Time_planner_api.Controllers
 
     }
 }
-
-

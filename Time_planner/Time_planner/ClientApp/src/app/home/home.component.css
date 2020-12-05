@@ -4,6 +4,9 @@
   background-color: var(--yellow);
 }
 
+.btn-secondary {
+  background-color: var(--color-light-green);
+}
 
 #block_container {
   display: flex;
