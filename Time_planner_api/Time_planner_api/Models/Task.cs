@@ -21,8 +21,9 @@ namespace Time_planner_api.Models
 
         public int Priority { get; set; }
 
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public string City { get; set; }
+
+        public string StreetAddress { get; set; }
 
         public DateTime? Date0 { get; set; }
         public DateTime? Date1 { get; set; }

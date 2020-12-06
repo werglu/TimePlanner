@@ -38,7 +38,9 @@ export class EditTaskAaEventModalComponent implements OnInit {
       date3: '',
       date4: '',
       date5: '',
-      date6: ''
+      date6: '',
+      city: ' ',
+      streetAddress: ' '
     });
   }
 
@@ -50,6 +52,8 @@ export class EditTaskAaEventModalComponent implements OnInit {
   get date4() { return this.editTaskForm.get('date4'); }
   get date5() { return this.editTaskForm.get('date5'); }
   get date6() { return this.editTaskForm.get('date6'); }
+  get city() { return this.editTaskForm.get('city'); }
+  get streetAddress() { return this.editTaskForm.get('streetAddress'); }
 
   ngOnInit(): void {
     this.getCategories();
@@ -139,7 +143,9 @@ export class EditTaskAaEventModalComponent implements OnInit {
       date3: new Date(this.setDate('date3')),
       date4: new Date(this.setDate('date4')),
       date5: new Date(this.setDate('date5')),
-      date6: new Date(this.setDate('date6'))
+      date6: new Date(this.setDate('date6')),
+      city: (<HTMLInputElement>document.getElementById('city')).value,
+      streetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value
     };
   }
   

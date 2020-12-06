@@ -7,8 +7,6 @@ export interface Task {
   category: ListCategory;
   isDone: boolean;
   priority: number;
-  startDate?: Date;
-  endDate?: Date;
   date0?: Date;
   date1?: Date;
   date2?: Date;
@@ -19,6 +17,8 @@ export interface Task {
   days?: number;
   time?: number;
   split?: number;
+  city?: string;
+  streetAddress?: string;
   latitude?: number;
   longitude?: number;
 }
