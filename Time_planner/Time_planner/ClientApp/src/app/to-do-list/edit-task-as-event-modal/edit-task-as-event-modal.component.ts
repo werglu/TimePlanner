@@ -57,6 +57,7 @@ export class EditTaskAaEventModalComponent implements OnInit {
       this.tasksService.getTask(Number(this.editedTask.id)).subscribe((task) => {
         this.currentTask = task;
         this.currentCategory = (this.listCategories.filter(c => c.id == task.categoryId))[0];
+        this.choosenPriority = task.priority;
       });
     }
   }
