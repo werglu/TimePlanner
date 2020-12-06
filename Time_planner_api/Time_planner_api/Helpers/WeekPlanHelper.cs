@@ -40,6 +40,10 @@ namespace Time_planner_api.Helpers
                 int count = 0;
                 for (int i = 0; i < freeTimes.Length && count < Task.Split; i++)
                 {
+                    if (((Task.Days >> i) & 1) == 0)
+                    {
+                        continue;
+                    }
                     if (DayTimes[i] >= 0)
                     {
                         count++;
@@ -47,7 +51,7 @@ namespace Time_planner_api.Helpers
                     }
                     for (int j = 0; j < freeTimes[i].Count; j++)
                     {
-                        if (freeTimes[i][j] >= Task.Time.Value / Task.Split.Value && ((Task.Days >> j) & 1) == 1)
+                        if (freeTimes[i][j] >= Task.Time.Value / Task.Split.Value)
                         {
                             freeTimes[i][j] -= Task.Time.Value / Task.Split.Value;
                             DayTimes[i] = j;
