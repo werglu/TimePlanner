@@ -38,20 +38,20 @@ namespace UnitTests
             }
         }
 
-        [Fact]
-        public async void ThrowsWhenSavingDatesForNonExistingTasks()
-        {
-            var options = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(databaseName: "Test").Options;
+        //[Fact]
+        //public async void ThrowsWhenSavingDatesForNonExistingTasks()
+        //{
+        //    var options = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(databaseName: "Test").Options;
 
-            using (var context = new DatabaseContext(options))
-            {
-                var controller = new TasksController(context);
-                var result = await controller.SaveDates(new List<TaskAssignmentSave>()
-                {
-                    new TaskAssignmentSave() { TaskId = 2, DayTimes = new bool[] { false, false, false, false, false, false, false } }
-                });
-                Assert.IsType<NotFoundResult>(result.Result);
-            }
-        }
+        //    using (var context = new DatabaseContext(options))
+        //    {
+        //        var controller = new TasksController(context);
+        //        var result = await controller.SaveDates(new List<TaskAssignmentSave>()
+        //        {
+        //            new TaskAssignmentSave() { TaskId = 2, DayTimes = new bool[] { false, false, false, false, false, false, false } }
+        //        });
+        //        Assert.IsType<NotFoundResult>(result.Result);
+        //    }
+        //}
     }
 }

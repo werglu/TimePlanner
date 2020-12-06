@@ -53,8 +53,6 @@ namespace Time_planner_api.Controllers
             newTask.CategoryId = task.CategoryId;
             newTask.Category = task.Category;
             newTask.Priority = task.Priority;
-            newTask.StartDate = task.StartDate != null ? task.StartDate?.ToLocalTime() : task.StartDate;
-            newTask.EndDate = task.EndDate != null ? task.EndDate?.ToLocalTime() : task.EndDate;
             newTask.Date0 = task.Date0 != null ? task.Date0?.ToLocalTime() : task.Date0;
             newTask.Date1 = task.Date1 != null ? task.Date1?.ToLocalTime() : task.Date1;
             newTask.Date2 = task.Date2 != null ? task.Date2?.ToLocalTime() : task.Date2;
@@ -65,6 +63,8 @@ namespace Time_planner_api.Controllers
             newTask.Days = task.Days;
             newTask.Time = task.Time;
             newTask.Split = task.Split;
+            newTask.City = task.City == " " ? null : task.City;
+            newTask.StreetAddress = task.StreetAddress == " " ? null : task.StreetAddress;
 
             _context.Entry(newTask).State = EntityState.Modified;
 
@@ -98,8 +98,6 @@ namespace Time_planner_api.Controllers
                 CategoryId = task.CategoryId,
                 Category = null,
                 Priority = task.Priority,
-                StartDate = task.StartDate == null ? null : task.StartDate?.ToLocalTime(),
-                EndDate = task.EndDate == null ? null : task.EndDate?.ToLocalTime(),
                 Date0 = task.Date0 == null ? null : task.Date0?.ToLocalTime(),
                 Date1 = task.Date1 == null ? null : task.Date1?.ToLocalTime(),
                 Date2 = task.Date2 == null ? null : task.Date2?.ToLocalTime(),
@@ -109,7 +107,9 @@ namespace Time_planner_api.Controllers
                 Date6 = task.Date6 == null ? null : task.Date6?.ToLocalTime(),
                 Days = task.Days,
                 Time = task.Time,
-                Split = task.Split
+                Split = task.Split,
+                City = task.City,
+                StreetAddress = task.StreetAddress
             });
 
             try

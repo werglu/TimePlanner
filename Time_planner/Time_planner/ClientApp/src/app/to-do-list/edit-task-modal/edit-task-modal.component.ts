@@ -32,11 +32,15 @@ export class EditTaskModalComponent implements OnInit {
     this.editTaskForm = this.formBuilder.group({
       category: '',
       title: ['title', Validators.required],
-      priority: ''
+      priority: '',
+      city: ' ',
+      streetAddress: ' '
     });
   }
 
   get title() { return this.editTaskForm.get('title'); }
+  get city() { return this.editTaskForm.get('city'); }
+  get streetAddress() { return this.editTaskForm.get('streetAddress'); }
 
   ngOnInit(): void {
     this.getCategories();
@@ -95,7 +99,9 @@ export class EditTaskModalComponent implements OnInit {
       date3: this.editedTask.date3 == null ? null : new Date(this.editedTask.date3),
       date4: this.editedTask.date4 == null ? null : new Date(this.editedTask.date4),
       date5: this.editedTask.date5 == null ? null : new Date(this.editedTask.date5),
-      date6: this.editedTask.date6 == null ? null : new Date(this.editedTask.date6)
+      date6: this.editedTask.date6 == null ? null : new Date(this.editedTask.date6),
+      city: (<HTMLInputElement>document.getElementById('city')).value,
+      streetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value
     };
   }
   
