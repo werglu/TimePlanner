@@ -39,10 +39,71 @@
   </div>
   <div style="display:grid" *ngIf="currentTask != null">
     <label style="padding-top:10px;" for="name">
-      Street address 
+      Street address
     </label>
     <input style="width:70%;" id="streetAddress" type="text" formControlName="streetAddress" [value]="currentTask.streetAddress == null ? '' : currentTask.streetAddress" required>
   </div>
+
+  <div style="padding-top: 10px;">
+    <label>
+      Add date constraints <i class=" fa fa-info-circle"><span class="tooltiptext">Specify on which days and how many times you want to do this task.</span></i>
+    </label>
+    <button *ngIf="addDateConstraintsOff" class="btn" style="background-color:transparent;" (click)="turnOnAddDateConstraints()"><i class="fa fa-toggle-off"></i></button>
+    <button *ngIf="!addDateConstraintsOff" class="btn" style="background-color:transparent" (click)="turnOffAddDateConstraints()"><i class="fa fa-toggle-on"></i></button>
+  </div>
+  <div *ngIf="!addDateConstraintsOff" style="display:grid">
+    <label style="padding-top: 10px;" for="name">
+      Days <span class="required">*</span>
+    </label>
+    <div class="weekDays-selector">
+      <input type="checkbox" id="weekday-mon" class="weekday" [checked]="checkedDays[0]" (click)="onDayChange()" />
+      <label for="weekday-mon">M</label>
+      <input type="checkbox" id="weekday-tue" class="weekday" [checked]="checkedDays[1]" (click)="onDayChange()" />
+      <label for="weekday-tue">T</label>
+      <input type="checkbox" id="weekday-wed" class="weekday" [checked]="checkedDays[2]" (click)="onDayChange()" />
+      <label for="weekday-wed">W</label>
+      <input type="checkbox" id="weekday-thu" class="weekday" [checked]="checkedDays[3]" (click)="onDayChange()" />
+      <label for="weekday-thu">T</label>
+      <input type="checkbox" id="weekday-fri" class="weekday" [checked]="checkedDays[4]" (click)="onDayChange()" />
+      <label for="weekday-fri">F</label>
+      <input type="checkbox" id="weekday-sat" class="weekday" [checked]="checkedDays[5]" (click)="onDayChange()" />
+      <label for="weekday-sat">S</label>
+      <input type="checkbox" id="weekday-sun" class="weekday" [checked]="checkedDays[6]" (click)="onDayChange()" />
+      <label for="weekday-sun">S</label>
+    </div>
+  </div>
+  <div *ngIf="!addDateConstraintsOff" style="display:grid">
+    <label style="padding-top: 10px;" for="name">
+      Total duration <span class="required" style="margin-left:1px;margin-right:5px">*</span> <i class=" fa fa-info-circle"><span class="tooltiptext">Choose how much time it will take to do your task in total.</span></i>
+    </label>
+    <div>
+      <kendo-combobox [data]="hours"
+                      [value]="hours[choosenHourIndex]"
+                      (valueChange)="onHourChange($event)"
+                      style="width: 100px;margin-bottom:10px">
+      </kendo-combobox>
+      <label style="margin-left:1em">hours</label>
+    </div>
+    <div>
+      <kendo-combobox [data]="minutes"
+                      [value]="minutes[choosenMinuteIndex]"
+                      (valueChange)="onMinuteChange($event)"
+                      style="width: 100px;">
+      </kendo-combobox>
+      <label style="margin-left:1em">minutes</label>
+    </div>
+  </div>
+  <div *ngIf="!addDateConstraintsOff" style="display:grid">
+    <label style="padding-top: 10px;" for="name">
+      Split into days<span class="required" style="margin-left:3px;margin-right:5px">*</span> <i class=" fa fa-info-circle"><span class="tooltiptext">Choose how many days from selected you want to do your task.</span></i>
+    </label>
+    <kendo-combobox [data]="splits"
+                    [value]="choosenSplit-1 < splits.length ? splits[choosenSplit-1] : splits[0]"
+                    (valueChange)="onSplitChange($event)"
+                    style="width: 100px;">
+    </kendo-combobox>
+  </div>
+
   <div style="float:right">
     <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>
     <button style="margin-top:20px;" class="btn btn-primary" type="submit">Save</button>
