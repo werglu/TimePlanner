@@ -88,7 +88,14 @@ export class EditTaskModalComponent implements OnInit {
       categoryId: this.currentCategory.id,
       isDone: this.isDone,
       title: (<HTMLInputElement>document.getElementById('title')).value,
-      priority: this.choosenPriority
+      priority: this.choosenPriority,
+      date0: this.editedTask.date0 == null ? null :  new Date(this.editedTask.date0),
+      date1: this.editedTask.date1 == null ? null : new Date(this.editedTask.date1),
+      date2: this.editedTask.date2 == null ? null : new Date(this.editedTask.date2),
+      date3: this.editedTask.date3 == null ? null : new Date(this.editedTask.date3),
+      date4: this.editedTask.date4 == null ? null : new Date(this.editedTask.date4),
+      date5: this.editedTask.date5 == null ? null : new Date(this.editedTask.date5),
+      date6: this.editedTask.date6 == null ? null : new Date(this.editedTask.date6)
     };
   }
   
