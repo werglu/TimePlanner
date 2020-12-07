@@ -33,7 +33,12 @@ namespace Time_planner_api.Controllers
             {
                 var begin = GetDate(i);
                 var end = GetDate(i + 1);
-                events[i] = await _context.Events.Where(ev => ev.StartDate < end && ev.EndDate >= begin).ToListAsync();
+                events[i] = await _context.Events.Where(ev => ev.OwnerId == userId && ev.StartDate < end && ev.EndDate >= begin).ToListAsync();
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.FacebookId == userId);
+                if (user != null && user.AttendedEvents != null)
+                {
+                    events[i].AddRange(user.AttendedEvents.Where(ev => ev.StartDate < end && ev.EndDate >= begin));
+                }
                 events[i].Sort((x, y) =>
                 {
                     if (x.StartDate != y.StartDate)
@@ -153,6 +158,11 @@ namespace Time_planner_api.Controllers
             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             var events = await _context.Events.Where(x => x.OwnerId == userId).ToListAsync();
             var tasks = await _context.Tasks.Where(y => y.Category.OwnerId == userId).ToListAsync();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.FacebookId == userId);
+            if (user != null && user.AttendedEvents != null)
+            {
+                events.AddRange(user.AttendedEvents);
+            }
             events = events.Where(x => IsCurrentDay(x)).ToList();
             tasks = tasks.Where(y => IsCurrentDay(y)).ToList();
             return DayPlanHelper.FindShortestRoute(events, tasks, startMinutes, endMinutes);
