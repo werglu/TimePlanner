@@ -1,3 +1,5 @@
+<h2 class="label-friends">My friends</h2>
+
 <div class="container">
   <!-- search -->
   <div class="p-0 bg-light rounded rounded-pill shadow-sm mb-1 searchBar">
@@ -9,7 +11,7 @@
     </div>
   </div>
   <!-- end search -->
-  <div >
+  <div>
     <ul id="friendsList">
       <ng-container *ngFor="let friend of friends">
         <li id="block_container" class="list-group-item">
@@ -20,7 +22,7 @@
             <label class="profile-link">{{friend.name}}</label>
           </div>
           <div class="col-md-2 col-sm-2 list-item-elem">
-            <button type="button" class="btn btn-primary pull-right" style="background-color: var(--color-light-green);" >Show calendar</button>
+            <button type="button" class="btn btn-primary pull-right" style="background-color: var(--color-light-green);">Show calendar</button>
           </div>
         </li>
       </ng-container>

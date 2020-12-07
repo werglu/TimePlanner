@@ -16,6 +16,8 @@ img.profile-photo-lg {
 
 .list-group-item {
   border-top-width: 1px;
+  margin-left: 2px;
+  margin-right: 2px;
 }
 
 .list-item-elem {
@@ -26,3 +28,7 @@ img.profile-photo-lg {
   padding: inherit;
 }
 
+.label-friends {
+  color: var(--yellow);
+  margin-left: 14px;
+}
