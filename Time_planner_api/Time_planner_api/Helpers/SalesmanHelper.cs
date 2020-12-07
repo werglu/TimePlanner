@@ -63,7 +63,7 @@ namespace Time_planner_api.Helpers
             return newList.ToList();
         }
 
-        private static double CalculateDistance(Task[] tasks)
+        public static double CalculateDistance(Task[] tasks)
         {
             double distance = 0;
             var size = tasks.Length;

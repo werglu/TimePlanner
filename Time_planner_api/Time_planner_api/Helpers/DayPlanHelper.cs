@@ -95,7 +95,7 @@ namespace Time_planner_api.Helpers
             var prevTask = tasksBetween.Last();
             foreach (var task in tasksBetween)
             {
-                double distance = 0.0;
+                double distance = -SalesmanHelper.CalculateDistance(new Task[] { prevTask, task });
                 if (start.Item2 < double.MaxValue)
                 {
                     distance += GetDistance(task, (start.Item2, start.Item3));
