@@ -1,0 +1,34 @@
+ul {
+  padding: 0px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 50% 50%);
+}
+
+img.profile-photo-lg {
+  height: 70px;
+  width: 70px;
+  border-radius: 10%;
+}
+
+.searchBar {
+  margin-top: 10px;
+}
+
+.list-group-item {
+  border-top-width: 1px;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+.list-item-elem {
+  float: left;
+}
+
+.profile-link {
+  padding: inherit;
+}
+
+.label-friends {
+  color: var(--yellow);
+  margin-left: 14px;
+}
