@@ -14,8 +14,8 @@ namespace Time_planner_api.Helpers
             var result = new List<CalendarItem>();
             var tasksLeftOut = new List<CalendarItem>();
 
-            tasksLeftOut.AddRange(tasks.Where(x => !x.Longitude.HasValue || !x.Latitude.HasValue || !x.Time.HasValue || !x.Split.HasValue).Select(t => new CalendarItem { T = t, Assigned = false }).ToList());
-            tasks.RemoveAll(x => !x.Longitude.HasValue || !x.Latitude.HasValue || !x.Time.HasValue || !x.Split.HasValue);
+            tasksLeftOut.AddRange(tasks.Where(x => !x.Longitude.HasValue || !x.Latitude.HasValue).Select(t => new CalendarItem { T = t, Assigned = false }).ToList());
+            tasks.RemoveAll(x => !x.Longitude.HasValue || !x.Latitude.HasValue);
 
             events.Sort((x, y) =>
             {
@@ -66,17 +66,18 @@ namespace Time_planner_api.Helpers
             }
             else
             {
-                tasks.Sort((x, y) => (x.Time.Value / x.Split.Value).CompareTo(y.Time.Value / y.Split.Value));
+                tasks.Sort((x, y) => (GetTime(x)).CompareTo(GetTime(y)));
             }
 
             var tasksBetween = new List<Task>();
             var timeLeft = (int)(end.Item1 - start.Item1).TotalMinutes;
             foreach(var task in tasks)
             {
-                if (task.Time.Value / task.Split.Value <= timeLeft)
+                var time = GetTime(task);
+                if (time <= timeLeft)
                 {
                     tasksBetween.Add(task);
-                    timeLeft -= task.Time.Value / task.Split.Value;
+                    timeLeft -= time;
                 }
             }
 
@@ -124,6 +125,11 @@ namespace Time_planner_api.Helpers
         private static double GetDistance(Task task, (double, double) point)
         {
             return (task.Latitude.Value - point.Item1) * (task.Latitude.Value - point.Item1) + (task.Longitude.Value - point.Item2) * (task.Longitude.Value - point.Item2);
+        }
+
+        private static int GetTime(Task task)
+        {
+            return task.Time.GetValueOrDefault(0) / task.Split.GetValueOrDefault(1);
         }
     }
 }
