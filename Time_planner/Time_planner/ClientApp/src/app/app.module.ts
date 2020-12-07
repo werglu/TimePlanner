@@ -31,7 +31,6 @@ import { AuthGuard } from './auth.guard';
 import { EditTaskAaEventModalComponent } from './to-do-list/edit-task-as-event-modal/edit-task-as-event-modal.component';
 import { FindDatesModalComponent } from './to-do-list/find-dates-modal/find-dates-modal.component';
 import { FindToDoModalComponent } from './home/find-to-do-modal/find-to-do-modal.component';
-import { FriendsComponent } from './friends/friends-list.component';
 import { FacebookModule } from 'ngx-facebook';
 
 @NgModule({
@@ -54,8 +53,7 @@ import { FacebookModule } from 'ngx-facebook';
     AccessDeniedComponent,
     LogoutComponent,
     FindDatesModalComponent,
-    FindToDoModalComponent,
-    FriendsComponent
+    FindToDoModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
