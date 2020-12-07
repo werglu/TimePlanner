@@ -1,8 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { PlanningService } from '../../planning/planning.service';
 import { Task } from '../../to-do-list/task';
-
-declare var FB: any;
+import { FacebookService } from 'ngx-facebook';
 
 @Component({
   selector: 'find-to-do-modal',
@@ -17,31 +16,14 @@ export class FindToDoModalComponent implements OnInit {
   mySelection: number[] = [];
   public gridData: Task[] = [];
 
-  constructor(private planningService: PlanningService) {
+  constructor(private planningService: PlanningService,
+    private fb: FacebookService) {
   }
 
   ngOnInit(): void {
-    (window as any).fbAsyncInit = () => {
-      FB.init({
-        appId: '343708573552335',
-        cookie: true,
-        xfbml: true,
-        version: 'v8.0',
-      });
-
-      (function (d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) { return; }
-        js = d.createElement(s); js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    }
-
-    FB.api('/me', (response) => {
-      this.userId = response.id;
-      this.getTasksForToday();
-    });
+    let authResp = this.fb.getAuthResponse();
+    this.userId = authResp.userID;
+    this.getTasksForToday();
   }
 
   cancel() {
