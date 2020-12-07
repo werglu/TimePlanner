@@ -9,12 +9,11 @@ namespace Time_planner_api.Helpers
     {
         public static List<Task> FindShortestRoute(List<Task> tasks)
         {
-            if (tasks.Count > 15)
-            {
-                tasks.RemoveRange(15, tasks.Count - 15);
-            }
-            var oldList = tasks.ToArray();
-            var newList = tasks.ToArray();
+            int taskCount = Math.Min(30, tasks.Count);
+            var taskArray = new Task[taskCount];
+            tasks.CopyTo(0, taskArray, 0, taskCount);
+            var oldList = taskArray;
+            var newList = (Task[])taskArray.Clone();
             var size = oldList.Length;
             var noImprovementCount = 0;
 
