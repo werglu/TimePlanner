@@ -7,7 +7,7 @@ namespace Time_planner_api.Helpers
 {
     public class DayPlanHelper
     {
-        public static List<CalendarItem> FindShortestRoute(List<Event> eventsToPlan, List<Task> tasksToPlan, double startMinutes, double endMinutes)
+        public static List<CalendarItem> FindShortestRoute(List<Event> eventsToPlan, List<Task> tasksToPlan, DateTime date, double startMinutes, double endMinutes)
         {
             var events = eventsToPlan.Select(x => x).ToList();
             var tasks = tasksToPlan.Select(x => x).ToList();
@@ -27,8 +27,8 @@ namespace Time_planner_api.Helpers
             });
             result.AddRange(events.Select(ev => new CalendarItem { E = ev, Assigned = true }).ToList());
 
-            (DateTime, double, double) currentWindowStart = (DateTime.Today.AddMinutes(startMinutes), double.MaxValue, double.MaxValue);
-            var dayEnd = DateTime.Today.AddMinutes(endMinutes);
+            (DateTime, double, double) currentWindowStart = (date.AddMinutes(startMinutes), double.MaxValue, double.MaxValue);
+            var dayEnd = date.AddMinutes(endMinutes);
             foreach (var ev in events)
             {
                 if (currentWindowStart.Item1 < ev.StartDate)

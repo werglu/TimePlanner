@@ -24,7 +24,8 @@ export class PlanningService {
   }
 
   saveDates(taskAssignemntsSave: TaskAssignmentSave[]): Observable<TaskAssignmentSave[]> {
-    return this.http.put<TaskAssignmentSave[]>(this.baseUrl + 'saveDates', taskAssignemntsSave);
+    var date = new Date();
+    return this.http.put<TaskAssignmentSave[]>(this.baseUrl + 'saveDates?year=' + date.getFullYear() + '&month=' + (date.getMonth() + 1) + '&day=' + date.getDate(), taskAssignemntsSave);
   }
 
   findPlacesOrder(userId: string): Observable<CalendarItem[]> {
@@ -33,8 +34,7 @@ export class PlanningService {
   }
 
   findTasksForToday(userId: string): Observable<Task[]> {
-    var date = new Date();
-    return this.http.get<Task[]>(this.baseUrl + 'tasksForToday?userId=' + userId + '&year=' + date.getFullYear() + '&month=' + (date.getMonth() + 1) + '&day=' + date.getDate());
+    return this.http.get<Task[]>(this.baseUrl + 'tasksForToday?userId=' + userId);
   }
 
   saveTasksForToday(taskIds: number[]): Observable<number[]> {
