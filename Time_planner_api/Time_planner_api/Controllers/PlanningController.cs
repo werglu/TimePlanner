@@ -22,11 +22,12 @@ namespace Time_planner_api.Controllers
             _context = context;
         }
 
-        // PUT: api/Planning/weekplan
+        // PUT: api/Planning/weekplan?userId=a&year=b&month=c&day=d
         [HttpPut]
         [Route("weekplan")]
-        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentProposition>>> GetWeekPlannedTasks(List<int> taskIds, double startMinutes = 420.0, double endMinutes = 1320.0)
+        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentProposition>>> GetWeekPlannedTasks(List<int> taskIds, string userId, int year, int month, int day, double startMinutes = 420.0, double endMinutes = 1320.0)
         {
+            // !!!!!!!!!!!!!!!!!!!!!!!!
             var events = new List<Event>[7];
             for (int i = 0; i < events.Length; i++)
             {
@@ -144,16 +145,12 @@ namespace Time_planner_api.Controllers
             return NoContent();
         }
 
-        private DateTime GetDate(int day)
+        // GET: api/Planning/dayplan?userId=a&year=b&month=c&day=d
+        [HttpGet]
+        [Route("dayplan")]
+        public async Task<ActionResult<IEnumerable<CalendarItem>>> GetDayPlannedTasks(string userId, int year, int month, int day, double startMinutes = 420.0, double endMinutes = 1320.0)
         {
-            return DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek) + 1).AddDays(day % 7); // starts from monday
-        }
-
-        // GET: api/Planning/dayplan/104416411457610
-        [HttpGet("{userId}")]
-        [Route("dayplan/{userId}")]
-        public async Task<ActionResult<IEnumerable<CalendarItem>>> FindShortestRoute(string userId, double startMinutes = 420.0, double endMinutes = 1320.0)
-        {
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             var events = await _context.Events.Where(x => x.OwnerId == userId).ToListAsync();
             var tasks = await _context.Tasks.Where(y => y.Category.OwnerId == userId).ToListAsync();
             events = events.Where(x => IsCurrentDay(x)).ToList();
@@ -161,32 +158,12 @@ namespace Time_planner_api.Controllers
             return DayPlanHelper.FindShortestRoute(events, tasks, startMinutes, endMinutes);
         }
 
-        private bool IsCurrentDay(Event ev)
+        // GET: api/Planning/tasksForToday?userId=a&year=b&month=c&day=d
+        [HttpGet]
+        [Route("tasksForToday")]
+        public async Task<ActionResult<IEnumerable<Models.Task>>> FindTasksForToday(string userId, int year, int month, int day)
         {
-            return ev.StartDate < DateTime.Today.AddDays(1) && ev.EndDate >= DateTime.Today;
-        }
-
-        private bool IsCurrentDay(Models.Task task)
-        {
-            var days = new List<DateTime?>()
-            {
-                task.Date0, task.Date1, task.Date2, task.Date3, task.Date4, task.Date5, task.Date6
-            };
-            foreach (var day in days)
-            {
-                if (day.HasValue && day.Value >= DateTime.Today && day.Value < DateTime.Today.AddDays(1))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        // GET: api/Planning/tasksForToday/104416411457610
-        [HttpGet("{userId}")]
-        [Route("tasksForToday/{userId}")]
-        public async Task<ActionResult<IEnumerable<Models.Task>>> FindTasksForToday(string userId)
-        {
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             return await _context.Tasks.Where(y => y.Category.OwnerId == userId && !y.IsDone &&
                                               (!y.Date0.HasValue || y.Date0.Value.Year <= 1970 ||
                                                !y.Date1.HasValue || y.Date1.Value.Year <= 1970 ||
@@ -197,11 +174,12 @@ namespace Time_planner_api.Controllers
                                                !y.Date6.HasValue || y.Date6.Value.Year <= 1970)).OrderBy(x => x.Priority).ToListAsync();
         }
 
-        // PUT: api/Planning/tasksForToday
+        // PUT: api/Planning/tasksForToday?year=b&month=c&day=d
         [HttpPut]
         [Route("tasksForToday")]
-        public async Task<ActionResult<IEnumerable<int>>> SaveTasksForToday(List<int> taskIds)
+        public async Task<ActionResult<IEnumerable<int>>> SaveTasksForToday(List<int> taskIds, int year, int month, int day)
         {
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             if (taskIds == null)
             {
                 return NoContent();
@@ -258,6 +236,32 @@ namespace Time_planner_api.Controllers
             }
 
             return NoContent();
+        }
+
+        private DateTime GetDate(int day)
+        {
+            return DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek) + 1).AddDays(day % 7); // starts from monday
+        }
+
+        private bool IsCurrentDay(Event ev)
+        {
+            return ev.StartDate < DateTime.Today.AddDays(1) && ev.EndDate >= DateTime.Today;
+        }
+
+        private bool IsCurrentDay(Models.Task task)
+        {
+            var days = new List<DateTime?>()
+            {
+                task.Date0, task.Date1, task.Date2, task.Date3, task.Date4, task.Date5, task.Date6
+            };
+            foreach (var day in days)
+            {
+                if (day.HasValue && day.Value >= DateTime.Today && day.Value < DateTime.Today.AddDays(1))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         
         private bool TaskExists(int id)
