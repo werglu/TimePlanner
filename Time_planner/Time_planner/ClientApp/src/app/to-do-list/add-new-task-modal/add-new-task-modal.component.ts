@@ -126,9 +126,9 @@ export class AddNewTaskModalComponent implements OnInit {
       isDone: false,
       title: (<HTMLInputElement>document.getElementById('title')).value,
       priority: this.choosenPriority,
-      split: this.choosenSplit,
-      days: this.choosenDays,
-      time: this.choosenHour * 60 + this.choosenMinute
+      split: this.addDatesOff ? null : this.choosenSplit,
+      days: this.addDatesOff ? null : this.choosenDays,
+      time: this.addDatesOff ? null : (this.choosenHour * 60 + this.choosenMinute)
     };
   }
   

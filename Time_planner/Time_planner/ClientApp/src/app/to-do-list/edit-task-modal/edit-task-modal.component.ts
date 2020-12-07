@@ -29,7 +29,7 @@ export class EditTaskModalComponent implements OnInit {
   choosenMinute = 0;
   choosenHourIndex = 1;
   choosenMinuteIndex = 0;
-  choosenDays = 1 + 2 + 4 + 8 + 16;
+  choosenDays = 1;
 
   public addDateConstraintsOff = true;
   @Input() userId: string;
