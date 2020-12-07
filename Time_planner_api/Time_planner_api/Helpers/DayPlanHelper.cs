@@ -79,6 +79,10 @@ namespace Time_planner_api.Helpers
                     tasksBetween.Add(task);
                     timeLeft -= time;
                 }
+                if (tasksBetween.Count == SalesmanHelper.MaxTaskCount)
+                {
+                    break;
+                }
             }
 
             if (tasksBetween.Count == 0)

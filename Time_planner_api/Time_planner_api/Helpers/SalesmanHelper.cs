@@ -7,9 +7,10 @@ namespace Time_planner_api.Helpers
 {
     public class SalesmanHelper
     {
+        public static int MaxTaskCount { get { return 30; } }
         public static List<Task> FindShortestRoute(List<Task> tasks)
         {
-            int taskCount = Math.Min(30, tasks.Count);
+            int taskCount = Math.Min(MaxTaskCount, tasks.Count);
             var taskArray = new Task[taskCount];
             tasks.CopyTo(0, taskArray, 0, taskCount);
             var oldList = taskArray;
@@ -60,6 +61,7 @@ namespace Time_planner_api.Helpers
 
                 noImprovementCount++;
             }
+
             return newList.ToList();
         }
 
