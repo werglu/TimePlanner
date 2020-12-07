@@ -10,8 +10,7 @@ import { Task } from '../to-do-list/task';
 import { NotificationsService } from '../notifications/notifications.service';
 import { ListCategoriesService } from '../to-do-list/listCategories.service';
 import { isNullOrUndefined } from 'util';
-
-declare var FB: any;
+import { FacebookService } from 'ngx-facebook';
 
 @Component({
   selector: 'app-calendar-component',
@@ -33,7 +32,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   activeDayIsOpen = false;
   CalendarView = CalendarView;
   refresh: Subject<any> = new Subject();
-  userTasksCateoriesIds: number[]= [];
+  userTasksCateoriesIds: number[] = [];
   events: CalendarEvent[] = [];
   actions: CalendarEventAction[] = [
     {
@@ -50,32 +49,16 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     public tasksService: TasksService,
     public http: HttpClient,
     private listCategoriesService: ListCategoriesService,
-    private notificationsService: NotificationsService) {
+    private notificationsService: NotificationsService,
+    private fb: FacebookService) {
   }
 
   ngOnInit(): void {
-    (window as any).fbAsyncInit = () => {
-      FB.init({
-        appId: '343708573552335',
-        cookie: true,
-        xfbml: true,
-        version: 'v8.0',
-      });
 
-      (function (d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) { return; }
-        js = d.createElement(s); js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    }
-
-    FB.api('/me', (response) => {
-      this.userId = response.id;
-      this.getTasks();
-      this.getEvents();
-    });
+    let authResp = this.fb.getAuthResponse();
+    this.userId = authResp.userID;
+    this.getTasks();
+    this.getEvents();
   }
 
   ngAfterViewInit(): void {
@@ -84,25 +67,25 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   getEvents(): void {
     this.eventsService.getAllEvents(this.userId).subscribe(e => {
       e.forEach(ee => {
-          this.events.push({
-            id: ee.id,
-            title: ee.title,
-            start: new Date(ee.startDate),
-            end: new Date(ee.endDate),
-            actions: this.actions,
-            color: {
-              primary: '#ff9642',
-              secondary: '#ff9642'
-            },
-            meta: {
-              type: 'event'
-            }
-          })
+        this.events.push({
+          id: ee.id,
+          title: ee.title,
+          start: new Date(ee.startDate),
+          end: new Date(ee.endDate),
+          actions: this.actions,
+          color: {
+            primary: '#ff9642',
+            secondary: '#ff9642'
+          },
+          meta: {
+            type: 'event'
+          }
+        })
       });
       this.refresh.next();
     });
   }
-  
+
   getTasks() {
     this.listCategoriesService.getAllListCategoriesPerUser(this.userId).subscribe((categories) => {
       categories.forEach(category => this.userTasksCateoriesIds.push(category.id));
@@ -173,7 +156,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }) {
     if (isSameMonth(date, this.viewDate)) {
-      if ( events.length == 0 || (isSameDay(this.viewDate, date) && this.activeDayIsOpen == true) ) {
+      if (events.length == 0 || (isSameDay(this.viewDate, date) && this.activeDayIsOpen == true)) {
         this.activeDayIsOpen = false;
       } else {
         this.activeDayIsOpen = true;

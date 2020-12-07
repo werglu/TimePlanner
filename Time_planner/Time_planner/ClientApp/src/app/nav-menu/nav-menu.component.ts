@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { NotificationsService } from '../notifications/notifications.service';
 import { Subscription, interval } from 'rxjs';
 import { UserService } from '../user/user.service';
+import { FacebookService, LoginStatus, InitParams } from 'ngx-facebook';
 
-declare var FB: any;
 
 @Component({
   selector: 'app-nav-menu',
@@ -19,26 +19,22 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   userId: string;
 
   constructor(private router: Router,
+    private fb: FacebookService,
     private notificationsService: NotificationsService,
     public userService: UserService) {
   }
 
   ngOnInit(): void {
+    const initParams: InitParams = {
+      appId: '343708573552335',
+      cookie: true,
+      xfbml: true,
+      version: 'v9.0',
+    };
 
-    (window as any).fbAsyncInit = () => {
-      FB.init({
-        appId: '343708573552335',
-        cookie: true,
-        xfbml: true,
-        version: 'v8.0',
-      });
-
-      // log visitor activity
-      // TODO: support to July 1,2022
-      // https://developers.facebook.com/docs/facebook-pixel
-      FB.AppEvents.logPageView();
-
-      FB.getLoginStatus(response => {
+    this.fb.init(initParams);
+  
+    this.fb.getLoginStatus().then(response => {
         let loginBtn = document.getElementById("loginBtn");
         let logoutBtn = document.getElementById("logoutBtn");
         let notificationsBtn = document.getElementById("notificationBtn");
@@ -58,23 +54,11 @@ export class NavMenuComponent implements OnInit, OnDestroy {
           notificationsBtn.style.display = "none";
         }
       });
-    };
 
-    (function (d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) { return; }
-      js = d.createElement(s); js.id = id;
-      js.src = "https://connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-
-    //FB.getLoginStatus('/me', (response) => {
-    //  this.userId = response.id;
-    //});
   }
 
   fbLogout() {
-    FB.logout(response => {
+    this.fb.logout().then(response => {
       let loginBtn = document.getElementById("loginBtn");
       loginBtn.style.display = "block";
       let logoutBtn = document.getElementById("logoutBtn");
@@ -86,8 +70,11 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     });
   }
 
-   fbLogin() {
-    FB.login(response => {
+  fbLogin() {
+    this.fb.login({
+      scope: 'public_profile, email, user_friends, user_photos',
+      return_scopes: true
+    }).then((response: LoginStatus) => {
       if (response.authResponse) {
         let loginBtn = document.getElementById("loginBtn");
         loginBtn.style.display = "none";
@@ -101,9 +88,6 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         }
         this.userService.putUser(response.authResponse.userID).subscribe(() => this.router.navigate(['/']));
       }
-    }, {
-      scope: 'public_profile, email, user_friends, user_photos',
-      return_scopes: true
     });
   }
 

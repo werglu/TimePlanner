@@ -1,52 +1,41 @@
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from "@angular/router";
-import { Injectable, OnInit } from "@angular/core";
-
-declare var FB: any;
+import { Injectable, OnInit} from "@angular/core";
+import { FacebookService, InitParams, LoginStatus } from 'ngx-facebook';
 
 @Injectable()
 export class AuthGuard implements OnInit, CanActivate {
 
   isConnected: boolean;
 
-  constructor(private router: Router) {
+  constructor(private router: Router,
+    private fb: FacebookService) {
   }
 
   ngOnInit() {
-    (window as any).fbAsyncInit = function () {
-      FB.init({
-        appId: '343708573552335',
-        cookie: true,
-        xfbml: true,
-        version: 'v8.0',
-      });
+  const initParams: InitParams = {
+    appId: '343708573552335',
+    cookie: true,
+    xfbml: true,
+    version: 'v9.0',
+  };
 
-      FB.AppEvents.logPageView();
-    };
+    this.fb.init(initParams);
+    this.fb.getLoginStatus(true);
+}
 
-    (function (d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) { return; }
-      js = d.createElement(s); js.id = id;
-      js.src = "https://connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-  }
-
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-
-    FB.getLoginStatus( response => {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    
+    return this.fb.getLoginStatus().catch((error) => {
+      console.log(error);
+    }).then((response: LoginStatus) => {
       if (response.status === 'connected') {
-        this.isConnected = true;
+        return true;
       } else {
-        this.isConnected = false;
+        this.router.navigate(['/access-denied']);
+        return false;
       }
-    });
-
-    if (this.isConnected == true) {
-      return true;
-    } else {
-      this.router.navigate(['/access-denied']);
+    }).catch((error) => {
       return false;
-    }
+    });
   }
 }

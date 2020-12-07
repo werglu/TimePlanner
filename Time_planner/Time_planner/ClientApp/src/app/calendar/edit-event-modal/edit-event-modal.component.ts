@@ -7,9 +7,8 @@ import { Friend, InvitedFriend } from '../../shared/friend';
 import { UserService } from '../../user/user.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { Notification } from '../../notifications/notification';
-import { UserEventsService, Status  } from '../userEvents.service';
-
-declare var FB: any;
+import { UserEventsService, Status } from '../userEvents.service';
+import { FacebookService } from 'ngx-facebook';
 
 @Component({
   selector: 'edit-event-modal',
@@ -36,7 +35,8 @@ export class EditEventModalComponent implements OnInit {
     public eventsService: EventsService,
     public userService: UserService,
     private notificationService: NotificationsService,
-    private userEventsService: UserEventsService) {
+    private userEventsService: UserEventsService,
+    private fb: FacebookService) {
     this.editEventForm = this.formBuilder.group({
       title: [' ', Validators.required],
       startDate: '',
@@ -61,33 +61,17 @@ export class EditEventModalComponent implements OnInit {
   get streetAddress() { return this.editEventForm.get('streetAddress'); }
 
   ngOnInit(): void {
-    (window as any).fbAsyncInit = () => {
-      FB.init({
-        appId: '343708573552335',
-        cookie: true,
-        xfbml: true,
-        version: 'v8.0',
+
+    let authResp = this.fb.getAuthResponse();
+    this.userId = authResp.userID;
+
+    if (this.editedEvent.id != null) {
+      this.eventsService.getEvent(this.userId, Number(this.editedEvent.id)).subscribe((event) => {
+        this.currentEvent = event;
+        this.isPublic = event.isPublic;
+        this.onChangeVisibility.emit(this.isPublic);
       });
-
-      (function (d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) { return; }
-        js = d.createElement(s); js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
     }
-
-    FB.api('/me', (response) => {
-      this.userId = response.id;
-      if (this.editedEvent.id != null) {
-        this.eventsService.getEvent(this.userId, Number(this.editedEvent.id)).subscribe((event) => {
-          this.currentEvent = event;
-          this.isPublic = event.isPublic;
-          this.onChangeVisibility.emit(this.isPublic);
-        });
-      }
-    });
   }
 
   validateAllFormControls(formGroup: FormGroup) {
@@ -155,9 +139,9 @@ export class EditEventModalComponent implements OnInit {
   onSubmit() {
     this.validateAllFormControls(this.editEventForm);
     if (this.editEventForm.valid && !this.dateInvalid()) {
-        this.eventsService.editEvent(Number(this.editedEvent.id), this.getFormValue()).subscribe(() => {
-          this.onSave.emit(this.getFormValue());
-        });
+      this.eventsService.editEvent(Number(this.editedEvent.id), this.getFormValue()).subscribe(() => {
+        this.onSave.emit(this.getFormValue());
+      });
     }
     else {
       this.validateAllFormControls(this.editEventForm);
@@ -194,17 +178,17 @@ export class EditEventModalComponent implements OnInit {
   }
 
   sendInvitation(friend: Friend) {
-      this.notificationService.addNotification(this.getNotificationToSend(friend.FacebookId.toString(), +this.editedEvent.id)).subscribe();
+    this.notificationService.addNotification(this.getNotificationToSend(friend.FacebookId.toString(), +this.editedEvent.id)).subscribe();
     // add user event with unknown status to know that invitation has been sent
-      this.userEventsService.addUserEvent(this.getUserEvent(+this.editedEvent.id, 0, friend.FacebookId.toString())).subscribe(() => {
-          this.invited.push({
-              FacebookId: friend.FacebookId,
-              name: friend.name,
-              photoUrl: friend.photoUrl,
-              status: Status.Unknow,
-          });
-          this.friends.splice(this.friends.indexOf(friend), 1);
+    this.userEventsService.addUserEvent(this.getUserEvent(+this.editedEvent.id, 0, friend.FacebookId.toString())).subscribe(() => {
+      this.invited.push({
+        FacebookId: friend.FacebookId,
+        name: friend.name,
+        photoUrl: friend.photoUrl,
+        status: Status.Unknow,
       });
+      this.friends.splice(this.friends.indexOf(friend), 1);
+    });
   }
 
   getUserEvent(eventId: number, status: number, userId: string): UsersEvents {
@@ -227,7 +211,7 @@ export class EditEventModalComponent implements OnInit {
       messageType: 0
     }
   }
-  
+
   search() {
     let value = (<HTMLInputElement>document.getElementById("searchInput")).value.toLowerCase();
 

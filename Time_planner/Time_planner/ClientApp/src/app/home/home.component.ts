@@ -8,8 +8,7 @@ import { TasksService } from '../to-do-list/tasks.service';
 import { Task } from '../to-do-list/task';
 import { PlanningService } from '../planning/planning.service';
 import { CalendarItem } from '../planning/calendarItem';
-
-declare var FB: any;
+import { FacebookService } from 'ngx-facebook';
 
 @Component({
   selector: 'app-home',
@@ -33,32 +32,14 @@ export class HomeComponent {
     public planningService: PlanningService,
     public http: HttpClient,
     private listCategoriesService: ListCategoriesService,
-    private tasksService: TasksService) {
+    private tasksService: TasksService,
+    private fb: FacebookService) {
   }
 
   ngOnInit(): void {
-    (window as any).fbAsyncInit = () => {
-      FB.init({
-        appId: '343708573552335',
-        cookie: true,
-        xfbml: true,
-        version: 'v8.0',
-      });
-
-      (function (d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) { return; }
-        js = d.createElement(s); js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    }
-
-    FB.api('/me', (response) => {
-      this.userId = response.id;
-      this.refresh();
-    });
-
+    let authResp = this.fb.getAuthResponse();
+    this.userId = authResp.userID;
+    this.refresh();
     this.getLocation();
   }
 

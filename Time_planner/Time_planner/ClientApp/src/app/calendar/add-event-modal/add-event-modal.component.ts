@@ -7,8 +7,7 @@ import { UserService } from '../../user/user.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { Notification } from '../../notifications/notification';
 import { Status, UserEventsService } from '../userEvents.service';
-
-declare var FB: any;
+import { FacebookService } from 'ngx-facebook';
 
 @Component({
   selector: 'add-event-modal',
@@ -33,7 +32,8 @@ export class AddEventModalComponent implements OnInit {
     public eventsService: EventsService,
     public userService: UserService,
     public userEventsService: UserEventsService,
-    private notificationService: NotificationsService) {
+    private notificationService: NotificationsService,
+    private fb: FacebookService) {
     this.editEventForm = this.formBuilder.group({
       title: ['', Validators.required],
       startDate: '',
@@ -59,26 +59,8 @@ export class AddEventModalComponent implements OnInit {
 
 
   ngOnInit(): void {
-    (window as any).fbAsyncInit = () => {
-      FB.init({
-        appId: '343708573552335',
-        cookie: true,
-        xfbml: true,
-        version: 'v8.0',
-      });
-
-      (function (d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) { return; }
-        js = d.createElement(s); js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    }
-
-    FB.api('/me', (response) => {
-      this.userId = response.id;
-    });
+    let authResp = this.fb.getAuthResponse();
+    this.userId = authResp.userID;
   }
 
   getFormValue(): Events {
