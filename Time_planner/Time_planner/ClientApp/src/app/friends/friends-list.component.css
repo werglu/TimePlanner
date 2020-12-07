@@ -1,0 +1,34 @@
+ body {
+}
+
+ul {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}
+
+img.profile-photo-lg {
+  height: 70px;
+  width: 70px;
+  border-radius: 10%;
+}
+
+.searchBar {
+  margin-top: 10px;
+}
+
+.list-group-item {
+    display: inline;
+}
+
+.list-item-elem {
+  float: left;
+}
+
+.list-2col {
+  column-count: 2;
+}
+
+.profile-link {
+  padding: inherit;
+}

@@ -1,0 +1,29 @@
+<div class="container">
+  <!-- search -->
+  <div class="p-0 bg-light rounded rounded-pill shadow-sm mb-1 searchBar">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <button id="button-addon2" type="button" (click)="search()" class="btn btn-link text-warning"><i class="fa fa-search"></i></button>
+      </div>
+      <input type="search" id="searchInput" placeholder="search friends..." class="form-control border-0 bg-light rounded-pill">
+    </div>
+  </div>
+  <!-- end search -->
+  <div class="list-2col">
+    <ul id="friendsList" class="list-group">
+      <ng-container *ngFor="let friend of friends">
+        <li id="block_container" class="list-group-item">
+          <div class="col-md-3 col-sm-3 list-item-elem">
+            <img src={{friend.photoUrl}} alt="friend's photo" class="profile-photo-lg">
+          </div>
+          <div class="col-md-7 col-sm-7 list-item-elem">
+            <label class="profile-link">{{friend.name}}</label>
+          </div>
+          <div class="col-md-2 col-sm-2 list-item-elem">
+            <button type="button" class="btn btn-primary pull-right" style="background-color: var(--color-light-green);" >Show calendar</button>
+          </div>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</div>
