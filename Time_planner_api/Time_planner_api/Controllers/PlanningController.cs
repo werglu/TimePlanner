@@ -37,7 +37,7 @@ namespace Time_planner_api.Controllers
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.FacebookId == userId);
                 if (user != null && user.AttendedEvents != null)
                 {
-                    events[i].AddRange(user.AttendedEvents.Where(ev => ev.StartDate < end && ev.EndDate >= begin));
+                    events[i].AddRange(user.AttendedEvents.Where(ev => ev.StartDate < end && ev.EndDate >= begin && !events[i].Contains(ev)));
                 }
                 events[i].Sort((x, y) =>
                 {
@@ -162,7 +162,7 @@ namespace Time_planner_api.Controllers
             var user = await _context.Users.FirstOrDefaultAsync(u => u.FacebookId == userId);
             if (user != null && user.AttendedEvents != null)
             {
-                events.AddRange(user.AttendedEvents);
+                events.AddRange(user.AttendedEvents.Where(ev => !events.Contains(ev)));
             }
             var date = new DateTime(year, month, day);
             events = events.Where(x => IsDay(x, date)).ToList();
