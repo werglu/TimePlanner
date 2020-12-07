@@ -134,7 +134,7 @@ export class EditTaskModalComponent implements OnInit {
 
     this.splits = Array.from({ length: count }, (v, k) => k + 1)
     if (this.choosenSplit > this.splits.length) {
-      this.choosenSplit = 1; 
+      this.choosenSplit = 1;
     }
   }
 
@@ -179,7 +179,7 @@ export class EditTaskModalComponent implements OnInit {
   onPriorityChange(priority: string) {
     if (priority == this.priorities[0]) {
       this.choosenPriority = 0;
-    }     
+    }
     if (priority == this.priorities[1]) {
       this.choosenPriority = 1;
     }
@@ -203,7 +203,7 @@ export class EditTaskModalComponent implements OnInit {
   getFormValue(): Task {
     return {
       id: Number(this.editedTask.id),
-      category:  this.currentCategory,
+      category: this.currentCategory,
       categoryId: this.currentCategory.id,
       isDone: this.isDone,
       title: (<HTMLInputElement>document.getElementById('title')).value,
@@ -211,7 +211,7 @@ export class EditTaskModalComponent implements OnInit {
       split: this.choosenSplit,
       days: this.choosenDays,
       time: this.choosenHour * 60 + this.choosenMinute,
-      date0: this.editedTask.date0 == null ? null :  new Date(this.editedTask.date0),
+      date0: this.editedTask.date0 == null ? null : new Date(this.editedTask.date0),
       date1: this.editedTask.date1 == null ? null : new Date(this.editedTask.date1),
       date2: this.editedTask.date2 == null ? null : new Date(this.editedTask.date2),
       date3: this.editedTask.date3 == null ? null : new Date(this.editedTask.date3),
@@ -222,7 +222,7 @@ export class EditTaskModalComponent implements OnInit {
       streetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value
     };
   }
-  
+
   onSubmit() {
     if (this.editTaskForm.valid) {
       this.tasksService.editTask(Number(this.editedTask.id), this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
