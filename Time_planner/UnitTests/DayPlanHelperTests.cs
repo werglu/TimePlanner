@@ -12,8 +12,12 @@ namespace UnitTests
     public class DayPlanHelperTests
     {
         [Fact]
-        public async void DoesNotPlanTasksWithoutTime()
+        public void DoesNotPlanTasksWhenThereIsNoTime()
         {
+            var events = new List<Event>()
+            {
+                new Event() { Id = 1, StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(1).AddMinutes(-1) }
+            };
             var tasks = new List<Task>()
             {
                 new Task() { Id = 1234, Title = "*" },
@@ -22,12 +26,12 @@ namespace UnitTests
                 new Task() { Id = 4, Title = "*******" },
                 new Task() { Id = 5, Title = "   ||   " }
             };
-            var result = DayPlanHelper.FindShortestRoute(new List<Event>(), tasks, DateTime.Now, 0.0, 10000.0);
-            Assert.All(result, item => Assert.False(item.Assigned));
+            var result = DayPlanHelper.FindShortestRoute(events, tasks, DateTime.Now, 0.0, 10000.0);
+            Assert.All(result, item => Assert.False(item.Assigned && item.T != null));
         }
 
         [Fact]
-        public async void ReturnsNotPlannedTasks()
+        public void ReturnsNotPlannedTasks()
         {
             var tasks = new List<Task>()
             {
