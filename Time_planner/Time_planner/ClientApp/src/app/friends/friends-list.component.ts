@@ -18,8 +18,6 @@ export class FriendsComponent implements OnInit {
     this.userService.getUserFriends().subscribe((friendArray) => {
       this.allFriends = friendArray;
       this.friends = friendArray;
-
-      console.log("friends", friendArray);
     });
   }
 

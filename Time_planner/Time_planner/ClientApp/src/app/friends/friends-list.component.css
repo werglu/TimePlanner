@@ -1,10 +1,7 @@
- body {
-}
-
 ul {
-  columns: 2;
-  -webkit-columns: 2;
-  -moz-columns: 2;
+  padding: 0px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 50% 50%);
 }
 
 img.profile-photo-lg {
@@ -18,17 +15,14 @@ img.profile-photo-lg {
 }
 
 .list-group-item {
-    display: inline;
+  border-top-width: 1px;
 }
 
 .list-item-elem {
   float: left;
 }
 
-.list-2col {
-  column-count: 2;
-}
-
 .profile-link {
   padding: inherit;
 }
+
