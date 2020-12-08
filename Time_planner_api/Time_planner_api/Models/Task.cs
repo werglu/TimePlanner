@@ -43,11 +43,15 @@ namespace Time_planner_api.Models
             get
             {
                 // todo: to be changed when we will have address in db and access to api for getting location
-                double rand = Title[0] % 2 == 1 ? ((double)Id * (double)Title[0] - (double)Title[0] * (double)Title[0]) / 1000.0 :
-                    ((double)Id * (double)Title[0] - (double)Title[0] * (double)Title[0]) / 1000.0;
-                rand /= (double)Id;
-                rand *= 5;
-                return rand - (int)rand;
+                if (City != null && StreetAddress != null && City.Length > 0 && StreetAddress.Length > 0)
+                {
+                    double rand = Title[0] % 2 == 1 ? ((double)Id * (double)Title[0] - (double)Title[0] * (double)Title[0]) / 1000.0 :
+                        ((double)Id * (double)Title[0] - (double)Title[0] * (double)Title[0]) / 1000.0;
+                    rand /= (double)Id;
+                    rand *= 5;
+                    return rand - (int)rand;
+                }
+                return null;
             }
         }
 
@@ -57,11 +61,15 @@ namespace Time_planner_api.Models
             get
             {
                 // todo: to be changed when we will have address in db and access to api for getting location
-                double rand = Title[0] % 2 == 1 ? ((double)(100 - Id) * (double)Title[0] * 10 - (double)Title[0] * (double)Id) / 10000.0 :
-                    ((double)(100 - Id) * (double)Title[0] - (double)Id * (double)Title[0] * 10) / 10000.0;
-                rand /= (double)Title[0];
-                rand *= 7;
-                return rand - (int)rand;
+                if (City != null && StreetAddress != null && City.Length > 0 && StreetAddress.Length > 0)
+                {
+                    double rand = Title[0] % 2 == 1 ? ((double)(100 - Id) * (double)Title[0] * 10 - (double)Title[0] * (double)Id) / 10000.0 :
+                        ((double)(100 - Id) * (double)Title[0] - (double)Id * (double)Title[0] * 10) / 10000.0;
+                    rand /= (double)Title[0];
+                    rand *= 7;
+                    return rand - (int)rand;
+                }
+                return null;
             }
         }
     }

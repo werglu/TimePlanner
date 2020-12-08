@@ -20,13 +20,13 @@ namespace UnitTests
             };
             var tasks = new List<Task>()
             {
-                new Task() { Id = 1234, Title = "*" },
-                new Task() { Id = 234, Title = "***" },
-                new Task() { Id = 34, Title = "*****" },
-                new Task() { Id = 4, Title = "*******" },
-                new Task() { Id = 5, Title = "   ||   " }
+                new Task() { Id = 1234, Title = "*", Time = 100, Split = 1 },
+                new Task() { Id = 234, Title = "***", Time = 100, Split = 1 },
+                new Task() { Id = 34, Title = "*****", Time = 100, Split = 1 },
+                new Task() { Id = 4, Title = "*******", Time = 100, Split = 1 },
+                new Task() { Id = 5, Title = "   ||   ", Time = 100, Split = 1 }
             };
-            var result = DayPlanHelper.FindShortestRoute(events, tasks, DateTime.Now, 0.0, 10000.0);
+            var result = DayPlanHelper.FindShortestRoute(events, tasks, DateTime.Now, 0.0, 1439.0);
             Assert.All(result, item => Assert.False(item.Assigned && item.T != null));
         }
 

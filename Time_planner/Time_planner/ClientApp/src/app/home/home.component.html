@@ -41,12 +41,18 @@
 <agm-map [latitude]="lat" [longitude]="lng" style="height:400px">
   <agm-marker *ngFor="let point of eventPoints" [latitude]="point.lat" [longitude]="point.lng" [iconUrl]="'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|f8b400'">
     <agm-info-window #window>
-      <h6>Event: {{point.title}}</h6>
+      Event: {{point.title}}
+      <br />
+      Address: {{point.address}}
+      <br />
+      Time: {{point.hour}}
     </agm-info-window>
   </agm-marker>
   <agm-marker *ngFor="let point of taskPoints" [latitude]="point.lat" [longitude]="point.lng" [iconUrl]="'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|004445'">
     <agm-info-window #window>
-      <h6>Task: {{point.title}}</h6>
+      Task: {{point.title}}
+      <br />
+      Address: {{point.address}}
     </agm-info-window>
   </agm-marker>
   <agm-polyline [strokeColor]="'#aaa'">
