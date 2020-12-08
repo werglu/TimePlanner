@@ -257,11 +257,13 @@ namespace Time_planner_api.Controllers
         {
             var events = new List<Event>[input.UserIds.Length];
             var conflictingUsers = new List<string>();
+            var start = input.Start.ToLocalTime();
+            var end = input.End.ToLocalTime();
 
             for (int i = 0; i < input.UserIds.Length; i++)
             {
                 events[i] = await FindEventsForUser(input.UserIds[i]);
-                if (events[i].Any(ev => Math.Max(ev.StartDate.Ticks, input.Start.Ticks) < Math.Max(ev.EndDate.Ticks, input.End.Ticks)))
+                if (events[i].Any(ev => Math.Max(ev.StartDate.Ticks, start.Ticks) < Math.Min(ev.EndDate.Ticks, end.Ticks)))
                 {
                     conflictingUsers.Add(input.UserIds[i]);
                 }
@@ -286,13 +288,13 @@ namespace Time_planner_api.Controllers
                 return x.EndDate.CompareTo(y.EndDate);
             });
 
-            var duration = input.End - input.Start;
-            DateTime currentWindowStart = new DateTime(Math.Max(input.Start.Ticks, input.Start.Subtract(input.Start.TimeOfDay).AddMinutes(startMinutes).Ticks));
+            var duration = end - start;
+            DateTime currentWindowStart = CalculateStartDate(start, startMinutes, endMinutes); new DateTime(Math.Max(start.Ticks, start.Subtract(start.TimeOfDay).AddMinutes(startMinutes).Ticks));
             foreach (var ev in allEvents)
             {
                 if (currentWindowStart < ev.StartDate)
                 {
-                    DateTime currentWindowEnd = new DateTime(Math.Min(ev.StartDate.Ticks, ev.StartDate.Subtract(ev.StartDate.TimeOfDay).AddMinutes(endMinutes).Ticks));
+                    DateTime currentWindowEnd = CalculateEndDate(ev.StartDate, startMinutes, endMinutes, duration);
                     if (currentWindowEnd - currentWindowStart >= duration)
                     {
                         return new CommonDateOutput() { ConflictingUsers = conflictingUsers.ToArray(), CommonDate = currentWindowStart };
@@ -300,7 +302,7 @@ namespace Time_planner_api.Controllers
                 }
                 if (ev.EndDate > currentWindowStart)
                 {
-                    currentWindowStart = new DateTime(Math.Max(ev.EndDate.Ticks, ev.EndDate.Subtract(ev.EndDate.TimeOfDay).AddMinutes(startMinutes).Ticks));
+                    currentWindowStart = CalculateStartDate(ev.EndDate, startMinutes, endMinutes);
                 }
             }
             return new CommonDateOutput() { ConflictingUsers = conflictingUsers.ToArray(), CommonDate = currentWindowStart };
@@ -346,6 +348,26 @@ namespace Time_planner_api.Controllers
                 events.AddRange(user.AttendedEvents.Where(ev => !events.Contains(ev)));
             }
             return events;
+        }
+
+        private DateTime CalculateStartDate(DateTime date, double startMinutes, double endMinutes)
+        {
+            var result = new DateTime(Math.Max(date.Ticks, date.Subtract(date.TimeOfDay).AddMinutes(startMinutes).Ticks));
+            if (result.TimeOfDay.TotalMinutes >= endMinutes)
+            {
+                result = result.Subtract(result.TimeOfDay).AddDays(1).AddMinutes(startMinutes);
+            }
+            return result;
+        }
+
+        private DateTime CalculateEndDate(DateTime date, double startMinutes, double endMinutes, TimeSpan duration)
+        {
+            var result = new DateTime(Math.Min(date.Ticks, date.Subtract(date.TimeOfDay).AddMinutes(endMinutes).Ticks));
+            if (result.TimeOfDay.TotalMinutes < startMinutes)
+            {
+                result = result.Subtract(result.TimeOfDay).AddDays(-1).AddMinutes(-24 * 60 + endMinutes).Subtract(duration);
+            }
+            return result;
         }
     }
 }
