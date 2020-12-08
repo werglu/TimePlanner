@@ -250,26 +250,26 @@ namespace Time_planner_api.Controllers
             return NoContent();
         }
 
-        // GET: api/Planning/commonDate?userIds=a&start=b&end=c
-        [HttpGet]
+        // PUT: api/Planning/commonDate?userIds=a&start=b&end=c
+        [HttpPut]
         [Route("commonDate")]
-        public async Task<ActionResult<(IEnumerable<string>, DateTime)>> FindCommonDate(string[] userIds, DateTime start, DateTime end, double startMinutes = 420.0, double endMinutes = 1320.0)
+        public async Task<ActionResult<CommonDateOutput>> FindCommonDate(CommonDateInput input, double startMinutes = 420.0, double endMinutes = 1320.0)
         {
-            var events = new List<Event>[userIds.Length];
+            var events = new List<Event>[input.UserIds.Length];
             var conflictingUsers = new List<string>();
 
-            for (int i = 0; i < userIds.Length; i++)
+            for (int i = 0; i < input.UserIds.Length; i++)
             {
-                events[i] = await FindEventsForUser(userIds[i]);
-                if (events[i].Any(ev => Math.Max(ev.StartDate.Ticks, start.Ticks) < Math.Max(ev.EndDate.Ticks, end.Ticks)))
+                events[i] = await FindEventsForUser(input.UserIds[i]);
+                if (events[i].Any(ev => Math.Max(ev.StartDate.Ticks, input.Start.Ticks) < Math.Max(ev.EndDate.Ticks, input.End.Ticks)))
                 {
-                    conflictingUsers.Add(userIds[i]);
+                    conflictingUsers.Add(input.UserIds[i]);
                 }
             }
 
             if (conflictingUsers.Count == 0)
             {
-                return (conflictingUsers, DateTime.MinValue);
+                return new CommonDateOutput() { ConflictingUsers = conflictingUsers.ToArray(), CommonDate = DateTime.MinValue };
             }
 
             var allEvents = new List<Event>();
@@ -286,8 +286,8 @@ namespace Time_planner_api.Controllers
                 return x.EndDate.CompareTo(y.EndDate);
             });
 
-            var duration = end - start;
-            DateTime currentWindowStart = new DateTime(Math.Max(start.Ticks, start.Subtract(start.TimeOfDay).AddMinutes(startMinutes).Ticks));
+            var duration = input.End - input.Start;
+            DateTime currentWindowStart = new DateTime(Math.Max(input.Start.Ticks, input.Start.Subtract(input.Start.TimeOfDay).AddMinutes(startMinutes).Ticks));
             foreach (var ev in allEvents)
             {
                 if (currentWindowStart < ev.StartDate)
@@ -295,7 +295,7 @@ namespace Time_planner_api.Controllers
                     DateTime currentWindowEnd = new DateTime(Math.Min(ev.StartDate.Ticks, ev.StartDate.Subtract(ev.StartDate.TimeOfDay).AddMinutes(endMinutes).Ticks));
                     if (currentWindowEnd - currentWindowStart >= duration)
                     {
-                        return (conflictingUsers, currentWindowStart);
+                        return new CommonDateOutput() { ConflictingUsers = conflictingUsers.ToArray(), CommonDate = currentWindowStart };
                     }
                 }
                 if (ev.EndDate > currentWindowStart)
@@ -303,7 +303,7 @@ namespace Time_planner_api.Controllers
                     currentWindowStart = new DateTime(Math.Max(ev.EndDate.Ticks, ev.EndDate.Subtract(ev.EndDate.TimeOfDay).AddMinutes(startMinutes).Ticks));
                 }
             }
-            return (conflictingUsers, currentWindowStart);
+            return new CommonDateOutput() { ConflictingUsers = conflictingUsers.ToArray(), CommonDate = currentWindowStart };
         }
 
         private DateTime GetDate(int day, DateTime duringWeek)
