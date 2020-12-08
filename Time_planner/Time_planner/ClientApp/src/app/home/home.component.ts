@@ -23,9 +23,9 @@ export class HomeComponent {
   events: Events[] = [];
   userTasksCategoriesIds: number[] = [];
   tasks: Task[] = [];
-  eventPoints: { lat: number, lng: number, label: string, id: number, title: string }[] = [];
-  taskPoints: { lat: number, lng: number, label: string, id: number, title: string }[] = [];
-  assignedPoints: { lat: number, lng: number, label: string, id: number, title: string }[] = [];
+  eventPoints: { lat: number, lng: number, title: string, address: string, hour: string }[] = [];
+  taskPoints: { lat: number, lng: number, title: string, address: string }[] = [];
+  assignedPoints: { lat: number, lng: number }[] = [];
   findToDoModalVisible: boolean = false;
 
   constructor(public eventsService: EventsService,
@@ -82,9 +82,10 @@ export class HomeComponent {
     return {
       lat: e.latitude + this.lat,
       lng: e.longitude + this.lng,
-      label: 'E' + (this.eventPoints.length + 1).toString(),
-      id: e.id,
-      title: e.title
+      title: e.title,
+      address: e.streetAddress,
+      hour: new Date(e.startDate).getHours() + ":" + (new Date(e.startDate).getMinutes() < 10 ? '0' : '') + new Date(e.startDate).getMinutes() + ' - ' +
+        new Date(e.endDate).getHours() + ":" + (new Date(e.endDate).getMinutes() < 10 ? '0' : '') + new Date(e.endDate).getMinutes()
     };
   }
 
@@ -94,9 +95,8 @@ export class HomeComponent {
     return {
       lat: t.latitude + this.lat,
       lng: t.longitude + this.lng,
-      label: 'T' + (this.taskPoints.length + 1).toString(),
-      id: t.id,
-      title: t.title
+      title: t.title,
+      address: t.streetAddress ? t.streetAddress : '???'
     };
   }
 
@@ -106,18 +106,12 @@ export class HomeComponent {
     if (i.e) {
       return {
         lat: i.e.latitude + this.lat,
-        lng: i.e.longitude + this.lng,
-        label: (this.assignedPoints.length + 1).toString(),
-        id: i.e.id,
-        title: i.e.title
+        lng: i.e.longitude + this.lng
       };
     } else if (i.t) {
       return {
         lat: i.t.latitude + this.lat,
-        lng: i.t.longitude + this.lng,
-        label: this.assignedPoints.length.toString(),
-        id: i.t.id,
-        title: i.t.title
+        lng: i.t.longitude + this.lng
       };
     } else {
       return null;
