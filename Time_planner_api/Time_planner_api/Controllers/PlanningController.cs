@@ -250,6 +250,62 @@ namespace Time_planner_api.Controllers
             return NoContent();
         }
 
+        // GET: api/Planning/commonDate?userIds=a&start=b&end=c
+        [HttpGet]
+        [Route("commonDate")]
+        public async Task<ActionResult<(IEnumerable<string>, DateTime)>> FindCommonDate(string[] userIds, DateTime start, DateTime end, double startMinutes = 420.0, double endMinutes = 1320.0)
+        {
+            var events = new List<Event>[userIds.Length];
+            var conflictingUsers = new List<string>();
+
+            for (int i = 0; i < userIds.Length; i++)
+            {
+                events[i] = await FindEventsForUser(userIds[i]);
+                if (events[i].Any(ev => Math.Max(ev.StartDate.Ticks, start.Ticks) < Math.Max(ev.EndDate.Ticks, end.Ticks)))
+                {
+                    conflictingUsers.Add(userIds[i]);
+                }
+            }
+
+            if (conflictingUsers.Count == 0)
+            {
+                return (conflictingUsers, DateTime.MinValue);
+            }
+
+            var allEvents = new List<Event>();
+            foreach (var eventList in events)
+            {
+                allEvents.AddRange(eventList);
+            }
+            allEvents.Sort((x, y) =>
+            {
+                if (x.StartDate != y.StartDate)
+                {
+                    return x.StartDate.CompareTo(y.StartDate);
+                }
+                return x.EndDate.CompareTo(y.EndDate);
+            });
+
+            var duration = end - start;
+            DateTime currentWindowStart = new DateTime(Math.Max(start.Ticks, start.Subtract(start.TimeOfDay).AddMinutes(startMinutes).Ticks));
+            foreach (var ev in allEvents)
+            {
+                if (currentWindowStart < ev.StartDate)
+                {
+                    DateTime currentWindowEnd = new DateTime(Math.Min(ev.StartDate.Ticks, ev.StartDate.Subtract(ev.StartDate.TimeOfDay).AddMinutes(endMinutes).Ticks));
+                    if (currentWindowEnd - currentWindowStart >= duration)
+                    {
+                        return (conflictingUsers, currentWindowStart);
+                    }
+                }
+                if (ev.EndDate > currentWindowStart)
+                {
+                    currentWindowStart = new DateTime(Math.Max(ev.EndDate.Ticks, ev.EndDate.Subtract(ev.EndDate.TimeOfDay).AddMinutes(startMinutes).Ticks));
+                }
+            }
+            return (conflictingUsers, currentWindowStart);
+        }
+
         private DateTime GetDate(int day, DateTime duringWeek)
         {
             return duringWeek.AddDays(-1 * (int)(duringWeek.DayOfWeek) + 1).AddDays(day % 7); // starts from monday
@@ -281,5 +337,15 @@ namespace Time_planner_api.Controllers
             return _context.Tasks.Any(t => t.Id == id);
         }
 
+        private async Task<List<Event>> FindEventsForUser(string userId)
+        {
+            var events = await _context.Events.Where(ev => ev.OwnerId == userId).ToListAsync();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.FacebookId == userId);
+            if (user != null && user.AttendedEvents != null)
+            {
+                events.AddRange(user.AttendedEvents.Where(ev => !events.Contains(ev)));
+            }
+            return events;
+        }
     }
 }
