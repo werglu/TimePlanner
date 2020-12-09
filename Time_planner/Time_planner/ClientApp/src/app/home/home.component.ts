@@ -1,8 +1,7 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Events } from '../calendar/events';
 import { EventsService } from '../calendar/events.service';
-import { Subject } from 'rxjs';
 import { ListCategoriesService } from '../to-do-list/listCategories.service';
 import { TasksService } from '../to-do-list/tasks.service';
 import { Task } from '../to-do-list/task';
