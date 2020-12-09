@@ -1,0 +1,16 @@
+.headline {
+  text-align: center;
+  position: relative;
+  padding-top: 40px;
+}
+
+h1 {
+  color: var(--yellow);
+  font-size: 5em;
+}
+
+h2 {
+  font-family: "Roboto Mono", monospace;
+  font-size: 1.25em;
+  color: var(--color-dark-green);
+}
