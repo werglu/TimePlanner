@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Events } from '../events';
 import { EventsService } from '../events.service';
@@ -10,6 +10,8 @@ import { Status, UserEventsService } from '../userEvents.service';
 import { FacebookService } from 'ngx-facebook';
 import { DefinedPlace } from '../../defined-places/defined-place';
 import { DefinedPlacesService } from '../../defined-places/defined-places.service';
+import { PlanningService } from '../../planning/planning.service';
+import { CommonDateOutput } from '../../planning/commonDateOutput';
 
 @Component({
   selector: 'add-event-modal',
@@ -17,7 +19,7 @@ import { DefinedPlacesService } from '../../defined-places/defined-places.servic
   styleUrls: ['./add-event-modal.component.css']
 })
 
-export class AddEventModalComponent implements OnInit {
+export class AddEventModalComponent implements OnInit, AfterViewInit {
   editEventForm: FormGroup;
   @Output() onCancel = new EventEmitter();
   @Output() onChangeVisibility = new EventEmitter<boolean>();
@@ -30,11 +32,14 @@ export class AddEventModalComponent implements OnInit {
   invitedFriendsIds: string[] = [];
   invited: Friend[];
   placesList: any[] = [];
+  conflictMessage: string = '';
+  conflict: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService,
     public userService: UserService,
     public userEventsService: UserEventsService,
+    public planningService: PlanningService,
     private notificationService: NotificationsService,
     private fb: FacebookService,
     private definedPlacesService: DefinedPlacesService) {
@@ -82,6 +87,10 @@ export class AddEventModalComponent implements OnInit {
   onPlaceChange(place: DefinedPlace) {
     this.editEventForm.controls.city.setValue(place.city);
     this.editEventForm.controls.streetAddress.setValue(place.streetAddress);
+  }
+
+  ngAfterViewInit(): void {
+    this.findCommonDate();
   }
 
   getFormValue(): Events {
@@ -217,6 +226,7 @@ export class AddEventModalComponent implements OnInit {
     this.invitedFriendsIds.push(friend.FacebookId.toString());
     this.invited.push(friend);
     this.friends.splice(this.friends.indexOf(friend), 1);
+    this.findCommonDate();
   }
 
   search() {
@@ -243,5 +253,68 @@ export class AddEventModalComponent implements OnInit {
     };
 
     return canInvite;
+  }
+
+  findCommonDate() {
+    if (!this.startDateInvalid() && !this.endDateInvalid() && !this.dateInvalid()) {
+      var userIds: string[] = [this.userId];
+      var startDate = this.setDate('startDate');
+      var endDate = this.setDate('endDate');
+      this.invitedFriendsIds.forEach(friendId => userIds.push(friendId));
+      this.planningService.findCommonDate(userIds, startDate, endDate).subscribe(output => {
+        this.getConflictMessage(output);
+      })
+    }
+    else {
+      this.conflictMessage = "";
+      this.conflict = false;
+    }
+  }
+
+  getConflictMessage(output: CommonDateOutput) {
+    if (output.conflictingUsers.length == 0) {
+      this.conflictMessage = 'Everyone invited in available during selected time';
+      this.conflict = false
+      return;
+    }
+
+    var names = [];
+    output.conflictingUsers.forEach(conflictingUserId => {
+      if (conflictingUserId != this.userId) {
+        var conflictingFriend = this.invited.find(friend => friend.FacebookId == conflictingUserId);
+        if (conflictingFriend) {
+          names.push(conflictingFriend.name);
+        }
+      }
+    });
+
+    var message = '';
+    if (names.length == 0) {
+      if (output.conflictingUsers.includes(this.userId)) {
+        message = 'You are';
+      }
+      else {
+        this.conflictMessage = 'Everyone invited in available during selected time';
+        this.conflict = false
+        return;
+      }
+    }
+    else {
+      if (output.conflictingUsers.includes(this.userId)) {
+        names.unshift('You');
+      }
+      if (names.length == 1) {
+        message = names[0] + ' is';
+      }
+      else {
+        for (var ind = 0; ind < names.length - 2; ind++) {
+          message = message + names[ind] + ', '
+        }
+        message = message + names[names.length - 2] + ' and ' + names[names.length - 1] + ' are';
+      }
+    }
+
+    this.conflictMessage = message + ' busy during selected time.\n\nYou can try ' + output.commonDate.toString().replace('T', ' ');
+    this.conflict = true;
   }
 }
