@@ -250,6 +250,64 @@ namespace Time_planner_api.Controllers
             return NoContent();
         }
 
+        // PUT: api/Planning/commonDate?userIds=a&start=b&end=c
+        [HttpPut]
+        [Route("commonDate")]
+        public async Task<ActionResult<CommonDateOutput>> FindCommonDate(CommonDateInput input, double startMinutes = 420.0, double endMinutes = 1320.0)
+        {
+            var events = new List<Event>[input.UserIds.Length];
+            var conflictingUsers = new List<string>();
+            var start = input.Start.ToLocalTime();
+            var end = input.End.ToLocalTime();
+
+            for (int i = 0; i < input.UserIds.Length; i++)
+            {
+                events[i] = await FindEventsForUser(input.UserIds[i]);
+                if (events[i].Any(ev => Math.Max(ev.StartDate.Ticks, start.Ticks) < Math.Min(ev.EndDate.Ticks, end.Ticks)))
+                {
+                    conflictingUsers.Add(input.UserIds[i]);
+                }
+            }
+
+            if (conflictingUsers.Count == 0)
+            {
+                return new CommonDateOutput() { ConflictingUsers = conflictingUsers.ToArray(), CommonDate = DateTime.MinValue };
+            }
+
+            var allEvents = new List<Event>();
+            foreach (var eventList in events)
+            {
+                allEvents.AddRange(eventList);
+            }
+            allEvents.Sort((x, y) =>
+            {
+                if (x.StartDate != y.StartDate)
+                {
+                    return x.StartDate.CompareTo(y.StartDate);
+                }
+                return x.EndDate.CompareTo(y.EndDate);
+            });
+
+            var duration = end - start;
+            DateTime currentWindowStart = CalculateStartDate(start, startMinutes, endMinutes); new DateTime(Math.Max(start.Ticks, start.Subtract(start.TimeOfDay).AddMinutes(startMinutes).Ticks));
+            foreach (var ev in allEvents)
+            {
+                if (currentWindowStart < ev.StartDate)
+                {
+                    DateTime currentWindowEnd = CalculateEndDate(ev.StartDate, startMinutes, endMinutes, duration);
+                    if (currentWindowEnd - currentWindowStart >= duration)
+                    {
+                        return new CommonDateOutput() { ConflictingUsers = conflictingUsers.ToArray(), CommonDate = currentWindowStart };
+                    }
+                }
+                if (ev.EndDate > currentWindowStart)
+                {
+                    currentWindowStart = CalculateStartDate(ev.EndDate, startMinutes, endMinutes);
+                }
+            }
+            return new CommonDateOutput() { ConflictingUsers = conflictingUsers.ToArray(), CommonDate = currentWindowStart };
+        }
+
         private DateTime GetDate(int day, DateTime duringWeek)
         {
             return duringWeek.AddDays(-1 * (int)(duringWeek.DayOfWeek) + 1).AddDays(day % 7); // starts from monday
@@ -281,5 +339,35 @@ namespace Time_planner_api.Controllers
             return _context.Tasks.Any(t => t.Id == id);
         }
 
+        private async Task<List<Event>> FindEventsForUser(string userId)
+        {
+            var events = await _context.Events.Where(ev => ev.OwnerId == userId).ToListAsync();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.FacebookId == userId);
+            if (user != null && user.AttendedEvents != null)
+            {
+                events.AddRange(user.AttendedEvents.Where(ev => !events.Contains(ev)));
+            }
+            return events;
+        }
+
+        private DateTime CalculateStartDate(DateTime date, double startMinutes, double endMinutes)
+        {
+            var result = new DateTime(Math.Max(date.Ticks, date.Subtract(date.TimeOfDay).AddMinutes(startMinutes).Ticks));
+            if (result.TimeOfDay.TotalMinutes >= endMinutes)
+            {
+                result = result.Subtract(result.TimeOfDay).AddDays(1).AddMinutes(startMinutes);
+            }
+            return result;
+        }
+
+        private DateTime CalculateEndDate(DateTime date, double startMinutes, double endMinutes, TimeSpan duration)
+        {
+            var result = new DateTime(Math.Min(date.Ticks, date.Subtract(date.TimeOfDay).AddMinutes(endMinutes).Ticks));
+            if (result.TimeOfDay.TotalMinutes < startMinutes)
+            {
+                result = result.Subtract(result.TimeOfDay).AddDays(-1).AddMinutes(-24 * 60 + endMinutes).Subtract(duration);
+            }
+            return result;
+        }
     }
 }

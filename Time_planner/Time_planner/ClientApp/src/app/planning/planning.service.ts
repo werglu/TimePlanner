@@ -6,6 +6,7 @@ import { TaskAssignmentProposition } from './taskAssignmentProposition';
 import { TaskAssignmentSave } from './taskAssignmentSave';
 import { CalendarItem } from './calendarItem';
 import { Task } from '../to-do-list/task';
+import { CommonDateOutput } from './commonDateOutput';
 
 @Injectable({
   providedIn: 'root',
@@ -40,5 +41,13 @@ export class PlanningService {
   saveTasksForToday(taskIds: number[]): Observable<number[]> {
     var date = new Date();
     return this.http.put<number[]>(this.baseUrl + 'tasksForToday?year=' + date.getFullYear() + '&month=' + (date.getMonth() + 1) + '&day=' + date.getDate(), taskIds);
+  }
+
+  findCommonDate(userIds: string[], start: Date, end: Date): Observable<CommonDateOutput> {
+    return this.http.put<CommonDateOutput>(this.baseUrl + 'commonDate', {
+      userIds: userIds,
+      start: start,
+      end: end,
+    });
   }
 }

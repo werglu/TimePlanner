@@ -1,4 +1,8 @@
 <form [formGroup]="editEventForm" (ngSubmit)="onSubmit()">
+  <div *ngIf="conflict" class="conflictMessage">
+    <i class="conflictBtn fa fa-exclamation-triangle fa-10x"><span class="conflictTooltip">{{conflictMessage}}</span></i>
+  </div>
+
   <div>
     <label>
       Set as public <i class=" fa fa-info-circle"><span class="tooltiptext">When event is public all your friends can see it.</span></i>
@@ -35,8 +39,8 @@
       Start date <span class="required">*</span>
     </label>
     <div>
-      <input style="width:40%;margin-right:10px" type="date" id="startDate" name="startDate" [value]="getStartDate()">
-      <input type="time" id="startDateTime" name="startDateTime" [value]="getStartTime()">
+      <input style="width:40%;margin-right:10px" type="date" id="startDate" name="startDate" [value]="getStartDate()" (change)="findCommonDate()">
+      <input type="time" id="startDateTime" name="startDateTime" [value]="getStartTime()" (change)="findCommonDate()">
     </div>
     <div *ngIf="startDateInvalid() && startDate.touched"
          class="alert alert-danger">
@@ -50,8 +54,8 @@
       End date <span class="required">*</span>
     </label>
     <div>
-      <input style="width:40%;margin-right:10px" type="date" id="endDate" name="endDate" [value]="getStartDate()">
-      <input type="time" id="endDateTime" name="appt" [value]="getEndTime()">
+      <input style="width:40%;margin-right:10px" type="date" id="endDate" name="endDate" [value]="getStartDate()" (change)="findCommonDate()">
+      <input type="time" id="endDateTime" name="appt" [value]="getEndTime()" (change)="findCommonDate()">
     </div>
     <div *ngIf="endDateInvalid() && endDate.touched"
          class="alert alert-danger">
