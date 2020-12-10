@@ -23,7 +23,7 @@ namespace Time_planner_api.Controllers
 
         // GET api/Places/5
         /// <summary>
-        /// Return all definied places by specific user
+        /// Return all defined places by specific user
         /// </summary>
         /// <param name="userId">user's id</param>
         /// <returns>list of places</returns>
@@ -38,7 +38,7 @@ namespace Time_planner_api.Controllers
 
         // POST api/Places
         /// <summary>
-        /// Adds a definied place
+        /// Adds a defined place
         /// </summary>
         /// <param name="place"></param>
         /// <returns></returns>
@@ -126,7 +126,7 @@ namespace Time_planner_api.Controllers
 
         // DELETE: api/Events/5
         /// <summary>
-        /// Delete definied place
+        /// Delete defined place
         /// </summary>
         /// <param name="id">Place id</param>
         /// <returns>Deleted place</returns>
