@@ -66,6 +66,7 @@ export class EditTaskModalComponent implements OnInit {
           this.choosenMinute = task.time - (60 * this.choosenHour);
           this.choosenMinuteIndex = this.minutes.findIndex(m => m == this.choosenMinute);
           this.choosenSplit = task.split;
+          this.choosenPriority = task.priority;
           this.getSelectedDays(this.currentTask.days);
         }
       });
