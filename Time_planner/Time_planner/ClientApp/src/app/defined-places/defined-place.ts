@@ -1,7 +1,7 @@
 export interface DefinedPlace {
-  Id: number;
-  Name: string;
-  City: string;
-  StreetAddress: string;
-  OwnerId: string;
+  id: number;
+  name: string;
+  city: string;
+  streetAddress: string;
+  ownerId: string;
 }

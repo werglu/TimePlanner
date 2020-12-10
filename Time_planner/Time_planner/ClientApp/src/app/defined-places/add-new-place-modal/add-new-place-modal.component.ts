@@ -30,11 +30,11 @@ export class AddNewPlaceModalComponent {
 
   getFormValue(): DefinedPlace {
     return {
-      Id: 1,
-      Name: (<HTMLInputElement>document.getElementById('name')).value,
-      City: (<HTMLInputElement>document.getElementById('city')).value,
-      StreetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value,
-      OwnerId: this.userId,
+      id: 1,
+      name: (<HTMLInputElement>document.getElementById('name')).value,
+      city: (<HTMLInputElement>document.getElementById('city')).value,
+      streetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value,
+      ownerId: this.userId,
     };
   }
 

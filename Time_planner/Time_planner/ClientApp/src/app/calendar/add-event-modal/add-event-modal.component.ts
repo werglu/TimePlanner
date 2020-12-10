@@ -8,6 +8,8 @@ import { NotificationsService } from '../../notifications/notifications.service'
 import { Notification } from '../../notifications/notification';
 import { Status, UserEventsService } from '../userEvents.service';
 import { FacebookService } from 'ngx-facebook';
+import { DefinedPlace } from '../../defined-places/defined-place';
+import { DefinedPlacesService } from '../../defined-places/defined-places.service';
 
 @Component({
   selector: 'add-event-modal',
@@ -27,13 +29,15 @@ export class AddEventModalComponent implements OnInit {
   allFriends: Friend[];
   invitedFriendsIds: string[] = [];
   invited: Friend[];
+  placesList: any[] = [];
 
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService,
     public userService: UserService,
     public userEventsService: UserEventsService,
     private notificationService: NotificationsService,
-    private fb: FacebookService) {
+    private fb: FacebookService,
+    private definedPlacesService: DefinedPlacesService) {
     this.editEventForm = this.formBuilder.group({
       title: ['', Validators.required],
       startDate: '',
@@ -61,6 +65,23 @@ export class AddEventModalComponent implements OnInit {
   ngOnInit(): void {
     let authResp = this.fb.getAuthResponse();
     this.userId = authResp.userID;
+
+    this.placesList.push({
+      id: 1,
+      name: 'not selected',
+      city: '',
+      streetAddress: '',
+      ownerId: this.userId,
+    });
+
+    this.definedPlacesService.getAllPlaces(this.userId).subscribe((places) => {
+      places.forEach((p) => this.placesList.push(p));
+    })
+  }
+
+  onPlaceChange(place: DefinedPlace) {
+    this.editEventForm.controls.city.setValue(place.city);
+    this.editEventForm.controls.streetAddress.setValue(place.streetAddress);
   }
 
   getFormValue(): Events {

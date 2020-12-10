@@ -41,7 +41,7 @@
       <input type="time" id="startDateTime" name="startDateTime" [value]="getStartTime()">
     </div>
   </div>
-  <div style="display:grid">
+  <div style="display:grid; padding-bottom: 20px;">
     <label style="padding-top: 10px;" for="name">
       End date <span class="required">*</span>
     </label>
@@ -56,6 +56,20 @@
       </div>
     </div>
   </div>
+
+  <!-- defined places -->
+  <div style="display:inline">
+    <label class="myPlace">
+      My places
+    </label>
+    <kendo-combobox [data]="placesList"
+                    [value]="placesList[0]"
+                    [textField]="'name'"
+                    [valueField]="'id'"
+                    (valueChange)="onPlaceChange($event)">
+    </kendo-combobox>
+  </div>
+
   <div style="display:grid" *ngIf="currentEvent != null">
     <label style="padding-top:10px;" for="city">
       City <span class="required">*</span>

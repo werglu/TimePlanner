@@ -149,3 +149,7 @@ img.profile-photo-s {
 .unknow {
   color: var(--yellow);
 }
+
+.myPlace {
+  margin-right: 10px;
+}

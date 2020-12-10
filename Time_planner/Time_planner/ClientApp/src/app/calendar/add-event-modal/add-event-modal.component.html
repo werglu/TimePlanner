@@ -45,7 +45,7 @@
       </div>
     </div>
   </div>
-  <div style="display:grid">
+  <div style="display:grid; padding-bottom: 20px;">
     <label style="padding-top:10px;" for="name">
       End date <span class="required">*</span>
     </label>
@@ -66,6 +66,20 @@
       </div>
     </div>
   </div>
+
+  <!-- defined places -->
+  <div style="display:inline">
+    <label class="myPlace">
+      My places
+    </label>
+    <kendo-combobox [data]="placesList"
+                    [value]="placesList[0]"
+                    [textField]="'name'"
+                    [valueField]="'id'"
+                    (valueChange)="onPlaceChange($event)">
+    </kendo-combobox>
+  </div>
+
   <div style="display:grid">
     <label style="padding-top:10px;" for="name">
       City <span class="required">*</span>
@@ -117,7 +131,7 @@
               <button type="button" class="btn btn-primary pull-right" style="background-color: var(--color-light-green);" (click)="sendInvitation(friend)">Invite</button>
             </div>
           </li>
-         </ng-container>
+        </ng-container>
       </ul>
     </div>
   </div>
