@@ -36,6 +36,8 @@ import { FriendsComponent } from './friends/friends-list.component';
 import { SharedCalendarComponent } from './shared-calendars/shared-calendar.component';
 import { CannotAccessComponent } from './cannot-access/cannot-access.component';
 import { EventDetailsModalComponent } from './shared-calendars/event-details-modal/event-details-modal.component';
+import { DefinedPlacesComponent } from './defined-places/defined-places.component';
+import { AddNewPlaceModalComponent } from './defined-places/add-new-place-modal/add-new-place-modal.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +63,9 @@ import { EventDetailsModalComponent } from './shared-calendars/event-details-mod
     FindToDoModalComponent,
     FriendsComponent,
     SharedCalendarComponent,
-    CannotAccessComponent
+    CannotAccessComponent,
+    DefinedPlacesComponent,
+    AddNewPlaceModalComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -90,6 +94,7 @@ import { EventDetailsModalComponent } from './shared-calendars/event-details-mod
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthGuard] },
       { path: 'friends', component: FriendsComponent, canActivate: [AuthGuard] },
       { path: 'to-do-list', component: ToDoListComponent, canActivate: [AuthGuard] },
+      { path: 'places', component: DefinedPlacesComponent, canActivate: [AuthGuard] },
       { path: 'access-denied', component: AccessDeniedComponent },
       { path: 'cannot-access', component: CannotAccessComponent },
       { path: 'logout', component: LogoutComponent }

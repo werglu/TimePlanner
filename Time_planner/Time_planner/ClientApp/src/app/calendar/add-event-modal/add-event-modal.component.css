@@ -143,3 +143,6 @@ img.profile-photo-s {
   color: var(--yellow);
 }
 
+.myPlace {
+  margin-right: 10px;
+}

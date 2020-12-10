@@ -9,6 +9,8 @@ import { NotificationsService } from '../../notifications/notifications.service'
 import { Notification } from '../../notifications/notification';
 import { UserEventsService, Status } from '../userEvents.service';
 import { FacebookService } from 'ngx-facebook';
+import { DefinedPlace } from '../../defined-places/defined-place';
+import { DefinedPlacesService } from '../../defined-places/defined-places.service';
 
 @Component({
   selector: 'edit-event-modal',
@@ -25,6 +27,7 @@ export class EditEventModalComponent implements OnInit {
   friends: Friend[];
   invited: InvitedFriend[];
   isOwner: boolean;
+  placesList: any[] = [];
   private wasInvitedInitialized = false;
   @Input() editedEvent: CalendarEvent;
   @Output() onCancel = new EventEmitter();
@@ -36,7 +39,8 @@ export class EditEventModalComponent implements OnInit {
     public userService: UserService,
     private notificationService: NotificationsService,
     private userEventsService: UserEventsService,
-    private fb: FacebookService) {
+    private fb: FacebookService,
+    private definedPlacesService: DefinedPlacesService) {
     this.editEventForm = this.formBuilder.group({
       title: [' ', Validators.required],
       startDate: '',
@@ -72,6 +76,25 @@ export class EditEventModalComponent implements OnInit {
         this.onChangeVisibility.emit(this.isPublic);
       });
     }
+
+    this.placesList.push({
+      id: 1,
+      name: 'not selected',
+      city: '',
+      streetAddress: '',
+      ownerId: this.userId,
+    });
+
+    this.definedPlacesService.getAllPlaces(this.userId).subscribe((places) => {
+      places.forEach((p) => this.placesList.push(p));
+    })
+  }
+
+  onPlaceChange(place: DefinedPlace) {
+    this.editEventForm.controls.city.setValue(place.city);
+    this.editEventForm.controls.city.markAsTouched();
+    this.editEventForm.controls.streetAddress.setValue(place.streetAddress);
+    this.editEventForm.controls.streetAddress.markAsTouched();
   }
 
   validateAllFormControls(formGroup: FormGroup) {
