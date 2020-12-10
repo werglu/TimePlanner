@@ -37,6 +37,7 @@ import { SharedCalendarComponent } from './shared-calendars/shared-calendar.comp
 import { CannotAccessComponent } from './cannot-access/cannot-access.component';
 import { EventDetailsModalComponent } from './shared-calendars/event-details-modal/event-details-modal.component';
 import { DefinedPlacesComponent } from './defined-places/defined-places.component';
+import { AddNewPlaceModalComponent } from './defined-places/add-new-place-modal/add-new-place-modal.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { DefinedPlacesComponent } from './defined-places/defined-places.componen
     FriendsComponent,
     SharedCalendarComponent,
     CannotAccessComponent,
-    DefinedPlacesComponent
+    DefinedPlacesComponent,
+    AddNewPlaceModalComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
