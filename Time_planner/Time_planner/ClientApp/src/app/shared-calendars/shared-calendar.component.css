@@ -24,3 +24,17 @@ i.fa {
   margin-right: 8px;
   margin-bottom: 5px;
 }
+
+.labelName {
+  color: var(--color-light-green);
+  margin-left: 14px;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+img.profile-photo-lg {
+  height: 50px;
+  width: 50px;
+  border-radius: 10%;
+  margin-right: 5px;
+}

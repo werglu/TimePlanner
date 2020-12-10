@@ -34,6 +34,8 @@ export class SharedCalendarComponent implements OnInit {
   friendId: string;
   allFriends: Friend[] = [];
   access: boolean = false;
+  friendName: string;
+  friendPicture: any;
 
   constructor(public eventsService: EventsService,
     public http: HttpClient,
@@ -50,11 +52,13 @@ export class SharedCalendarComponent implements OnInit {
     this.userId = authResp.userID;
     this.friendId = this.route.snapshot.paramMap.get('id');
 
-    this.fb.api('/me/friends', 'get', { fields: 'id' }).then((res) => {
+    this.fb.api('/me/friends', 'get', { fields: 'id,name,picture.type(normal)' }).then((res) => {
       // this is to prevent from hack attack, user can access only their friends calendars
       res.data.forEach(d => {
         if (d.id == this.friendId) {
           this.access = true;
+          this.friendName = d.name;
+          this.friendPicture = d.picture.data.url;
         }
       });
       if (!this.access) {
