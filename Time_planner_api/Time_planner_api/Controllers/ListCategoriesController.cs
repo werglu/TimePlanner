@@ -22,6 +22,10 @@ namespace Time_planner_api.Controllers
         }
 
         // GET: api/ListCategories
+        /// <summary>
+        /// Get all categories 
+        /// </summary>
+        /// <returns>Collection of ListCategory objects</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ListCategory>>> GetCategories()
         {
@@ -29,22 +33,24 @@ namespace Time_planner_api.Controllers
         }
 
         // GET: api/ListCategories/perUser
+        /// <summary>
+        /// Get all categories per user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>Collection of ListCategory objects</returns>
         [HttpGet("perUser/{userId}")]
         public async Task<ActionResult<IEnumerable<ListCategory>>> GetCategoriesPerUser(string userId)
         {
             return await _context.ListCategories.Where(lc => lc.OwnerId == userId).ToListAsync();
         }
 
-        // GET: api/ListCategories/5
-        [HttpGet("{id}", Name = "Get")]
-        public string GetCategory(int id)
-        {
-            return "value";
-        }
-
         // POST: api/ListCategories
+        /// <summary>
+        /// Post category
+        /// </summary>
+        /// <returns>Posted list category</returns>
         [HttpPost]
-        public async Task<ActionResult<ListCategory>> PostEvent(ListCategory listCategory)
+        public async Task<ActionResult<ListCategory>> PostCategory(ListCategory listCategory)
         {
             await _context.ListCategories.AddAsync(new ListCategory()
             {
@@ -69,17 +75,6 @@ namespace Time_planner_api.Controllers
             }
 
             return CreatedAtAction("GetCategory", new { id = listCategory.Id }, listCategory);
-        }
-        // PUT: api/ListCategories/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
 
         private bool CategoryExists(int id)

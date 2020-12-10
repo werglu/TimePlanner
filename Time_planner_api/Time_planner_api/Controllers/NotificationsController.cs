@@ -19,12 +19,23 @@ namespace Time_planner_api.Controllers
         }
 
         // GET: api/Notifications/userId
+        /// <summary>
+        /// Get all notifications per user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>Collection of Notification objects</returns>
         [HttpGet("{userId}")]
         public async Task<ActionResult<IEnumerable<Notification>>> GetNotifications(string userId)
         {
             return await _context.Notifications.Where(n => n.IsDismissed == false && n.ReceiverId == userId).ToListAsync();
         }
 
+        /// <summary>
+        /// Get all notification with specified id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="id"></param>
+        /// <returns>Notification with specified id or NotFound error if not found/returns>
         [HttpGet("{userId}/{id}")]
         public async Task<ActionResult<Notification>> GetNotification(string userId, int id)
         {
@@ -38,6 +49,10 @@ namespace Time_planner_api.Controllers
             return notification;
         }
 
+        /// <summary>
+        /// Post notification
+        /// </summary>
+        /// <returns>Posted notification</returns>
         [HttpPost]
         [Route("add")]
         public async Task<ActionResult<Notification>> PostNotification(Notification ourNotification)
@@ -70,6 +85,10 @@ namespace Time_planner_api.Controllers
             return CreatedAtAction("GetNotification", new { userId = ourNotification.SenderId, id = ourNotification.Id }, ourNotification);
         }
 
+        /// <summary>
+        /// Update notification with specified id
+        /// </summary>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<ActionResult> PutNotification([FromRoute]int id, Notification notification)
         {
@@ -105,6 +124,10 @@ namespace Time_planner_api.Controllers
 
 
         // DELETE: api/Notifications/deleteAll
+        /// <summary>
+        /// Delete all notifications with specified event id
+        /// </summary>
+        /// <returns>dDeleted notifications collecion</returns>
         [HttpDelete("deleteAll/{eventId}")]
         public async Task<ActionResult<IEnumerable<Notification>>> DeleteAllNotificationsWithSpecifiedEventId([FromRoute] int eventId)
         {

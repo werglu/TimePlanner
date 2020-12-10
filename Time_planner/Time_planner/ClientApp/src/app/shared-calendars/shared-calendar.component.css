@@ -1,0 +1,26 @@
+@import "../../colors.css";
+
+button {
+    background-color: var(--yellow);
+}
+
+div.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+i.fa {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+  padding-bottom: 0px;
+  font-size: 1.5rem;
+  color: var(--color-dark-green);
+}
+
+.k-icon {
+  margin-right: 8px;
+  margin-bottom: 5px;
+}

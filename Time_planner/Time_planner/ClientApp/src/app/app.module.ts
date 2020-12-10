@@ -33,6 +33,9 @@ import { FindDatesModalComponent } from './to-do-list/find-dates-modal/find-date
 import { FindToDoModalComponent } from './home/find-to-do-modal/find-to-do-modal.component';
 import { FacebookModule } from 'ngx-facebook';
 import { FriendsComponent } from './friends/friends-list.component';
+import { SharedCalendarComponent } from './shared-calendars/shared-calendar.component';
+import { CannotAccessComponent } from './cannot-access/cannot-access.component';
+import { EventDetailsModalComponent } from './shared-calendars/event-details-modal/event-details-modal.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +46,7 @@ import { FriendsComponent } from './friends/friends-list.component';
     CalendarComponent,
     FetchDataComponent,
     EditEventModalComponent,
+    EventDetailsModalComponent,
     AddEventModalComponent,
     ToDoListComponent,
     AddNewCategoryModalComponent,
@@ -55,7 +59,9 @@ import { FriendsComponent } from './friends/friends-list.component';
     LogoutComponent,
     FindDatesModalComponent,
     FindToDoModalComponent,
-    FriendsComponent
+    FriendsComponent,
+    SharedCalendarComponent,
+    CannotAccessComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -80,10 +86,12 @@ import { FriendsComponent } from './friends/friends-list.component';
       { path: '', component: HomeComponent, pathMatch: 'full', canActivate: [AuthGuard] },
       { path: 'counter', component: CounterComponent, canActivate: [AuthGuard] },
       { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard] },
+      { path: 'sharedCalendars', component: SharedCalendarComponent, canActivate: [AuthGuard] },
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthGuard] },
       { path: 'friends', component: FriendsComponent, canActivate: [AuthGuard] },
       { path: 'to-do-list', component: ToDoListComponent, canActivate: [AuthGuard] },
       { path: 'access-denied', component: AccessDeniedComponent },
+      { path: 'cannot-access', component: CannotAccessComponent },
       { path: 'logout', component: LogoutComponent }
     ])
   ],
