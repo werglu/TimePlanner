@@ -21,7 +21,7 @@ namespace UnitTests
             while (taskCount-- > 0)
             {
                 // todo: to be changed when there would be proper latitude/longitude to set
-                tasks.Add(new Time_planner_api.Models.Task() { Id = rnd.Next(), Title = rnd.Next().ToString() });
+                tasks.Add(new Time_planner_api.Models.Task() { Id = rnd.Next(), Title = rnd.Next().ToString(), City = rnd.Next().ToString(), StreetAddress = rnd.Next().ToString() });
             }
 
             int timeout = 5;
