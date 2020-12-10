@@ -30,6 +30,9 @@ namespace Time_planner_api.Controllers
         [HttpGet("{userId}")]
         public async Task<ActionResult<IEnumerable<Place>>> Get(string userId)
         {
+            if (!UserExists(userId))
+                return NotFound();
+
             return await _context.Places.Where(e => e.OwnerId == userId).ToListAsync(); ;
         }
 
@@ -40,7 +43,7 @@ namespace Time_planner_api.Controllers
         /// <param name="place"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<Place>> PostPlace(Place place)
+        public async Task<ActionResult> PostPlace(Place place)
         {
             if (!UserExists(place.OwnerId))
                 return NotFound();
