@@ -1,0 +1,37 @@
+<div>
+  <h2 class="label-places">My Places</h2>
+
+  <!-- Defined places list -->
+  <kendo-grid style="margin-top:30px;"
+              [kendoGridBinding]="gridData"
+              [sort]="sort"
+              [sortable]="true"
+              kendoGridSelectBy="id">
+
+    <kendo-grid-column field="name" width="110" title="Name">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="city" title="City" width="100">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="streetAddress" title="Street">
+    </kendo-grid-column>
+
+    <kendo-grid-column title="Delete" width="80">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div>
+          <button class="btn" style="background-color:transparent" (click)="removePlace(dataItem.id)"><i class="fa fa-trash" style="margin-left:8px;"></i></button>
+        </div>
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid>
+
+  <!-- Add place btn -->
+  <div style="float:right">
+    <button style="margin-top:20px;" class="btn btn-primary" (click)="openAddPlaceModal()"><i style="padding-right:7px;font-size:1.1rem" class="fa fa-plus"></i>Add place</button>
+  </div>
+</div>
+
+<!--<kendo-dialog title="Add new place" *ngIf="addNewPlaceModalVisible" (close)="closeAddPlaceModal()" [minWidth]="250" [width]="450">
+  <add-new-place-modal [userId]="userId" (onCancel)="closeAddPlaceModal()" (onSave)="addPlace($place)"></add-new-place-modal>
+</kendo-dialog>-->

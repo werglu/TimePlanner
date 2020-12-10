@@ -1,0 +1,12 @@
+.label-places {
+  color: var(--yellow);
+}
+
+button {
+  background-color: var(--yellow);
+}
+
+.fa-plus {
+  padding-right: 7px;
+  font-size: 1.1rem;
+}
