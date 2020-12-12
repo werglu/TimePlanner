@@ -94,7 +94,8 @@ export class NotificationDetailsModalComponent implements OnInit {
       longitude: event.longitude,
       owner: null,
       ownerId: ownerId,
-      title: event.title
+      title: event.title,
+      description: event.description
     }
   }
 

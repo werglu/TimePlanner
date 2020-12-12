@@ -9,7 +9,7 @@
     </ng-container>
   </ul>
 
-  <div style="display:grid"  *ngIf="currentEvent != null && currentEvent.isPublic">
+  <div style="display:grid" *ngIf="currentEvent != null && currentEvent.isPublic">
     <label style="padding-top: 10px;" for="name">
       Title
     </label>
@@ -22,7 +22,7 @@
   </div>
   <div style="display:grid">
     <label style="padding-top: 10px;" for="name">
-      Start date 
+      Start date
     </label>
     <div>
       <input style="width:40%;margin-right:10px" type="date" id="startDate" name="startDate" [value]="getStartDate()" readonly>
@@ -49,6 +49,13 @@
       Street address
     </label>
     <input style="width:70%;" id="streetAddress" type="text" formControlName="streetAddress" [value]="currentEvent.streetAddress" readonly>
+  </div>
+
+  <div style="display:grid" *ngIf="currentEvent != null && currentEvent.isPublic">
+    <label style="padding-top:10px;" for="name">
+      Description
+    </label>
+    <textarea class="description" id="description" type="text" formControlName="description" [value]="currentEvent.description" readonly></textarea>
   </div>
 
   <div style="float:right">

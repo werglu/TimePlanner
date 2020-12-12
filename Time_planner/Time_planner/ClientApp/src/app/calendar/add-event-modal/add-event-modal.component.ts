@@ -48,7 +48,8 @@ export class AddEventModalComponent implements OnInit, AfterViewInit {
       startDate: '',
       endDate: '',
       city: ['', Validators.required],
-      streetAddress: ['', Validators.required]
+      streetAddress: ['', Validators.required],
+      description: ['', Validators.maxLength(1000)]
     });
 
     userService.getUserFriends().subscribe((friendArray) => {
@@ -105,7 +106,8 @@ export class AddEventModalComponent implements OnInit, AfterViewInit {
       latitude: 0.0,
       longitude: 0.0,
       owner: null,
-      ownerId: this.userId
+      ownerId: this.userId,
+      description: (<HTMLInputElement>document.getElementById('description')).value
     };
   }
 

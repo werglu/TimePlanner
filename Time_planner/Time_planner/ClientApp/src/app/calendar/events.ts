@@ -12,6 +12,7 @@ export interface Events {
   longitude: number;
   ownerId: string;
   owner: User;
+  description: string;
 }
 
 export interface UsersEvents {
