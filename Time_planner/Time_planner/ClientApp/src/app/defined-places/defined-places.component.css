@@ -1,5 +1,7 @@
+@import "../../colors.css";
+
 .label-places {
-  color: var(--yellow);
+  color: var(--color-light-green);
 }
 
 button {
@@ -9,4 +11,8 @@ button {
 .fa-plus {
   padding-right: 7px;
   font-size: 1.1rem;
+}
+
+.fa-trash {
+    color: var(--color-dark-green);
 }

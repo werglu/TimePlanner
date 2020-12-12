@@ -26,9 +26,14 @@ img.profile-photo-lg {
 
 .profile-link {
   padding: inherit;
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 80%;
+  margin-bottom: .5rem;
 }
 
 .label-friends {
-  color: var(--yellow);
+  color: var(--color-light-green);
   margin-left: 14px;
 }

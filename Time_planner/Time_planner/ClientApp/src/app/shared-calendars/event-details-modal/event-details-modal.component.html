@@ -1,6 +1,6 @@
 <form [formGroup]="editEventForm" (ngSubmit)="onSubmit()">
   <!-- invited friends -->
-  <ul class="invitedfriends" *ngIf="initializeInvitedList()">
+  <ul class="invitedfriends" *ngIf="initializeInvitedList() && currentEvent != null && currentEvent.isPublic">
     <ng-container *ngFor="let friend of invited">
       <li class="invitedFriend">
         <img src={{friend.photoUrl}} alt="invited friend's photo" class="profile-photo-s" />
@@ -9,17 +9,16 @@
     </ng-container>
   </ul>
 
-  <div style="display:grid">
+  <div style="display:grid"  *ngIf="currentEvent != null && currentEvent.isPublic">
     <label style="padding-top: 10px;" for="name">
       Title
     </label>
     <input id="title" type="text" formControlName="title" [value]="editedEvent.title" readonly>
-    <div *ngIf="title.invalid && (title.dirty || title.touched)"
-         class="alert alert-danger">
-      <div *ngIf="title.errors.required">
-        Title is required.
-      </div>
-    </div>
+  </div>
+  <div *ngIf="currentEvent != null && !currentEvent.isPublic">
+    <label style="padding-top: 10px;">
+      Private appointment  <i class=" fa fa-info-circle"><span class="tooltiptext">This event is set as private. You don't have permission to see the details.</span></i>
+    </label>
   </div>
   <div style="display:grid">
     <label style="padding-top: 10px;" for="name">
@@ -39,13 +38,13 @@
       <input type="time" id="endDateTime" name="appt" [value]="getEndTime()" readonly>
     </div>
   </div>
-  <div style="display:grid" *ngIf="currentEvent != null">
+  <div style="display:grid" *ngIf="currentEvent != null && currentEvent.isPublic">
     <label style="padding-top:10px;" for="city">
       City
     </label>
     <input style="width:50%;" id="city" type="text" formControlName="city" [value]="currentEvent.city" readonly>
   </div>
-  <div style="display:grid" *ngIf="currentEvent != null">
+  <div style="display:grid" *ngIf="currentEvent != null && currentEvent.isPublic">
     <label style="padding-top:10px;" for="streetAddress">
       Street address
     </label>
