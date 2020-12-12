@@ -1,8 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { DefinedPlacesService } from "./defined-places.service";
-import { UserService } from "../user/user.service";
 import { FacebookService } from "ngx-facebook";
-import { DefinedPlace } from "./defined-place";
 
 @Component({
   templateUrl: './defined-places.component.html',

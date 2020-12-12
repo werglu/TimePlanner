@@ -3,7 +3,7 @@
   <div class="row" style="width:50%; margin-top:30px;">
     <h4 style="color:#004445;">My today's events</h4>
     <div *ngIf="events.length==0">
-      <label style="margin-left:-10rem;color:#004445;margin-top:110px">No events for today :)</label>
+      <label style="margin-left:-12rem;color:#004445;margin-top:55px">No events for today :)</label>
     </div>
     <ng-container *ngIf="events.length>0">
       <ul class="row-md-12 col-md-12" style="max-height:300px;overflow-y:scroll; margin-top:50px">
@@ -20,10 +20,10 @@
 
   <div class="row" style="width:50%; margin-top:30px;margin-left:4em;">
     <h4 style="color:#004445;">My today's tasks</h4>
-    <div style="margin-left:-8rem;" *ngIf="tasks.length==0">
-      <label style="color:#004445;margin-top:110px">No tasks for today :)</label>
+    <div style="margin-left:-11rem;" *ngIf="tasks.length==0">
+      <label style="color:#004445;margin-top:55px">No tasks for today :)</label>
       <br />
-      <button class="btn btn-secondary" (click)="showFindToDoModal()">Find something to do</button>
+      <button class="btn btn-secondary" style="margin-bottom:30px" (click)="showFindToDoModal()">Find something to do</button>
     </div>
     <ng-container *ngIf="tasks.length>0">
       <ul class="row-md-12 col-md-12" style="max-height:300px;overflow-y:scroll; margin-top:50px">

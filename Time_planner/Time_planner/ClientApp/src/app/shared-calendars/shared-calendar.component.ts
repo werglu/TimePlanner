@@ -3,7 +3,6 @@ import { CalendarEvent, CalendarView, CalendarEventAction } from 'angular-calend
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { isSameDay, isSameMonth } from 'date-fns';
-import { NotificationsService } from '../notifications/notifications.service';
 import { FacebookService } from 'ngx-facebook';
 import { EventsService } from '../calendar/events.service';
 import { Events } from '../calendar/events';
@@ -39,7 +38,6 @@ export class SharedCalendarComponent implements OnInit {
 
   constructor(public eventsService: EventsService,
     public http: HttpClient,
-    private notificationsService: NotificationsService,
     private fb: FacebookService,
     private route: ActivatedRoute,
     private router: Router,
@@ -85,7 +83,22 @@ export class SharedCalendarComponent implements OnInit {
               secondary: '#ff9642'
             },
             meta: {
-              type: 'event'
+              type: 'public'
+            }
+          })
+        }
+        else {
+          this.events.push({
+            id: ee.id,
+            title: 'Private appointment',
+            start: new Date(ee.startDate),
+            end: new Date(ee.endDate),
+            color: {
+              primary: '#2c786c',
+              secondary: '#2c786c'
+            },
+            meta: {
+              type: 'private'
             }
           })
         }
@@ -96,7 +109,7 @@ export class SharedCalendarComponent implements OnInit {
 
   eventClicked(event: CalendarEvent): void {
     this.editedEvent = event;
-    if (event.meta.type == 'event') { this.openEvent = true; }
+    this.openEvent = true; 
   }
 
   closeOpenEventModal() {
@@ -137,21 +150,6 @@ export class SharedCalendarComponent implements OnInit {
 
   editEvent(event: Events) {
     this.closeOpenEventModal();
-    this.events = this.events.filter(e => e.id !== event.id);
-    this.events.push({
-      id: event.id,
-      start: event.startDate,
-      end: event.endDate,
-      title: event.title,
-      actions: this.actions,
-      color: {
-        primary: '#ff9642',
-        secondary: '#ff9642'
-      },
-      meta: {
-        type: 'event'
-      }
-    });
     this.activeDayIsOpen = false;
     this.refresh.next();
   }
