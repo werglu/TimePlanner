@@ -13,8 +13,8 @@
       <li class="invitedFriend">
         <img src={{friend.photoUrl}} alt="invited friend's photo" class="profile-photo-s" />
         <i *ngIf="friend.status == 1" class="fa fa-check-circle status accepted"></i>
-        <i *ngIf="friend.status == 2"  class="fa fa-times-circle status rejected"></i>
-        <i *ngIf="friend.status == 0"  class="fa fa-question-circle status unknow"></i>
+        <i *ngIf="friend.status == 2" class="fa fa-times-circle status rejected"></i>
+        <i *ngIf="friend.status == 0" class="fa fa-question-circle status unknow"></i>
         <span class="nameTooltip">{{friend.name}}</span>
       </li>
     </ng-container>
@@ -93,6 +93,13 @@
         Street address is required.
       </div>
     </div>
+  </div>
+
+  <div style="display:grid" *ngIf="currentEvent != null">
+    <label style="padding-top:10px;" for="name">
+      Description <i class=" fa fa-info-circle"><span class="tooltiptext">Max length of the description is 1000.</span></i>
+    </label>
+    <textarea class="description" id="description" type="text" formControlName="description" maxlength="1000" [value]="currentEvent.description"></textarea>
   </div>
 
   <!-- begin friends list -->

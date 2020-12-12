@@ -56,7 +56,8 @@ namespace Time_planner_api.Controllers
                 City = ourEvent.City,
                 StreetAddress = ourEvent.StreetAddress,
                 IsPublic = ourEvent.IsPublic,
-                OwnerId = ourEvent.OwnerId
+                OwnerId = ourEvent.OwnerId,
+                Description = ourEvent.Description
             }); 
 
             try
@@ -90,6 +91,7 @@ namespace Time_planner_api.Controllers
             newEvent.StreetAddress = oldEvent.StreetAddress;
             newEvent.IsPublic = oldEvent.IsPublic;
             newEvent.OwnerId = oldEvent.OwnerId;
+            newEvent.Description = oldEvent.Description;
 
             _context.Entry(newEvent).State = EntityState.Modified;
 

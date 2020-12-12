@@ -32,6 +32,9 @@ namespace Time_planner_api.Models
 
         public User Owner { get; set; }
 
+        [Column(TypeName = "varchar(1000)")]
+        public string Description { get; set; }
+
         [NotMapped]
         public double Longitude
         {

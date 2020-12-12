@@ -46,7 +46,8 @@ export class EditEventModalComponent implements OnInit {
       startDate: '',
       endDate: '',
       city: [' ', Validators.required],
-      streetAddress: [' ', Validators.required]
+      streetAddress: [' ', Validators.required],
+      description: ['', Validators.maxLength(1000)]    
     });
 
     userService.getUserFriends().subscribe((friendArray) => {
@@ -155,7 +156,8 @@ export class EditEventModalComponent implements OnInit {
       latitude: 0.0,
       longitude: 0.0,
       owner: this.currentEvent.owner,
-      ownerId: this.currentEvent.ownerId
+      ownerId: this.currentEvent.ownerId,
+      description: (<HTMLInputElement>document.getElementById('description')).value
     };
   }
 

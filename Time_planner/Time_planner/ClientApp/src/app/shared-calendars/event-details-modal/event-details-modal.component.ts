@@ -39,7 +39,8 @@ export class EventDetailsModalComponent implements OnInit {
       startDate: '',
       endDate: '',
       city: ' ',
-      streetAddress: ' '
+      streetAddress: ' ',
+      description: ''
     });
 
     userService.getUserFriends().subscribe((friendArray) => {

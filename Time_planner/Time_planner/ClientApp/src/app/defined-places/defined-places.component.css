@@ -11,6 +11,7 @@ button {
 .fa-plus {
   padding-right: 7px;
   font-size: 1.1rem;
+  color: var(--color-dark-green);
 }
 
 .fa-trash {

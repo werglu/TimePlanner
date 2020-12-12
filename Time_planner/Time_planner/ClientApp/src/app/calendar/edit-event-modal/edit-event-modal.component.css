@@ -153,3 +153,9 @@ img.profile-photo-s {
 .myPlace {
   margin-right: 10px;
 }
+
+.description {
+  border: solid 3px var(--color-light-green);
+  width: 80%;
+  background-color: var(--color-background);
+}

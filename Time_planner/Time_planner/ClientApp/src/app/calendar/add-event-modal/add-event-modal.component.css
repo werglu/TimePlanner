@@ -180,3 +180,10 @@ img.profile-photo-s {
   position: fixed;
   color: var(--yellow)
 }
+
+
+.description {
+  border: solid 3px var(--color-light-green);
+  width: 80%;
+  background-color: var(--color-background);
+}
