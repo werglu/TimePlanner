@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { TasksService } from '../tasks.service';
 import { PlanningService } from '../../planning/planning.service'
 import { TaskAssignmentProposition } from '../../planning/taskAssignmentProposition';
@@ -13,15 +13,88 @@ import { TaskAssignmentSave } from '../../planning/taskAssignmentSave';
 
 export class FindDatesModalComponent implements OnInit {
   public foundDatesModel: Array<TaskAssignment> = [];
+  public weeks: Array<string> = [];
+  currentWeek = true;
   @Input() foundDates: Array<TaskAssignmentProposition>;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<TaskAssignmentSave[]>();
+  @Output() onRerun = new EventEmitter<boolean>();
 
   constructor(private tasksService: TasksService,
               private planningService: PlanningService) {
   }
 
   ngOnInit(): void {
+    var endCurrent = new Date();
+    endCurrent.setDate(endCurrent.getDate() + (7 - endCurrent.getDay()) % 7);
+    var beginNext = new Date(endCurrent.getTime());
+    beginNext.setDate(beginNext.getDate() + 1);
+    var endNext = new Date(endCurrent.getTime());
+    endNext.setDate(endNext.getDate() + 7);
+    this.weeks = ['current (today-' + this.formatDate(endCurrent) + ')', 'next (' + this.formatDate(beginNext) + '-' + this.formatDate(endNext) + ')'];
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.buildFoundDatesModel();
+  }
+
+  cancel() {
+    this.onCancel.emit();
+  }
+
+  getFormValue(): TaskAssignmentSave[] {
+    var taskAssignmentsSave: TaskAssignmentSave[] = [];
+    this.foundDatesModel.forEach(task => {
+      taskAssignmentsSave.push({ taskId: task.task.id, dayTimes: task.dayTimes });
+    })
+    return taskAssignmentsSave;
+  }
+  
+  onSubmit() {
+    this.planningService.saveDates(this.getFormValue(), this.currentWeek).subscribe(() => this.onSave.emit(this.getFormValue()));
+  }
+
+  checked(itemInd, dayInd: number) {
+    for (let dataItem of this.foundDatesModel) {
+      if (dataItem.task.id == itemInd) {
+        dataItem.dayTimes[dayInd] = true;
+        dataItem.count += 1;
+        return;
+      }
+    }
+  }
+
+  unchecked(itemInd, dayInd: number) {
+    for (let dataItem of this.foundDatesModel) {
+      if (dataItem.task.id == itemInd) {
+        dataItem.dayTimes[dayInd] = false;
+        dataItem.count -= 1;
+        return;
+      }
+    }
+  }
+
+  onWeekChange(priority: string) {
+    var change = false;
+    if (priority == this.weeks[0]) {
+      if (this.currentWeek == false) {
+        change = true;
+      }
+      this.currentWeek = true;
+    }
+    else {
+      if (this.currentWeek == true) {
+        change = true;
+      }
+      this.currentWeek = false;
+    }
+    if (change) {
+      this.foundDatesModel = [];
+      this.onRerun.emit(this.currentWeek);
+    }
+  }
+
+  buildFoundDatesModel() {
     this.foundDates.forEach(taskAssignmentProposition => {
       var taskDayTimes: Array<boolean> = [];
       var taskInfos: Array<string> = [];
@@ -45,39 +118,7 @@ export class FindDatesModalComponent implements OnInit {
     })
   }
 
-  cancel() {
-    this.onCancel.emit();
-  }
-
-  getFormValue(): TaskAssignmentSave[] {
-    var taskAssignmentsSave: TaskAssignmentSave[] = [];
-    this.foundDatesModel.forEach(task => {
-      taskAssignmentsSave.push({ taskId: task.task.id, dayTimes: task.dayTimes });
-    })
-    return taskAssignmentsSave;
-  }
-  
-  onSubmit() {
-    this.planningService.saveDates(this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
-  }
-
-  checked(itemInd, dayInd: number) {
-    for (let dataItem of this.foundDatesModel) {
-      if (dataItem.task.id == itemInd) {
-        dataItem.dayTimes[dayInd] = true;
-        dataItem.count += 1;
-        return;
-      }
-    }
-  }
-
-  unchecked(itemInd, dayInd: number) {
-    for (let dataItem of this.foundDatesModel) {
-      if (dataItem.task.id == itemInd) {
-        dataItem.dayTimes[dayInd] = false;
-        dataItem.count -= 1;
-        return;
-      }
-    }
+  formatDate(date: Date): string {
+    return date.getDate() + '.' + (date.getMonth() < 9 ? '0' : '') + (date.getMonth() + 1)
   }
 }

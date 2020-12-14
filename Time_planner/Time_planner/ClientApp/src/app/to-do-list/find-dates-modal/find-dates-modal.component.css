@@ -19,6 +19,11 @@
   color: var(--color-dark-green)
 }
 
+.labelWeek {
+  padding-top: 10px;
+  padding-right: 10px;
+}
+
 
 /*tooltip*/
 .pass-check-icon, .fa-check, .fa-times {
