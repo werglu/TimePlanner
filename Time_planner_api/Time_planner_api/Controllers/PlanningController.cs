@@ -22,17 +22,22 @@ namespace Time_planner_api.Controllers
             _context = context;
         }
 
-        // PUT: api/Planning/weekplan?userId=a&year=b&month=c&day=d
+        // PUT: api/Planning/weekplan?currentWeek=a&userId=b&year=c&month=d&day=e
         [HttpPut]
         [Route("weekplan")]
-        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentProposition>>> GetWeekPlannedTasks(List<int> taskIds, string userId, int year, int month, int day, double startMinutes = 420.0, double endMinutes = 1320.0)
+        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentProposition>>> GetWeekPlannedTasks(List<int> taskIds, bool currentWeek, string userId, int year, int month, int day, double startMinutes = 420.0, double endMinutes = 1320.0)
         {
             var date = new DateTime(year, month, day);
             var events = new List<Event>[7];
             for (int i = 0; i < events.Length; i++)
             {
-                var begin = GetDate(i, date);
-                var end = GetDate(i + 1, date);
+                var begin = GetDate(i, date, currentWeek);
+                if (currentWeek && begin == date)
+                {
+                    events[i] = new List<Event>();
+                    continue;
+                }
+                var end = GetDate(i + 1, date, currentWeek);
                 events[i] = await _context.Events.Where(ev => ev.OwnerId == userId && ev.StartDate < end && ev.EndDate >= begin).ToListAsync();
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.FacebookId == userId);
                 if (user != null && user.AttendedEvents != null)
@@ -52,9 +57,9 @@ namespace Time_planner_api.Controllers
             var windows = new List<(DateTime, DateTime)>[7];
             for (int i = 0; i < events.Length; i++)
             {
-                var currentWindowStart = GetDate(i, date).AddMinutes(startMinutes);
+                var currentWindowStart = GetDate(i, date, currentWeek).AddMinutes(startMinutes);
                 windows[i] = new List<(DateTime, DateTime)>();
-                var dayEnd = GetDate(i, date).AddMinutes(endMinutes);
+                var dayEnd = GetDate(i, date, currentWeek).AddMinutes(endMinutes);
                 foreach (var ev in events[i])
                 {
                     if (currentWindowStart < ev.StartDate)
@@ -107,10 +112,10 @@ namespace Time_planner_api.Controllers
             return planningResult;
         }
 
-        // PUT: api/Planning/saveDates?year=b&month=c&day=d
+        // PUT: api/Planning/saveDates?currentWeek=a&year=b&month=c&day=d
         [HttpPut]
         [Route("saveDates")]
-        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentSave>>> SaveDates(List<TaskAssignmentSave> tasksToSave, int year, int month, int day)
+        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentSave>>> SaveDates(List<TaskAssignmentSave> tasksToSave, bool currentWeek, int year, int month, int day)
         {
             if (tasksToSave == null)
             {
@@ -128,13 +133,13 @@ namespace Time_planner_api.Controllers
 
                 Models.Task newTask = _context.Tasks.Where(t => t.Id == task.TaskId).Single<Models.Task>();
 
-                newTask.Date0 = task.DayTimes[0] ? GetDate(0, date) : DateTime.MinValue;
-                newTask.Date1 = task.DayTimes[1] ? GetDate(1, date) : DateTime.MinValue;
-                newTask.Date2 = task.DayTimes[2] ? GetDate(2, date) : DateTime.MinValue;
-                newTask.Date3 = task.DayTimes[3] ? GetDate(3, date) : DateTime.MinValue;
-                newTask.Date4 = task.DayTimes[4] ? GetDate(4, date) : DateTime.MinValue;
-                newTask.Date5 = task.DayTimes[5] ? GetDate(5, date) : DateTime.MinValue;
-                newTask.Date6 = task.DayTimes[6] ? GetDate(6, date) : DateTime.MinValue;
+                newTask.Date0 = task.DayTimes[0] ? GetDate(0, date, currentWeek) : DateTime.MinValue;
+                newTask.Date1 = task.DayTimes[1] ? GetDate(1, date, currentWeek) : DateTime.MinValue;
+                newTask.Date2 = task.DayTimes[2] ? GetDate(2, date, currentWeek) : DateTime.MinValue;
+                newTask.Date3 = task.DayTimes[3] ? GetDate(3, date, currentWeek) : DateTime.MinValue;
+                newTask.Date4 = task.DayTimes[4] ? GetDate(4, date, currentWeek) : DateTime.MinValue;
+                newTask.Date5 = task.DayTimes[5] ? GetDate(5, date, currentWeek) : DateTime.MinValue;
+                newTask.Date6 = task.DayTimes[6] ? GetDate(6, date, currentWeek) : DateTime.MinValue;
 
 
                 _context.Entry(newTask).State = EntityState.Modified;
@@ -308,9 +313,14 @@ namespace Time_planner_api.Controllers
             return new CommonDateOutput() { ConflictingUsers = conflictingUsers.ToArray(), CommonDate = currentWindowStart };
         }
 
-        private DateTime GetDate(int day, DateTime duringWeek)
+        private DateTime GetDate(int day, DateTime duringWeek, bool currentWeek)
         {
-            return duringWeek.AddDays(-1 * (int)(duringWeek.DayOfWeek) + 1).AddDays(day % 7); // starts from monday
+            var currentWeekDate = duringWeek.AddDays(-1 * (int)(duringWeek.DayOfWeek) + 1).AddDays(day % 7); // starts from monday
+            if (!currentWeek)
+            {
+                return currentWeekDate.AddDays(7);
+            }
+            return currentWeekDate;
         }
 
         private bool IsDay(Event ev, DateTime date)

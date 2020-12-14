@@ -1,10 +1,16 @@
 <div>
+  <label class="labelWeek">
+    Plan for week:
+  </label>
+  <kendo-dropdownlist [data]="weeks"
+                      [value]="weeks[0]"
+                      (valueChange)="onWeekChange($event)">
+  </kendo-dropdownlist>
   <kendo-grid style="margin-top:30px;"
               [kendoGridBinding]="foundDatesModel"
               [height]="510"
-              [resizable]="true"
-             >
-    <kendo-grid-column  title="Task" [minResizableWidth]="50">
+              [resizable]="true">
+    <kendo-grid-column title="Task" [minResizableWidth]="50">
       <ng-template kendoGridCellTemplate let-dataItem>
         <label>
           <i *ngIf="dataItem.count < (dataItem.task.split ? dataItem.task.split : 1)" class="fa fa-exclamation-triangle notpassed pass-check-icon">

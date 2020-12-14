@@ -173,9 +173,15 @@ export class ToDoListComponent implements OnInit {
   }
 
   findDates() {
-    this.planningService.findDates(this.mySelection, this.userId).subscribe(taskAssignmentPropositions => {
+    this.planningService.findDates(this.mySelection, true, this.userId).subscribe(taskAssignmentPropositions => {
       this.foundDates = taskAssignmentPropositions;
       this.findDatesModalVisible = true;
+    });
+  }
+
+  findDatesRerun(currentWeek: boolean) {
+    this.planningService.findDates(this.mySelection, currentWeek, this.userId).subscribe(taskAssignmentPropositions => {
+      this.foundDates = taskAssignmentPropositions;
     });
   }
 
