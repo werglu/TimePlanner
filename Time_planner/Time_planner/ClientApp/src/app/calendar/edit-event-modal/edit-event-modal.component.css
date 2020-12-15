@@ -155,7 +155,7 @@ img.profile-photo-s {
 }
 
 .description {
-  border: solid 3px var(--color-light-green);
+  border: solid 2px var(--color-light-green);
   width: 80%;
   background-color: var(--color-background);
 }

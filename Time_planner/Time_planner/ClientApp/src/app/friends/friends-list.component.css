@@ -37,3 +37,16 @@ img.profile-photo-lg {
   color: var(--color-light-green);
   margin-left: 14px;
 }
+
+i.fa {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+  padding-bottom: 0px;
+  color: var(--color-dark-green);
+}
+
+.fa-calendar {
+  padding-right: 7px;
+  font-size: 1.1rem;
+}
