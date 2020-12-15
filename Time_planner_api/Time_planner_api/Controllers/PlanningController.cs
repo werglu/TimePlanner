@@ -34,7 +34,6 @@ namespace Time_planner_api.Controllers
                 var begin = GetDate(i, date, currentWeek);
                 if (currentWeek && begin == date)
                 {
-                    events[i] = new List<Event>();
                     continue;
                 }
                 var end = GetDate(i + 1, date, currentWeek);
@@ -60,6 +59,10 @@ namespace Time_planner_api.Controllers
                 var currentWindowStart = GetDate(i, date, currentWeek).AddMinutes(startMinutes);
                 windows[i] = new List<(DateTime, DateTime)>();
                 var dayEnd = GetDate(i, date, currentWeek).AddMinutes(endMinutes);
+                if (events[i] == null)
+                {
+                    continue;
+                }
                 foreach (var ev in events[i])
                 {
                     if (currentWindowStart < ev.StartDate)
