@@ -17,7 +17,7 @@
     </div>
     <div style="float:right">
       <button class="btn btn-primary" style="margin-right:10px" (click)="getWeekView()">Week view</button>
-      <button class="btn btn-secondary" style="margin-right:10px" (click)="getMonthView()">Month view</button>
+      <button class="btn btn-primary" style="margin-right:10px" (click)="getMonthView()">Month view</button>
       <button class="btn btn-primary" (click)="getDayView()">Day view</button>
     </div>
   </div>
@@ -41,7 +41,7 @@
                          [events]="events"></mwl-calendar-day-view>
 
   <div style="float:right">
-    <button style="margin-top:20px" class="btn btn-primary" (click)="openAddNewEventModal()"><i style="padding-right:7px;font-size:1.1rem" class="fa fa-plus"></i>Add new event</button>
+    <button class="btn btn-primary" (click)="openAddNewEventModal()"><i style="padding-right:7px;font-size:1.1rem" class="fa fa-plus"></i>Add new event</button>
   </div>
 </div>
 

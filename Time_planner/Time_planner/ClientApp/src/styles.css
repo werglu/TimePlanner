@@ -76,6 +76,24 @@ code {
   color: #fff;
 }
 
+.cal-month-view {
+  box-shadow: 1px 0px 10px -3px var(--color-dark-green);
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+}
+
+.cal-week-view {
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  box-shadow: 1px 0px 10px -3px var(--color-dark-green);
+}
+
+.cal-day-view {
+  box-shadow: 1px 0px 10px -3px var(--color-dark-green);
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+}
+
 .fa-trash {
     color: var(--yellow);
 }
