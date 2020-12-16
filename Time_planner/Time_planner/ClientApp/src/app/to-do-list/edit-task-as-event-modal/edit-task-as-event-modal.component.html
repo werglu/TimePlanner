@@ -56,7 +56,7 @@
   </div>
   <div style="padding-top: 10px;">
     <label>
-      Chosen days
+      Chosen days <i class=" fa fa-info-circle"><span class="tooltiptext">You can choose maximum 7 dates.</span></i>
     </label>
     <div class="parent-date" *ngIf="getDate(0) != null">
       <div>
@@ -93,6 +93,9 @@
         <input class="input-date" type="date" id="date6" name="date6" [value]="getDate(6)">
       </div>
     </div>
+  </div>
+  <div style="padding-top: 10px;" *ngIf="getFirstFreeDate(0) != -1">
+    <button class="btn btn-secondary add-date" type="button" (click)="addDate()"><i style="padding-right:7px;font-size:0.9rem" class="fa fa-plus"></i>Add date</button>
   </div>
   <div style="float:right">
     <button style="margin-top:20px;margin-right:10px" class="btn btn-secondary" (click)="cancel()">Cancel</button>

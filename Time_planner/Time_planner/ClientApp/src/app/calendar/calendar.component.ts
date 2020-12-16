@@ -231,17 +231,47 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.addNewEventModalVisible = false;
   }
 
+  areDatesEqual(date1: Date, date2: Date) {
+    var d1 = new Date(date1).toLocaleDateString();
+    var d2 = date2.toLocaleDateString();
+    return d1 == d2;
+  }
+
   async deleteEvent(event: CalendarEvent) {
-    //first need to remove all notifications with this event
     if (event.meta.type == 'task') {
-      this.tasksService.deleteTask(+event.id).subscribe(() => {
-        this.closeOpenEventModal();
-        this.events = this.events.filter(e => e.id !== event.id);
-        this.activeDayIsOpen = false;
-        this.refresh.next();
+      this.tasksService.getTask(+event.id).subscribe((task) => {
+        if (this.areDatesEqual(task.date0, event.start)) {
+          task.date0 = null;
+        }
+        else if (this.areDatesEqual(task.date1, new Date(event.start))) {
+          task.date1 = null;
+        }
+        else if (this.areDatesEqual(task.date2, event.start)) {
+          task.date2 = null;
+        }
+        else if (this.areDatesEqual(task.date3, event.start)) {
+          task.date3 = null;
+        }
+        else if (this.areDatesEqual(task.date4, event.start)) {
+          task.date4 = null;
+        }
+        else if (this.areDatesEqual(task.date5, event.start)) {
+          task.date5 = null;
+        }
+        else if (this.areDatesEqual(task.date6, event.start)) {
+          task.date6 = null;
+        }
+        this.tasksService.editTask(+event.id, task).subscribe(() => {
+          this.closeOpenEventModal();
+          this.events = this.events.filter(e => e.meta.type !== 'task');
+          this.getTasks();
+          this.refresh.next();
+          this.activeDayIsOpen = false;
+        });
       });
     }
     else {
+      //first need to remove all notifications with this event
       this.notificationsService.deleteAllNotificationWithSpecifiedEventId(+event.id).subscribe(() => {
         this.eventsService.deleteEvent(+event.id).subscribe(response => {
           this.closeOpenEventModal();
