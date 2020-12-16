@@ -4,6 +4,22 @@
   background-color: var(--yellow);
 }
 
+.add-date {
+  font-size: 0.8rem;
+  height: 30px;
+  width: 100px;
+  background-color: var(--color-light-green);
+}
+
+i.fa-plus {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+  padding-bottom: 0px;
+  font-size: 1.5rem;
+  color: var(--color-dark-green);
+}
+
 .fa-toggle-on {
   font-size: 1.6rem;
   color: var(--color-dark-green);

@@ -74,6 +74,44 @@ export class EditTaskAaEventModalComponent implements OnInit {
     this.isDone = isDone;
   }
 
+  addDate() {
+    var firstFreeDateInd = this.getFirstFreeDate(0);
+    if (firstFreeDateInd != -1) {
+      if (firstFreeDateInd == 0) {
+        this.currentTask.date0 = new Date();
+      }
+      if (firstFreeDateInd == 1) {
+        this.currentTask.date1 = new Date();
+      }
+      if (firstFreeDateInd == 2) {
+        this.currentTask.date2 = new Date();
+      }
+      if (firstFreeDateInd == 3) {
+        this.currentTask.date3 = new Date();
+        this.currentTask.date3 = new Date();
+      }
+      if (firstFreeDateInd == 4) {
+        this.currentTask.date4 = new Date();
+      }
+      if (firstFreeDateInd == 5) {
+        this.currentTask.date5 = new Date();
+      }
+      if (firstFreeDateInd == 6) {
+        this.currentTask.date6 = new Date();
+      }
+    }
+  }
+
+  // returns -1 when there all daets are taken
+  getFirstFreeDate(startInd: number): number {
+    for (var i = startInd; i < 7; i++) {
+      if (this.getDate(i) == null) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   getDate(ind: number): string {
     if (!this.currentTask) {
       return null;
@@ -92,7 +130,7 @@ export class EditTaskAaEventModalComponent implements OnInit {
       var d = this.currentTask.date5;
     else if (ind == 6)
       var d = this.currentTask.date6;
-    if (!d) {
+    if (!d || (new Date(d)).getFullYear() <= 1970) {
       return null;
     }
     var dLocale = (new Date(d)).toLocaleDateString();
