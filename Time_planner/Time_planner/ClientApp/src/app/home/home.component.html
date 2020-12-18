@@ -6,9 +6,9 @@
       <label style="margin-left:-12rem;color:#004445;margin-top:55px">No events for today :)</label>
     </div>
     <ng-container *ngIf="events.length>0">
-      <ul class="row-md-12 col-md-12" style="max-height:160px;overflow-y:scroll;margin-top:5px;margin-left:-14px;text-align:center;">
+      <ul class="row-md-12 col-md-12" style="min-height:99px;max-height:160px;overflow-y:auto;margin-top:5px;margin-left:-15px;text-align:center;margin-top:1rem">
         <ng-container *ngFor="let event of events">
-          <li id="block_container">
+          <li class="table-row" id="block_container">
             <div class="col-md-7 col-sm-7">
               <label style="color:#004445;">{{event.title}}</label>
             </div>
@@ -23,12 +23,12 @@
     <div *ngIf="tasks.length==0">
       <label style="margin-left:0rem;color:#004445;margin-top:55px">No tasks for today :)</label>
       <br />
-      <button class="btn btn-secondary" style="margin-bottom:30px" (click)="showFindToDoModal()">Find something to do</button>
+      <button class="btn btn-secondary" style="margin-bottom:30px;box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.5);background-color:var(--yellow);" (click)="showFindToDoModal()">Find something to do</button>
     </div>
     <ng-container *ngIf="tasks.length>0">
-      <ul class="row-md-12 col-md-12" style="max-height:160px;overflow-y:scroll;margin-top:5px;text-align:center;margin-left:-15px;margin-top:0rem">
+      <ul class="row-md-12 col-md-12" style="min-height: 99px; max-height: 160px; overflow-y: auto; margin-top: 5px; text-align: center; margin-left: -15px; margin-top: 1rem">
         <ng-container *ngFor="let task of tasks">
-          <li id="block_container">
+          <li class="table-row" id="block_container">
             <div class="col-md-7 col-sm-7">
               <label style="color: #004445;">{{task.title}}</label>
             </div>
@@ -38,7 +38,7 @@
     </ng-container>
   </div>
 </div>
-<agm-map [latitude]="lat" [longitude]="lng" style="height:400px">
+<agm-map [latitude]="lat" [longitude]="lng" style="height: 400px ">
   <agm-marker *ngFor="let point of eventPoints" [latitude]="point.lat" [longitude]="point.lng" [iconUrl]="'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|f8b400'">
     <agm-info-window #window>
       Event: {{point.title}}

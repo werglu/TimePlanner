@@ -25,23 +25,28 @@
         <ul class="navbar-nav flex-grow">
           <li class="nav-item">
             <div id="notificationBtn" class="dropdown" style="display:none;margin-top:-8px">
-              <button *ngIf="noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none;"><i style="font-size:1.4rem;" class="fa fa-bell-slash navbar-brand"></i></button>
-              <button *ngIf="!noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none;"><i style="font-size:1.4rem;" class="fa fa-bell navbar-brand"></i></button>
+              <button *ngIf="noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none;"><i style="font-size:1.4rem;margin-right:0" class="fa fa-bell-slash navbar-brand"></i></button>
+              <button *ngIf="!noNotifications" class="btn" (click)="showNotifications()" style="background-color:transparent;border:none;"><i style="font-size:1.4rem;margin-right:0" class="fa fa-bell navbar-brand"></i></button>
               <div *ngIf="showNotificationsList" class="dropdown-content" style="right:0;left:auto;min-width:290px;display:block">
                 <notifications-component [userId]="userId" (onChange)="notificationsChanged($event)"></notifications-component>
               </div>
             </div>
           </li>
           <li>
+            <div *ngIf="me && showPhoto" class="col-md-3 col-sm-3">
+              <img src={{me.photoUrl}} alt="user's photo" class="profile-photo-lg">
+            </div>
+          </li>
+          <li>
             <div>
-              <button id="loginBtn" (click)="fbLogin()" class="fb btn" style="display:none;margin-top:8px;">
+              <button id="loginBtn" (click)="fbLogin()" class="fb btn" style="display:none;margin-top:3px;">
                 <i class="fa fa-facebook fa-fw" style="margin-left:-5px;"></i> Log In
               </button>
             </div>
           </li>
           <li>
             <div>
-              <button id="logoutBtn" (click)="fbLogout()" class="fb btn" style="display:none;margin-top:8px;">
+              <button id="logoutBtn" (click)="fbLogout()" class="fb btn" style="display:none;margin-top:3px;">
                 <i class="fa fa-facebook fa-fw" style="margin-left:-5px;"></i> Log Out
               </button>
             </div>

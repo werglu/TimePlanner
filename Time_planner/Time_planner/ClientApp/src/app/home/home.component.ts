@@ -39,7 +39,7 @@ export class HomeComponent {
     let authResp = this.fb.getAuthResponse();
     this.userId = authResp.userID;
     this.refresh();
-    this.getLocation();
+    this.getLocation();  
   }
 
   private isCurrentDate(startDate: Date): boolean {

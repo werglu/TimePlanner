@@ -40,6 +40,11 @@ html {
   z-index: 100;
 }
 
+img.profile-photo-lg {
+  height: 40px;
+  width: 40px;
+  border-radius: 10%;
+}
 
 .dropdown-content a:hover {
   background-color: #ddd;
@@ -74,8 +79,8 @@ input,
 .btn {
   width: 100%;
   border: none;
-  border-radius: 15px;
-  margin: 5px 0;
+  /*border-radius: 15px;
+  margin: 5px 0;*/
   display: inline-block;
   font-size: 14px;
   text-decoration: none; /* remove underline from anchors */
