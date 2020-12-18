@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationsService } from '../notifications/notifications.service';
-import { Subscription, interval } from 'rxjs';
+import { Subscription, interval, Subject } from 'rxjs';
 import { UserService } from '../user/user.service';
 import { FacebookService, LoginStatus, InitParams } from 'ngx-facebook';
+import { Friend } from '../shared/friend';
 
 
 @Component({
@@ -17,6 +18,9 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   noNotifications = true;
   subscription: Subscription;
   userId: string;
+  me: Friend;
+  refresh: Subject<any> = new Subject();
+  showPhoto = false;
 
   constructor(private router: Router,
     private fb: FacebookService,
@@ -48,13 +52,29 @@ export class NavMenuComponent implements OnInit, OnDestroy {
           loginBtn.style.display = "none";
           logoutBtn.style.display = "block";
           notificationsBtn.style.display = "block";
+          this.showPhoto = true;
         } else {
           loginBtn.style.display = "block";
           logoutBtn.style.display = "none";
           notificationsBtn.style.display = "none";
-        }
-      });
+          this.showPhoto = false;
+      }
 
+      this.fb.api(
+        "/me",
+        "get",
+        { "fields": "id,name,picture.type(normal)" }).then(
+          response => {
+            if (response && !response.error) {
+              this.me = {
+                FacebookId: response.id,
+                name: response.name,
+                photoUrl: response.picture.data.url
+              };
+              this.router.navigate(['/']);
+            }
+          });
+      });
   }
 
   fbLogout() {
@@ -65,7 +85,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       logoutBtn.style.display = "none";
       let notificationsBtn = document.getElementById("notificationBtn");
       notificationsBtn.style.display = "none";
-
+      this.showPhoto = false;
       this.router.navigate(['/logout']);
     });
   }
@@ -82,10 +102,24 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         logoutBtn.style.display = "block";
         let notificationsBtn = document.getElementById("notificationBtn");
         notificationsBtn.style.display = "block";
-
+        this.showPhoto = true;
         if (response.authResponse != null) {
           this.userId = response.authResponse.userID;
         }
+        this.fb.api(
+          "/me",
+          "get",
+          { "fields": "id,name,picture.type(normal)" }).then(
+            response => {
+              if (response && !response.error) {
+                this.me = {
+                  FacebookId: response.id,
+                  name: response.name,
+                  photoUrl: response.picture.data.url
+                };
+                this.router.navigate(['/']);
+              }
+            });
         this.userService.putUser(response.authResponse.userID).subscribe(() => this.router.navigate(['/']));
       }
     });

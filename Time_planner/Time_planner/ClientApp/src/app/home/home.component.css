@@ -12,10 +12,6 @@
   display: flex;
   justify-content: center;
   padding: 5px;
-  background-color: var(--color-background);
-  /*box-shadow: 0px 1px 6px 1px var(--color-light-green);*/
-  border: 2px solid var(--color-light-green);
-  border-radius: 0.8rem;
 }
 
 /*scrollbar*/
@@ -47,4 +43,19 @@
   margin-top: 10px;
   margin-left: -14px;
   width: 387px;
+}
+
+.table-row {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  background-color: var(--color-light-green);
+  box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.5);
+  width: 250px;
+  margin-bottom: 5px;
+}
+
+.table-row:hover {
+  width: 280px;
+  font-size: large;
 }
