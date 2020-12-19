@@ -5,6 +5,7 @@ import { Subscription, interval, Subject } from 'rxjs';
 import { UserService } from '../user/user.service';
 import { FacebookService, LoginStatus, InitParams } from 'ngx-facebook';
 import { Friend } from '../shared/friend';
+import { Local } from 'protractor/built/driverProviders';
 
 
 @Component({
@@ -79,6 +80,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   fbLogout() {
     this.fb.logout().then(response => {
+      localStorage.removeItem('jwt');
       let loginBtn = document.getElementById("loginBtn");
       loginBtn.style.display = "block";
       let logoutBtn = document.getElementById("logoutBtn");
@@ -120,7 +122,11 @@ export class NavMenuComponent implements OnInit, OnDestroy {
                 this.router.navigate(['/']);
               }
             });
-        this.userService.putUser(response.authResponse.userID).subscribe(() => this.router.navigate(['/']));
+        this.userService.putUser(response.authResponse.accessToken).subscribe((response) => {
+          const token = (<any>response).token;
+          localStorage.setItem('jwt', token);
+          this.router.navigate(['/']);
+        });
       }
     });
   }

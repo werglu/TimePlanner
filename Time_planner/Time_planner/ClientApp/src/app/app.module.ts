@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { JwtModule } from '@auth0/angular-jwt';
 import { AgmCoreModule } from '@agm/core';
 //import { AgmDirectionModule } from 'agm-direction';
 import { AppComponent } from './app.component';
@@ -38,6 +39,10 @@ import { CannotAccessComponent } from './cannot-access/cannot-access.component';
 import { EventDetailsModalComponent } from './shared-calendars/event-details-modal/event-details-modal.component';
 import { DefinedPlacesComponent } from './defined-places/defined-places.component';
 import { AddNewPlaceModalComponent } from './defined-places/add-new-place-modal/add-new-place-modal.component';
+
+export function tokenGetter() {
+  return localStorage.getItem('jwt');
+}
 
 @NgModule({
   declarations: [
@@ -98,7 +103,14 @@ import { AddNewPlaceModalComponent } from './defined-places/add-new-place-modal/
       { path: 'access-denied', component: AccessDeniedComponent },
       { path: 'cannot-access', component: CannotAccessComponent },
       { path: 'logout', component: LogoutComponent }
-    ])
+    ]),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ["localhost:44332"],
+        disallowedRoutes: []
+      }
+    })
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]
