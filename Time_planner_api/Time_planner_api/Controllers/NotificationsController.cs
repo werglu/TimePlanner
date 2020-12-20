@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Time_planner_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class NotificationsController : ControllerBase
+    public class NotificationsController : BaseController
     {
         private readonly DatabaseContext _context;
 
@@ -24,82 +25,32 @@ namespace Time_planner_api.Controllers
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>Collection of Notification objects</returns>
-        [HttpGet("{userId}")]
-        public async Task<ActionResult<IEnumerable<Notification>>> GetNotifications(string userId)
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Notification>>> GetNotifications()
         {
+            var userId = GetUserId();
             return await _context.Notifications.Where(n => n.IsDismissed == false && n.ReceiverId == userId).ToListAsync();
         }
 
+        // POST: api/Notifications/dismiss?id=a
         /// <summary>
-        /// Get all notification with specified id
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="id"></param>
-        /// <returns>Notification with specified id or NotFound error if not found/returns>
-        [HttpGet("{userId}/{id}")]
-        public async Task<ActionResult<Notification>> GetNotification(string userId, int id)
-        {
-            var notification = await _context.Notifications.FindAsync(id);
-
-            if (notification == null)
-            {
-                return NotFound();
-            }
-
-            return notification;
-        }
-
-        /// <summary>
-        /// Post notification
-        /// </summary>
-        /// <returns>Posted notification</returns>
-        [HttpPost]
-        [Route("add")]
-        public async Task<ActionResult<Notification>> PostNotification(Notification ourNotification)
-        {
-            await _context.Notifications.AddAsync(new Notification()
-            {
-                IsDismissed = ourNotification.IsDismissed,
-                MessageType = ourNotification.MessageType,
-                SenderId = ourNotification.SenderId,
-                ReceiverId = ourNotification.ReceiverId,
-                EventId = ourNotification.EventId
-            });
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (NotificationExists(ourNotification.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetNotification", new { userId = ourNotification.SenderId, id = ourNotification.Id }, ourNotification);
-        }
-
-        /// <summary>
-        /// Update notification with specified id
+        /// Dismiss notification with specified id
         /// </summary>
         /// <returns></returns>
-        [HttpPut("{id}")]
-        public async Task<ActionResult> PutNotification([FromRoute]int id, Notification notification)
+        [HttpPost]
+        [Route("dismiss")]
+        [Authorize]
+        public async Task<ActionResult> DismissNotification(int id)
         {
             Notification newNotification = _context.Notifications.Where(n => n.Id == id).Single<Notification>();
-            newNotification.IsDismissed = notification.IsDismissed;
-            newNotification.MessageType = notification.MessageType;
-            newNotification.EventId = notification.EventId;
-            newNotification.Event = notification.Event;
-            newNotification.Id = notification.Id;
-            newNotification.ReceiverId = notification.ReceiverId;
-            newNotification.SenderId = notification.SenderId;
+
+            if (GetUserId() != newNotification.ReceiverId)
+            {
+                return Unauthorized();
+            }
+
+            newNotification.IsDismissed = true;
 
             _context.Entry(newNotification).State = EntityState.Modified;
 
@@ -122,31 +73,154 @@ namespace Time_planner_api.Controllers
             return NoContent();
         }
 
-
-        // DELETE: api/Notifications/deleteAll
+        // POST: api/Notifications/accept?id=a
         /// <summary>
-        /// Delete all notifications with specified event id
+        /// Accept notification with specified id
         /// </summary>
-        /// <returns>dDeleted notifications collecion</returns>
-        [HttpDelete("deleteAll/{eventId}")]
-        public async Task<ActionResult<IEnumerable<Notification>>> DeleteAllNotificationsWithSpecifiedEventId([FromRoute] int eventId)
+        /// <returns></returns>
+        [HttpPost]
+        [Route("accept")]
+        [Authorize]
+        public async Task<ActionResult> AcceptNotification(int id)
         {
-            var notifications = _context.Notifications.Where(n => n.EventId == eventId);
-            if (notifications == null)
+            Notification notification = await _context.Notifications.FirstOrDefaultAsync(n => n.Id == id);
+
+            if (notification == null || notification.MessageType != 0) // invited
             {
-                return Enumerable.Empty<Notification>().ToList();
+                return BadRequest();
             }
 
-            _context.Notifications.RemoveRange(notifications);
-            await _context.SaveChangesAsync();
+            if (GetUserId() != notification.ReceiverId)
+            {
+                return Unauthorized();
+            }
 
-            return notifications.ToList();
+            await _context.Notifications.AddAsync(new Notification()
+            {
+                IsDismissed = false,
+                MessageType = 1, // accepted
+                SenderId = notification.ReceiverId,
+                ReceiverId = notification.SenderId,
+                EventId = notification.EventId
+            });
+
+            UsersEvents usersEvents = await _context.UsersEvents.FirstOrDefaultAsync(ue => ue.EventId == notification.EventId && ue.UserId == notification.ReceiverId);
+            if (usersEvents != null)
+            {
+                usersEvents.Status = 1; // accepted
+                _context.Entry(usersEvents).State = EntityState.Modified;
+            }
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        // POST: api/Notifications/reject?id=a
+        /// <summary>
+        /// Reject notification with specified id
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("reject")]
+        [Authorize]
+        public async Task<ActionResult> RejectNotification(int id)
+        {
+            Notification notification = await _context.Notifications.FirstOrDefaultAsync(n => n.Id == id);
+
+            if (notification == null || notification.MessageType != 0) // invited
+            {
+                return BadRequest();
+            }
+
+            if (GetUserId() != notification.ReceiverId)
+            {
+                return Unauthorized();
+            }
+
+            // add accepted notification
+            await _context.Notifications.AddAsync(new Notification()
+            {
+                IsDismissed = false,
+                MessageType = 2, // rejected
+                SenderId = notification.ReceiverId,
+                ReceiverId = notification.SenderId,
+                EventId = notification.EventId
+            });
+
+            // update usersEvets state
+            UsersEvents usersEvents = await _context.UsersEvents.FirstOrDefaultAsync(ue => ue.EventId == notification.EventId && ue.UserId == notification.ReceiverId);
+            if (usersEvents != null)
+            {
+                usersEvents.Status = 2; //rejected
+                _context.Entry(usersEvents).State = EntityState.Modified;
+            }
+
+            // create new event, todo: don't
+            Event ev = await _context.Events.FirstOrDefaultAsync(e => e.Id == notification.EventId);
+            if (ev != null)
+            {
+                await _context.Events.AddAsync(new Event()
+                {
+                    StartDate = ev.StartDate,
+                    Title = ev.Title,
+                    EndDate = ev.EndDate,
+                    City = ev.City,
+                    StreetAddress = ev.StreetAddress,
+                    IsPublic = ev.IsPublic,
+                    OwnerId = notification.ReceiverId,
+                    Description = ev.Description
+                });
+            }
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        // POST: api/Notifications/invite?eventId=a&receiverId=b
+        /// <summary>
+        /// Send invite notification with specified id
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("invite")]
+        [Authorize]
+        public async Task<ActionResult> SendInviteNotification(int eventId, string receiverId)
+        {
+            Event ev = await _context.Events.FirstOrDefaultAsync(e => e.Id == eventId);
+            if (ev == null)
+            {
+                return BadRequest();
+            }
+
+            var userId = GetUserId();
+            if (userId != ev.OwnerId)
+            {
+                return Unauthorized();
+            }
+
+            await _context.Notifications.AddAsync(new Notification()
+            {
+                IsDismissed = false,
+                MessageType = 0, // invited
+                SenderId = userId,
+                ReceiverId = receiverId,
+                EventId = eventId
+            });
+            
+            await _context.UsersEvents.AddAsync(new UsersEvents()
+            {
+                EventId = eventId,
+                UserId = receiverId,
+                Status = 0 // unknown
+            });
+
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
         private bool NotificationExists(int id)
         {
             return _context.Notifications.Any(n => n.Id == id);
         }
-
     }
 }

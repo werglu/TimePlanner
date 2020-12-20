@@ -25,7 +25,7 @@ export class DefinedPlacesComponent implements OnInit {
   }
 
   getPlaces() {
-    this.definedPlacesService.getAllPlaces(this.userId).subscribe((places) => {
+    this.definedPlacesService.getAllPlaces().subscribe((places) => {
       this.gridData = places;
     });
   }

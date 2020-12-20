@@ -58,7 +58,7 @@ export class ToDoListComponent implements OnInit {
 
   getCategories() {
     this.listCategoriesService.getAllListCategories().subscribe(lc => {
-      var allCategory = lc.find(c => c.ownerId == this.userId && c.category == "All");
+      var allCategory = lc.find(c => c.category == "All");
       if (isNullOrUndefined(allCategory)) {
         // add 'All' category if not exist for current user
         this.listCategoriesService.addCategory(this.getAllCategory()).subscribe(() => this.getAllCategoriesPerUser());
@@ -71,7 +71,7 @@ export class ToDoListComponent implements OnInit {
   }
 
   getAllCategoriesPerUser() {
-    this.listCategoriesService.getAllListCategoriesPerUser(this.userId).subscribe((c) => {     
+    this.listCategoriesService.getAllListCategories().subscribe((c) => {
       c.forEach(cc => {
         if (cc.category == 'All') {
           this.allCategoryId = cc.id;
@@ -173,14 +173,14 @@ export class ToDoListComponent implements OnInit {
   }
 
   findDates() {
-    this.planningService.findDates(this.mySelection, true, this.userId).subscribe(taskAssignmentPropositions => {
+    this.planningService.findDates(this.mySelection, true).subscribe(taskAssignmentPropositions => {
       this.foundDates = taskAssignmentPropositions;
       this.findDatesModalVisible = true;
     });
   }
 
   findDatesRerun(currentWeek: boolean) {
-    this.planningService.findDates(this.mySelection, currentWeek, this.userId).subscribe(taskAssignmentPropositions => {
+    this.planningService.findDates(this.mySelection, currentWeek).subscribe(taskAssignmentPropositions => {
       this.foundDates = taskAssignmentPropositions;
     });
   }

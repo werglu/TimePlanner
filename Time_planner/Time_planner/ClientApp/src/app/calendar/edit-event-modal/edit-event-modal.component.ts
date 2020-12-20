@@ -71,7 +71,7 @@ export class EditEventModalComponent implements OnInit {
     this.userId = authResp.userID;
 
     if (this.editedEvent.id != null) {
-      this.eventsService.getEvent(this.userId, Number(this.editedEvent.id)).subscribe((event) => {
+      this.eventsService.getEvent(Number(this.editedEvent.id)).subscribe((event) => {
         this.currentEvent = event;
         this.isPublic = event.isPublic;
         this.onChangeVisibility.emit(this.isPublic);
@@ -86,7 +86,7 @@ export class EditEventModalComponent implements OnInit {
       ownerId: this.userId,
     });
 
-    this.definedPlacesService.getAllPlaces(this.userId).subscribe((places) => {
+    this.definedPlacesService.getAllPlaces().subscribe((places) => {
       places.forEach((p) => this.placesList.push(p));
     })
   }
@@ -203,9 +203,8 @@ export class EditEventModalComponent implements OnInit {
   }
 
   sendInvitation(friend: Friend) {
-    this.notificationService.addNotification(this.getNotificationToSend(friend.FacebookId.toString(), +this.editedEvent.id)).subscribe();
-    // add user event with unknown status to know that invitation has been sent
-    this.userEventsService.addUserEvent(this.getUserEvent(+this.editedEvent.id, 0, friend.FacebookId.toString())).subscribe(() => {
+    // todo: do this on save
+    this.notificationService.sendInviteNotification(+this.editedEvent.id, friend.FacebookId.toString()).subscribe(() => {
       this.invited.push({
         FacebookId: friend.FacebookId,
         name: friend.name,

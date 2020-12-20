@@ -12,9 +12,9 @@ export class DefinedPlacesService {
   constructor(public http: HttpClient) {
   }
 
-  getAllPlaces(userId: string): Observable<DefinedPlace[]> {
+  getAllPlaces(): Observable<DefinedPlace[]> {
     var baseUrl: string = environment.apiBaseUrl;
-    return this.http.get<DefinedPlace[]>(baseUrl + 'api/Places/' + userId);
+    return this.http.get<DefinedPlace[]>(baseUrl + 'api/Places');
   }
 
   deletePlace(id: number): Observable<DefinedPlace> {

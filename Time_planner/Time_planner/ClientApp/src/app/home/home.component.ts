@@ -142,7 +142,7 @@ export class HomeComponent {
     });
 
     // get tasks
-    this.listCategoriesService.getAllListCategoriesPerUser(this.userId).subscribe((categories) => {
+    this.listCategoriesService.getAllListCategories().subscribe((categories) => {
       categories.forEach(category => this.userTasksCategoriesIds.push(category.id)); // get all user's categories
 
       this.tasksService.getTasks().subscribe((tasks) => {
@@ -159,7 +159,7 @@ export class HomeComponent {
       });
     });
 
-    this.planningService.findPlacesOrder(this.userId).subscribe(result => {
+    this.planningService.findPlacesOrder().subscribe(result => {
       this.eventPoints = [];
       this.taskPoints = [];
       this.assignedPoints = [];

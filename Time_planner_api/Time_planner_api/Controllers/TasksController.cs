@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace Time_planner_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TasksController : ControllerBase
+    public class TasksController : BaseController
     {
         private readonly DatabaseContext _context;
 
@@ -24,16 +25,26 @@ namespace Time_planner_api.Controllers
 
         // GET: api/Tasks
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.Task>>> GetTasks()
         {
-            return await _context.Tasks.ToListAsync();
+            var userId = GetUserId();
+            var categories = await _context.ListCategories.Where(c => c.OwnerId == userId).Select(cc => cc.Id).ToListAsync();
+            return await _context.Tasks.Where(t => categories.Contains(t.CategoryId)).ToListAsync();
         }
 
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Models.Task>> GetTask(int id)
         {
             var task = await _context.Tasks.FindAsync(id);
+            var category = _context.ListCategories.Where(c => c.Id == task.CategoryId).Single<Models.ListCategory>();
+
+            if (GetUserId() != category.OwnerId)
+            {
+                return Unauthorized();
+            }
 
             if (task == null)
             {
@@ -44,9 +55,27 @@ namespace Time_planner_api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult> PutTask([FromRoute]int id, Models.Task task)
         {
             Models.Task newTask = _context.Tasks.Where(t => t.Id == id).Single<Models.Task>();
+
+            {
+                var oldCategory = await _context.ListCategories.FirstOrDefaultAsync(c => c.Id == task.CategoryId);
+                var newCategory = await _context.ListCategories.FirstOrDefaultAsync(c => c.Id == newTask.CategoryId);
+                if (oldCategory == null || newCategory == null)
+                {
+                    return BadRequest();
+                }
+                var userId = GetUserId();
+                if (userId != newCategory.OwnerId || userId != oldCategory.OwnerId)
+                {
+                    return Unauthorized();
+                }
+                _context.Entry(oldCategory).State = EntityState.Detached;
+                _context.Entry(newCategory).State = EntityState.Detached;
+            }
+
             newTask.Id = task.Id;
             newTask.IsDone = task.IsDone;
             newTask.Title = task.Title;
@@ -89,8 +118,15 @@ namespace Time_planner_api.Controllers
 
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Models.Task>> PostTask(Models.Task task)
         {
+            var category = _context.ListCategories.Where(c => c.Id == task.CategoryId).Single<Models.ListCategory>();
+            if (GetUserId() != category.OwnerId)
+            {
+                return Unauthorized();
+            }
+
             await _context.Tasks.AddAsync(new Models.Task()
             {
                 Title = task.Title,
@@ -134,12 +170,18 @@ namespace Time_planner_api.Controllers
 
         // DELETE: api/Tasks/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<Models.Task>> DeleteTask([FromRoute] int id)
         {
             var task = await _context.Tasks.FindAsync(id);
             if (task == null)
             {
                 return NotFound();
+            }
+
+            if (GetUserId() != task.Category.OwnerId)
+            {
+                return Unauthorized();
             }
 
             _context.Tasks.Remove(task);

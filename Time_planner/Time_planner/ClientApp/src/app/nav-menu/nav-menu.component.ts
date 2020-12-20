@@ -137,7 +137,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   getNotifications() {
 
-    this.notificationsService.getNotifications(this.userId).subscribe(n => {
+    this.notificationsService.getNotifications().subscribe(n => {
       if (n.length == 0) {
         this.noNotifications = true;
       }

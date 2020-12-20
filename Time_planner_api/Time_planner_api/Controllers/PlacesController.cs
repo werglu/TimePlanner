@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Time_planner_api.Models;
@@ -12,7 +13,7 @@ namespace Time_planner_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlacesController : ControllerBase
+    public class PlacesController : BaseController
     {
         private readonly DatabaseContext _context;
 
@@ -21,15 +22,17 @@ namespace Time_planner_api.Controllers
             _context = context;
         }
 
-        // GET api/Places/5
+        // GET api/Places
         /// <summary>
         /// Return all defined places by specific user
         /// </summary>
-        /// <param name="userId">user's id</param>
         /// <returns>list of places</returns>
-        [HttpGet("{userId}")]
-        public async Task<ActionResult<IEnumerable<Place>>> Get(string userId)
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Place>>> Get()
         {
+            var userId = GetUserId();
+
             if (!UserExists(userId))
                 return NotFound();
 
@@ -43,10 +46,16 @@ namespace Time_planner_api.Controllers
         /// <param name="place"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> PostPlace(Place place)
         {
             if (!UserExists(place.OwnerId))
                 return NotFound();
+
+            if (GetUserId() != place.OwnerId)
+            {
+                return Unauthorized();
+            }
 
             await _context.Places.AddAsync(new Place()
             {
@@ -93,9 +102,15 @@ namespace Time_planner_api.Controllers
         /// <param name="newPlace">New object of place</param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult> PutPlace([FromRoute]int id, Place newPlace)
         {
             Place place = _context.Places.Where(p => p.Id == id).Single<Place>();
+
+            if (GetUserId() != place.OwnerId || newPlace.OwnerId != place.OwnerId)
+            {
+                return Unauthorized();
+            }
 
             place.Name = newPlace.Name;
             place.City = newPlace.City;
@@ -124,19 +139,25 @@ namespace Time_planner_api.Controllers
         }
 
 
-        // DELETE: api/Events/5
+        // DELETE: api/Places/5
         /// <summary>
         /// Delete defined place
         /// </summary>
         /// <param name="id">Place id</param>
         /// <returns>Deleted place</returns>
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<Place>> DeletePlace([FromRoute] int id)
         {
             var place = await _context.Places.FindAsync(id);
             if (place == null)
             {
                 return NotFound();
+            }
+
+            if (GetUserId() != place.OwnerId)
+            {
+                return Unauthorized();
             }
 
             _context.Places.Remove(place);

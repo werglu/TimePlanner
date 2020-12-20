@@ -80,7 +80,7 @@ export class AddEventModalComponent implements OnInit, AfterViewInit {
       ownerId: this.userId,
     });
 
-    this.definedPlacesService.getAllPlaces(this.userId).subscribe((places) => {
+    this.definedPlacesService.getAllPlaces().subscribe((places) => {
       places.forEach((p) => this.placesList.push(p));
     })
   }
@@ -110,35 +110,13 @@ export class AddEventModalComponent implements OnInit, AfterViewInit {
       description: (<HTMLInputElement>document.getElementById('description')).value
     };
   }
-
-  sendInvitations(eventId: number) {
-    this.invitedFriendsIds.forEach(friendId => {
-      this.userEventsService.addUserEvent({
-        id: 1,
-        eventId: eventId,
-        userId: friendId,
-        status: Status.Unknow,
-      }).subscribe();
-      this.notificationService.addNotification(this.getNotificationToSend(friendId, eventId, 1)).subscribe();
-    });
-  }
   
   onSubmit() {
     this.validateAllFormControls(this.editEventForm);
     if (this.editEventForm.valid && !this.startDateInvalid() && !this.endDateInvalid() && !this.dateInvalid()) {
       var event = this.getFormValue();
-      this.eventsService.addEvent(event).subscribe(() => {
+      this.eventsService.addEvent(event, this.invitedFriendsIds).subscribe(() => {
         this.onSave.emit(event);
-        this.eventsService.getAllEvents(this.userId).subscribe((events) => {
-          var eventId = events.sort((e1, e2) => e2.id - e1.id)[0].id; // get new event id
-          this.userEventsService.addUserEvent({
-            id: 1,
-            eventId: eventId,
-            userId: this.userId,
-            status: Status.Owner,
-          }).subscribe();
-          this.sendInvitations(eventId);
-        });  
       });
     }
     else {
@@ -210,18 +188,6 @@ export class AddEventModalComponent implements OnInit, AfterViewInit {
   changeVisibility() {
     this.isPublic = !this.isPublic;
     this.onChangeVisibility.emit(this.isPublic);
-  }
-
-  getNotificationToSend(friendId: string, eventId: number, id: number): Notification {
-    return {
-      id: id,
-      eventId: eventId,
-      event: null,
-      senderId: this.userId,
-      receiverId: friendId,
-      isDismissed: false,
-      messageType: 0
-    }
   }
 
   sendInvitation(friend: Friend) {

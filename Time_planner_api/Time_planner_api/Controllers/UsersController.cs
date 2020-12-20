@@ -33,39 +33,9 @@ namespace Time_planner_api.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        // GET: api/Users
-        /// <summary>
-        /// Get all users from database
-        /// </summary>
-        /// <returns>Collection of User objects</returns>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-        {
-            return await _context.Users.ToListAsync();
-        }
-
-        // GET:  api/Users/103609784907565
-        /// <summary>
-        /// Get user of specified id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>User</returns>
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser([FromRoute]string id)
-        {
-            var user = await _context.Users.FindAsync(id);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return user;
-        }
-
         // PUT: api/Users/5
         /// <summary>
-        /// Add user to databese if user not exists
+        /// Add user to database if user not exists
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
@@ -137,41 +107,6 @@ namespace Time_planner_api.Controllers
             {
                 return null;
             }
-        }
-
-        // DELETE: api/Users/10/62
-        /// <summary>
-        /// Delete user from database
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        [HttpDelete("{userId}")]
-        public async Task<ActionResult<User>> DeleteUser([FromRoute] string userId)
-        {
-            if (!UserExists(userId))
-            {
-                return NoContent();
-            }
-
-            var user = await _context.Users.FindAsync(userId);
-            try
-            {
-                _context.Users.Remove(user);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (UserExists(user.FacebookId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return user;
         }
     }
 }
