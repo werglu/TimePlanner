@@ -64,7 +64,7 @@ export class EventDetailsModalComponent implements OnInit {
     this.userId = authResp.userID;
 
     if (this.editedEvent.id != null) {
-      this.eventsService.getEvent(this.userId, Number(this.editedEvent.id)).subscribe((event) => {
+      this.eventsService.getEvent(Number(this.editedEvent.id)).subscribe((event) => {
         this.currentEvent = event;
         this.isPublic = event.isPublic;
       });

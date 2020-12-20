@@ -14,9 +14,9 @@ export class UserService {
     private fb: FacebookService) {
   }
 
-  public putUser(id: string): Observable<any> {
+  public putUser(token: string): Observable<any> {
     let baseUrl: string = environment.apiBaseUrl;
-    return this.http.post(baseUrl + 'api/Users/' + id, {});
+    return this.http.post(baseUrl + 'api/Users/' + token, {});
   }
 
   public getUserFriends(): Observable<Friend[]> {

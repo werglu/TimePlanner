@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ namespace Time_planner_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ListCategoriesController : ControllerBase
+    public class ListCategoriesController : BaseController
     {
 
         private readonly DatabaseContext _context;
@@ -27,20 +28,10 @@ namespace Time_planner_api.Controllers
         /// </summary>
         /// <returns>Collection of ListCategory objects</returns>
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ListCategory>>> GetCategories()
         {
-            return await _context.ListCategories.ToListAsync();
-        }
-
-        // GET: api/ListCategories/perUser
-        /// <summary>
-        /// Get all categories per user
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns>Collection of ListCategory objects</returns>
-        [HttpGet("perUser/{userId}")]
-        public async Task<ActionResult<IEnumerable<ListCategory>>> GetCategoriesPerUser(string userId)
-        {
+            var userId = GetUserId();
             return await _context.ListCategories.Where(lc => lc.OwnerId == userId).ToListAsync();
         }
 
@@ -50,8 +41,14 @@ namespace Time_planner_api.Controllers
         /// </summary>
         /// <returns>Posted list category</returns>
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<ListCategory>> PostCategory(ListCategory listCategory)
         {
+            if (GetUserId() != listCategory.OwnerId)
+            {
+                return Unauthorized();
+            }
+
             await _context.ListCategories.AddAsync(new ListCategory()
             {
                 Category = listCategory.Category,
@@ -74,7 +71,7 @@ namespace Time_planner_api.Controllers
                 }
             }
 
-            return CreatedAtAction("GetCategory", new { id = listCategory.Id }, listCategory);
+            return Ok();
         }
 
         private bool CategoryExists(int id)

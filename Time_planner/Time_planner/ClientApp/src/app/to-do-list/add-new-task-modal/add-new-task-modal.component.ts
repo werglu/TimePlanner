@@ -51,7 +51,7 @@ export class AddNewTaskModalComponent implements OnInit {
   }
 
   getCategories() {
-    this.listCategoriesService.getAllListCategoriesPerUser(this.userId).subscribe(lc => {
+    this.listCategoriesService.getAllListCategories().subscribe(lc => {
       lc.forEach(c => this.listCategories.push(c));
       this.currentCategory = this.listCategories[0]; // set default value
     });

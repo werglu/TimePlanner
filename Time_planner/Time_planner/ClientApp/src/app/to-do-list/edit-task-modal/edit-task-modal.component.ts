@@ -165,7 +165,7 @@ export class EditTaskModalComponent implements OnInit {
   }
 
   getCategories() {
-    this.listCategoriesService.getAllListCategoriesPerUser(this.userId).subscribe(lc => {
+    this.listCategoriesService.getAllListCategories().subscribe(lc => {
       lc.forEach(c => this.listCategories.push(c));
       if (this.currentTask != null) {
         this.currentCategory = (this.listCategories.filter(c => c.id == this.currentTask.categoryId))[0];

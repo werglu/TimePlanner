@@ -8,32 +8,32 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class EventsService {
+  baseUrl: string;
 
   constructor(public http: HttpClient) {
+    this.baseUrl = environment.apiBaseUrl;
   }
 
   getAllEvents(userId: string): Observable<Events[]> {
-    var baseUrl: string = environment.apiBaseUrl;
-    return this.http.get<Events[]>(baseUrl + 'api/Events/' + userId);
+    return this.http.get<Events[]>(this.baseUrl + 'api/Events/user?id=' + userId);
   }
 
-  getEvent(userId: string, id: number): Observable<Events> {
-    var baseUrl: string = environment.apiBaseUrl;
-    return this.http.get<Events>(baseUrl + 'api/Events/' + userId + '/' + id.toString());
+  getEvent(id: number): Observable<Events> {
+    return this.http.get<Events>(this.baseUrl + 'api/Events/event?id=' + id.toString());
   }
 
   deleteEvent(id: number): Observable<Events> {
-    var baseUrl: string = environment.apiBaseUrl;
-    return this.http.delete<Events>(baseUrl + 'api/Events/' + id.toString());
+    return this.http.delete<Events>(this.baseUrl + 'api/Events/' + id.toString());
   }
 
   public editEvent(id: number, event: Events): Observable<Events> {
-    var baseUrl: string = environment.apiBaseUrl;
-    return this.http.put<Events>(baseUrl + 'api/Events/' + id.toString(), event);
+    return this.http.put<Events>(this.baseUrl + 'api/Events/' + id.toString(), event);
   }
 
-  public addEvent(event: Events): Observable<Events> {
-    var baseUrl: string = environment.apiBaseUrl;
-    return this.http.post<Events>(baseUrl + 'api/Events/', event);
+  public addEvent(event: Events, friendIds: string[]): Observable<Events> {
+    return this.http.post<Events>(this.baseUrl + 'api/Events/', {
+      event: event,
+      friendIds: friendIds
+    });
   }
 }

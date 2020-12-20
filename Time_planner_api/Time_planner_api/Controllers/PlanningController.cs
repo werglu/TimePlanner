@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ namespace Time_planner_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlanningController : ControllerBase
+    public class PlanningController : BaseController
     {
 
         private readonly DatabaseContext _context;
@@ -22,11 +23,19 @@ namespace Time_planner_api.Controllers
             _context = context;
         }
 
-        // PUT: api/Planning/weekplan?currentWeek=a&userId=b&year=c&month=d&day=e
+        // PUT: api/Planning/weekplan?currentWeek=a&year=b&month=c&day=d
         [HttpPut]
         [Route("weekplan")]
-        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentProposition>>> GetWeekPlannedTasks(List<int> taskIds, bool currentWeek, string userId, int year, int month, int day, double startMinutes = 420.0, double endMinutes = 1320.0)
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Models.TaskAssignmentProposition>>> GetWeekPlannedTasks(List<int> taskIds, bool currentWeek, int year, int month, int day, double startMinutes = 420.0, double endMinutes = 1320.0)
         {
+            var userId = GetUserId();
+            var categoryIds = await _context.Tasks.Where(task => taskIds.Contains(task.Id)).Select(t => t.CategoryId).ToListAsync();
+            var categories = await _context.ListCategories.Where(c => categoryIds.Contains(c.Id)).ToListAsync();
+            if (categories.Any(c => c.OwnerId != userId))
+            {
+                return Unauthorized();
+            }
             var date = new DateTime(year, month, day);
             var events = new List<Event>[7];
             for (int i = 0; i < events.Length; i++)
@@ -118,11 +127,21 @@ namespace Time_planner_api.Controllers
         // PUT: api/Planning/saveDates?currentWeek=a&year=b&month=c&day=d
         [HttpPut]
         [Route("saveDates")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.TaskAssignmentSave>>> SaveDates(List<TaskAssignmentSave> tasksToSave, bool currentWeek, int year, int month, int day)
         {
             if (tasksToSave == null)
             {
                 return NoContent();
+            }
+
+            var userId = GetUserId();
+            var taskIds = tasksToSave.Select(t => t.TaskId);         
+            var categoryIds = await _context.Tasks.Where(task => taskIds.Contains(task.Id)).Select(t => t.CategoryId).ToListAsync();
+            var categories = await _context.ListCategories.Where(c => categoryIds.Contains(c.Id)).ToListAsync();
+            if (categories.Any(c => c.OwnerId != userId))
+            {
+                return Unauthorized();
             }
 
             var date = new DateTime(year, month, day);
@@ -160,11 +179,13 @@ namespace Time_planner_api.Controllers
             return NoContent();
         }
 
-        // GET: api/Planning/dayplan?userId=a&year=b&month=c&day=d
+        // GET: api/Planning/dayplan?year=a&month=b&day=c
         [HttpGet]
         [Route("dayplan")]
-        public async Task<ActionResult<IEnumerable<CalendarItem>>> GetDayPlannedTasks(string userId, int year, int month, int day, double startMinutes = 420.0, double endMinutes = 1320.0)
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<CalendarItem>>> GetDayPlannedTasks(int year, int month, int day, double startMinutes = 420.0, double endMinutes = 1320.0)
         {
+            var userId = GetUserId();
             var events = await _context.Events.Where(x => x.OwnerId == userId).ToListAsync();
             var tasks = await _context.Tasks.Where(y => y.Category.OwnerId == userId).ToListAsync();
             var user = await _context.Users.FirstOrDefaultAsync(u => u.FacebookId == userId);
@@ -178,11 +199,13 @@ namespace Time_planner_api.Controllers
             return DayPlanHelper.FindShortestRoute(events, tasks, date, startMinutes, endMinutes);
         }
 
-        // GET: api/Planning/tasksForToday?userId=a
+        // GET: api/Planning/tasksForToday
         [HttpGet]
         [Route("tasksForToday")]
-        public async Task<ActionResult<IEnumerable<Models.Task>>> FindTasksForToday(string userId)
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Models.Task>>> FindTasksForToday()
         {
+            var userId = GetUserId();
             return await _context.Tasks.Where(y => y.Category.OwnerId == userId && !y.IsDone &&
                                               (!y.Date0.HasValue || y.Date0.Value.Year <= 1970 ||
                                                !y.Date1.HasValue || y.Date1.Value.Year <= 1970 ||
@@ -196,11 +219,20 @@ namespace Time_planner_api.Controllers
         // PUT: api/Planning/tasksForToday?year=b&month=c&day=d
         [HttpPut]
         [Route("tasksForToday")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<int>>> SaveTasksForToday(List<int> taskIds, int year, int month, int day)
         {
             if (taskIds == null)
             {
                 return NoContent();
+            }
+
+            var userId = GetUserId();
+            var categoryIds = await _context.Tasks.Where(task => taskIds.Contains(task.Id)).Select(t => t.CategoryId).ToListAsync();
+            var categories = await _context.ListCategories.Where(c => categoryIds.Contains(c.Id)).ToListAsync();
+            if (categories.Any(c => c.OwnerId != userId))
+            {
+                return Unauthorized();
             }
 
             var date = new DateTime(year, month, day);
@@ -261,6 +293,7 @@ namespace Time_planner_api.Controllers
         // PUT: api/Planning/commonDate?userIds=a&start=b&end=c
         [HttpPut]
         [Route("commonDate")]
+        [Authorize]
         public async Task<ActionResult<CommonDateOutput>> FindCommonDate(CommonDateInput input, double startMinutes = 420.0, double endMinutes = 1320.0)
         {
             var events = new List<Event>[input.UserIds.Length];

@@ -19,9 +19,9 @@ export class PlanningService {
     this.baseUrl = environment.apiBaseUrl + 'api/Planning/';
   }
 
-  findDates(ids: number[], currentWeek: boolean, userId: string): Observable<TaskAssignmentProposition[]> {
+  findDates(ids: number[], currentWeek: boolean): Observable<TaskAssignmentProposition[]> {
     var date = new Date();
-    return this.http.put<TaskAssignmentProposition[]>(this.baseUrl + 'weekplan?currentWeek=' + currentWeek + '&userId=' + userId + '&year=' + date.getFullYear() + '&month=' + (date.getMonth() + 1) + '&day=' + date.getDate(), ids);
+    return this.http.put<TaskAssignmentProposition[]>(this.baseUrl + 'weekplan?currentWeek=' + currentWeek + '&year=' + date.getFullYear() + '&month=' + (date.getMonth() + 1) + '&day=' + date.getDate(), ids);
   }
 
   saveDates(taskAssignemntsSave: TaskAssignmentSave[], currentWeek: boolean): Observable<TaskAssignmentSave[]> {
@@ -29,13 +29,13 @@ export class PlanningService {
     return this.http.put<TaskAssignmentSave[]>(this.baseUrl + 'saveDates?currentWeek=' + currentWeek + '&year=' + date.getFullYear() + '&month=' + (date.getMonth() + 1) + '&day=' + date.getDate(), taskAssignemntsSave);
   }
 
-  findPlacesOrder(userId: string): Observable<CalendarItem[]> {
+  findPlacesOrder(): Observable<CalendarItem[]> {
     var date = new Date();
-    return this.http.get<CalendarItem[]>(this.baseUrl + 'dayplan?userId=' + userId + '&year=' + date.getFullYear() + '&month=' + (date.getMonth() + 1) + '&day=' + date.getDate());
+    return this.http.get<CalendarItem[]>(this.baseUrl + 'dayplan?year=' + date.getFullYear() + '&month=' + (date.getMonth() + 1) + '&day=' + date.getDate());
   }
 
-  findTasksForToday(userId: string): Observable<Task[]> {
-    return this.http.get<Task[]>(this.baseUrl + 'tasksForToday?userId=' + userId);
+  findTasksForToday(): Observable<Task[]> {
+    return this.http.get<Task[]>(this.baseUrl + 'tasksForToday');
   }
 
   saveTasksForToday(taskIds: number[]): Observable<number[]> {

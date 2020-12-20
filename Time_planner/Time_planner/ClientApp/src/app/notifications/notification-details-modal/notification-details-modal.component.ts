@@ -35,7 +35,7 @@ export class NotificationDetailsModalComponent implements OnInit {
   ngOnInit(): void {
     this.messageType = this.notificationDetails.messageType;
     if (this.notificationDetails.eventId != null) {
-      this.eventsService.getEvent(this.notificationDetails.receiverId, this.notificationDetails.eventId).subscribe(ne => this.notificationEvent = ne);
+      this.eventsService.getEvent(this.notificationDetails.eventId).subscribe(ne => this.notificationEvent = ne);
     }
   } 
 
@@ -43,33 +43,14 @@ export class NotificationDetailsModalComponent implements OnInit {
     this.onCancel.emit();
   }
 
-  getNotificationToAdd(accepted: boolean): Notification {
-    return {
-      id: 1,
-      eventId: this.notificationDetails.eventId,
-      event: this.notificationDetails.event,
-      senderId: this.notificationDetails.receiverId,
-      receiverId: this.notificationDetails.senderId,
-      isDismissed: false,
-      messageType: accepted ? 1 : 2
-    }
-  }
-
   save(accepted: boolean) {
     if (accepted) {
-      this.notificationService.addNotification(this.getNotificationToAdd(accepted)).subscribe(() => {
-        this.eventsService.getEvent(this.notificationDetails.senderId, this.notificationDetails.eventId).subscribe((event) => {
-          this.eventsService.addEvent(this.getEvent(event, this.notificationDetails.receiverId)).subscribe();
-          this.userEventsService.updateUserEventStatus(this.getUserEvent(this.notificationDetails.eventId, 1)).subscribe(); // accept event
-        })
-        this.onSave.emit(this.notificationDetails)
+      this.notificationService.acceptNotification(this.notificationDetails.id).subscribe(() => {
+        this.onSave.emit(this.notificationDetails);
       });
-
-    }
-    else {
-      this.notificationService.addNotification(this.getNotificationToAdd(accepted)).subscribe(() => {
-        this.onSave.emit(this.notificationDetails)
-        this.userEventsService.updateUserEventStatus(this.getUserEvent(this.notificationDetails.eventId, 2)).subscribe(); // reject event
+    } else {
+      this.notificationService.rejectNotification(this.notificationDetails.id).subscribe(() => {
+        this.onSave.emit(this.notificationDetails);
       });
     }
   }
@@ -80,23 +61,6 @@ export class NotificationDetailsModalComponent implements OnInit {
       return "";
     }
     return friend.name;
-  }
-
-  getEvent(event: Events, ownerId: string): Events {
-    return {
-      endDate: event.endDate,
-      city: event.city,
-      startDate: event.startDate,
-      streetAddress: event.streetAddress,
-      id: event.id,
-      isPublic: event.isPublic,
-      latitude: event.latitude,
-      longitude: event.longitude,
-      owner: null,
-      ownerId: ownerId,
-      title: event.title,
-      description: event.description
-    }
   }
 
   getUserEvent(eventId: number, status: number): UsersEvents {

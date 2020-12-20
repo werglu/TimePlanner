@@ -35,7 +35,7 @@ export class FindToDoModalComponent implements OnInit {
   }
 
   getTasksForToday() {
-    this.planningService.findTasksForToday(this.userId).subscribe(tasks => {
+    this.planningService.findTasksForToday().subscribe(tasks => {
       this.gridData = tasks;
     });
   }

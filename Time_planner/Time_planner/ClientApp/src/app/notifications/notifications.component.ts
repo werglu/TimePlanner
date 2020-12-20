@@ -37,7 +37,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   getNotifications() {
-    this.notificationsService.getNotifications(this.userId).subscribe(notifications => {
+    this.notificationsService.getNotifications().subscribe(notifications => {
       this.gridData = [];
       notifications.forEach(n => this.gridData.push(n));
       this.checkIfThereAreAnyNotifications();
@@ -54,7 +54,7 @@ export class NotificationsComponent implements OnInit {
 
   dismiss(dataItem: any) {
     dataItem.isDismissed = true;
-    this.notificationsService.editNotification(dataItem.id, dataItem).subscribe(() => this.getNotifications());
+    this.notificationsService.dismissNotification(dataItem.id).subscribe(() => this.getNotifications());
   }
 
   dismissAll() {

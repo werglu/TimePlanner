@@ -9,27 +9,29 @@ import { Notification } from './notification';
 })
 
 export class NotificationsService {
+  baseUrl: string;
 
   constructor(public http: HttpClient) {
+    this.baseUrl = environment.apiBaseUrl;
   }
 
-  getNotifications(userId: string): Observable<Notification[]> {
-    var baseUrl: string = environment.apiBaseUrl;
-    return this.http.get<Notification[]>(baseUrl + 'api/Notifications/' + userId);
+  getNotifications(): Observable<Notification[]> {
+    return this.http.get<Notification[]>(this.baseUrl + 'api/Notifications/');
   }
 
-  editNotification(id: number, notification: Notification): Observable<Notification> {
-    var baseUrl: string = environment.apiBaseUrl;
-    return this.http.put<Notification>(baseUrl + 'api/Notifications/' + id.toString(), notification);
+  dismissNotification(id: number): Observable<Notification> {
+    return this.http.post<Notification>(this.baseUrl + 'api/Notifications/dismiss?id=' + id.toString(), {});
   }
 
-  addNotification(notification: Notification): Observable<Notification> {
-    var baseUrl: string = environment.apiBaseUrl;
-    return this.http.post<Notification>(baseUrl + 'api/Notifications/add', notification);
+  acceptNotification(id: number): Observable<Notification> {
+    return this.http.post<Notification>(this.baseUrl + 'api/Notifications/accept?id=' + id.toString(), {});
   }
 
-  deleteAllNotificationWithSpecifiedEventId(eventId: number): Observable<Notification> {
-    var baseUrl: string = environment.apiBaseUrl;
-    return this.http.delete<Notification>(baseUrl + 'api/Notifications/deleteAll/' + eventId.toString());
+  rejectNotification(id: number): Observable<Notification> {
+    return this.http.post<Notification>(this.baseUrl + 'api/Notifications/reject?id=' + id.toString(), {});
+  }
+
+  sendInviteNotification(eventId: number, receiverId: string): Observable<Notification> {
+    return this.http.post<Notification>(this.baseUrl + 'api/Notifications/invite?eventId=' + eventId.toString() + '&receiverId=' + receiverId, {});
   }
 }

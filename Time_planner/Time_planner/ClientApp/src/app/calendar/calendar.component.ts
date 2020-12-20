@@ -88,7 +88,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   getTasks() {
-    this.listCategoriesService.getAllListCategoriesPerUser(this.userId).subscribe((categories) => {
+    this.listCategoriesService.getAllListCategories().subscribe((categories) => {
       categories.forEach(category => this.userTasksCateoriesIds.push(category.id));
       // get all tasks specified per user
       this.tasksService.getTasks().subscribe(tasks => {
@@ -275,14 +275,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       });
     }
     else {
-      //first need to remove all notifications with this event
-      this.notificationsService.deleteAllNotificationWithSpecifiedEventId(+event.id).subscribe(() => {
-        this.eventsService.deleteEvent(+event.id).subscribe(response => {
-          this.closeOpenEventModal();
-          this.events = this.events.filter(e => e.id !== event.id);
-          this.activeDayIsOpen = false;
-          this.refresh.next();
-        });
+      this.eventsService.deleteEvent(+event.id).subscribe(response => {
+        this.closeOpenEventModal();
+        this.events = this.events.filter(e => e.id !== event.id);
+        this.activeDayIsOpen = false;
+        this.refresh.next();
       });
     }
   }
@@ -322,7 +319,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       });
     }
     else {
-      this.eventsService.getEvent(this.userId, Number(event.id)).subscribe((e) => {
+      this.eventsService.getEvent(Number(event.id)).subscribe((e) => {
         e.startDate = new Date(newStart);
         e.endDate = new Date(newEnd);
         this.eventsService.editEvent(+event.id, e).subscribe(() => {

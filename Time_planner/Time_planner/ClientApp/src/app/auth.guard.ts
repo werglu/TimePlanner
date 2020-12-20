@@ -1,6 +1,7 @@
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from "@angular/router";
 import { Injectable, OnInit} from "@angular/core";
 import { FacebookService, InitParams, LoginStatus } from 'ngx-facebook';
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Injectable()
 export class AuthGuard implements OnInit, CanActivate {
@@ -8,7 +9,8 @@ export class AuthGuard implements OnInit, CanActivate {
   isConnected: boolean;
 
   constructor(private router: Router,
-    private fb: FacebookService) {
+    private fb: FacebookService,
+    private jwtHelper: JwtHelperService) {
   }
 
   ngOnInit() {
@@ -24,7 +26,12 @@ export class AuthGuard implements OnInit, CanActivate {
 }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    
+    const token: string = localStorage.getItem('jwt');
+    if (!token || this.jwtHelper.isTokenExpired(token)) {
+      this.router.navigate(['/access-denied']);
+      return Promise.resolve(false);
+    }
+
     return this.fb.getLoginStatus().catch((error) => {
       console.log(error);
     }).then((response: LoginStatus) => {
