@@ -28,17 +28,20 @@
                            [activeDayIsOpen]="activeDayIsOpen"
                            [refresh]="refresh"
                            (dayClicked)="dayClicked($event.day)"
-                           (eventClicked)="eventClicked($event.event)">
+                           (eventClicked)="eventClicked($event.event)"
+                           (eventTimesChanged)="eventTimesChanged($event)">
   </mwl-calendar-month-view>
   <mwl-calendar-week-view [viewDate]="viewDate"
                           *ngIf="weekView"
                           weekStartsOn="1"
                           [refresh]="refresh"
-                          [events]="events"></mwl-calendar-week-view>
+                          [events]="events"
+                          (eventTimesChanged)="eventTimesChanged($event)"></mwl-calendar-week-view>
   <mwl-calendar-day-view [viewDate]="viewDate"
                          *ngIf="dayView"
                          [refresh]="refresh"
-                         [events]="events"></mwl-calendar-day-view>
+                         [events]="events"
+                         (eventTimesChanged)="eventTimesChanged($event)"></mwl-calendar-day-view>
 
   <div style="float:right">
     <button class="btn btn-primary" (click)="openAddNewEventModal()"><i style="padding-right:7px;font-size:1.1rem" class="fa fa-plus"></i>Add new event</button>

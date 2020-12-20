@@ -148,10 +148,11 @@ export class HomeComponent {
       this.tasksService.getTasks().subscribe((tasks) => {
         this.tasks = [];
         tasks.forEach(task => {
-          if (this.isCurrentDate(task.date0) || this.isCurrentDate(task.date1)
+          if (this.userTasksCategoriesIds.indexOf(task.categoryId) >=0 && (
+            this.isCurrentDate(task.date0) || this.isCurrentDate(task.date1)
             || this.isCurrentDate(task.date2) || this.isCurrentDate(task.date3)
             || this.isCurrentDate(task.date4) || this.isCurrentDate(task.date5)
-            || this.isCurrentDate(task.date6)) {
+            || this.isCurrentDate(task.date6))) {
             this.tasks.push(task);
           }
         })
