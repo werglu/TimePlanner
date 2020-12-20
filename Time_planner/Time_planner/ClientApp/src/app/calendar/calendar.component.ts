@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { CalendarEvent, CalendarView, CalendarEventAction } from 'angular-calendar';
+import { CalendarEvent, CalendarView, CalendarEventAction, CalendarEventTimesChangedEvent } from 'angular-calendar';
 import { EventsService } from './events.service';
 import { Events } from './events';
 import { HttpClient } from '@angular/common/http';
@@ -73,6 +73,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
           start: new Date(ee.startDate),
           end: new Date(ee.endDate),
           actions: this.actions,
+          draggable: true,
           color: {
             primary: '#ff9642',
             secondary: '#ff9642'
@@ -102,6 +103,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                   start: new Date(new Date(date).setHours(0, 0)),
                   end: new Date(new Date(date).setHours(0, 30)),
                   actions: this.actions,
+                  draggable: true,
                   color: {
                     primary: '#2c786c',
                     secondary: '#2c786c'
@@ -174,6 +176,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       end: event.endDate,
       title: event.title,
       actions: this.actions,
+      draggable: true,
       color: {
         primary: '#ff9642',
         secondary: '#ff9642'
@@ -198,6 +201,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             start: new Date(date),
             end: new Date(date),
             actions: this.actions,
+            draggable: true,
             color: {
               primary: '#2c786c',
               secondary: '#ff9642'
@@ -286,4 +290,63 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   eventVisibilityChanged(event: boolean) {
     this.isPublic = event;
   }
+
+  // dragg and drop event change it's start and end dates
+  eventTimesChanged({ event, newStart, newEnd }: CalendarEventTimesChangedEvent): void {
+    if (event.meta.type == 'task') {
+      this.tasksService.getTask(+event.id).subscribe((task) => {
+        if (this.areDatesEqual(task.date0, event.start)) {
+          task.date0 = new Date(newStart);
+        }
+        else if (this.areDatesEqual(task.date1, event.start)) {
+          task.date1 = new Date(newStart);
+        }
+        else if (this.areDatesEqual(task.date2, event.start)) {
+          task.date2 = new Date(newStart);
+        }
+        else if (this.areDatesEqual(task.date3, event.start)) {
+          task.date3 = new Date(newStart);
+        }
+        else if (this.areDatesEqual(task.date4, event.start)) {
+          task.date4 = new Date(newStart);
+        }
+        else if (this.areDatesEqual(task.date5, event.start)) {
+          task.date5 = new Date(newStart);
+        }
+        else if (this.areDatesEqual(task.date6, event.start)) {
+          task.date6 = new Date(newStart);
+        }
+        this.tasksService.editTask(+event.id, task).subscribe(() => {
+          this.editTask(task);
+        });
+      });
+    }
+    else {
+      this.eventsService.getEvent(this.userId, Number(event.id)).subscribe((e) => {
+        e.startDate = new Date(newStart);
+        e.endDate = new Date(newEnd);
+        this.eventsService.editEvent(+event.id, e).subscribe(() => {
+          this.events = this.events.filter(e => e.id !== event.id);
+          this.events.push({
+            id: event.id,
+            start: newStart,
+            end: newEnd,
+            title: event.title,
+            actions: this.actions,
+            draggable: true,
+            color: {
+              primary: '#ff9642',
+              secondary: '#ff9642'
+            },
+            meta: {
+              type: 'event'
+            }
+          });
+          this.refresh.next();
+        });
+      });
+    }
+
+  }
+
 }
