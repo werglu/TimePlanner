@@ -1,5 +1,15 @@
 @import "../../colors.css";
 
+h4 {
+    color: var(--color-dark-green);
+}
+
+
+label {
+  color: var(--color-dark-green);
+}
+
+
 .btn-primary {
   background-color: var(--yellow);
 }
@@ -59,3 +69,4 @@
   width: 280px;
   font-size: large;
 }
+

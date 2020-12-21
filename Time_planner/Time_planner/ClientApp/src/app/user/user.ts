@@ -3,6 +3,7 @@ import { Events } from "../calendar/events";
 
 export interface User {
   facebookId: string;
+  theme: number;
   attendedEvents: Events[];
   ownedTaskCategories: ListCategory[];
   notifications: Notification[];

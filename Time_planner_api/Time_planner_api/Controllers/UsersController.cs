@@ -33,6 +33,51 @@ namespace Time_planner_api.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<ActionResult<User>> GetUser(string id)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
+        }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<ActionResult> PutUser([FromRoute]string id, User user)
+        {
+            User newUser = _context.Users.Where(u => u.FacebookId == id).Single();
+
+
+            newUser.FacebookId = user.FacebookId;
+            newUser.Theme = user.Theme;
+
+            _context.Entry(newUser).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
         // PUT: api/Users/5
         /// <summary>
         /// Add user to database if user not exists
@@ -55,7 +100,7 @@ namespace Time_planner_api.Controllers
             {
                 try
                 {
-                    _context.Users.Add(new User() { FacebookId = id });
+                    _context.Users.Add(new User() { FacebookId = id, Theme = 0 });
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception e)
@@ -81,7 +126,7 @@ namespace Time_planner_api.Controllers
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, id)
                 },
-                expires: DateTime.Now.AddDays(1), // todo: use validationResult.Data.ExpiresAt and add refresh token
+                expires: DateTime.Now.AddDays(100), // todo: use validationResult.Data.ExpiresAt and add refresh token
                 signingCredentials: signingCredentials);
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);

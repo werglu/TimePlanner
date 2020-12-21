@@ -1,0 +1,28 @@
+<p>Select theme:</p>
+<div>
+  <div>
+    <input type="radio" id="light" name="theme" value="light" checked>
+    <i class="fa fa-circle" style="color:#004445;margin-left:10px;"></i>
+    <i class="fa fa-circle" style="color:#76b39d;margin-left:-6px;"></i>
+    <i class="fa fa-circle" style="color:#f8b400;margin-left:-6px;"></i>
+  </div>
+
+  <div style="margin-top:15px;">
+    <input type="radio" id="mono" name="theme" value="mono">
+    <i class="fa fa-circle" style="color:#373a40;margin-left:10px;"></i>
+    <i class="fa fa-circle" style="color:#686d76;margin-left:-6px;"></i>
+    <i class="fa fa-circle" style="color: #19d3da;margin-left:-6px;"></i>
+  </div>
+
+  <div style="margin-top:15px;">
+    <input type="radio" id="red" name="theme" value="red">
+    <i class="fa fa-circle" style="color: #ff4646;margin-left: 10px;"></i>
+    <i class="fa fa-circle" style="color: #ffb396; margin-left: -6px;"></i>
+    <i class="fa fa-circle" style="color: #ff8585;margin-left:-6px;"></i>
+  </div>
+</div>
+
+<div style=" float: right">
+  <button style="margin-top:20px;margin-right:10px;opacity:0.6" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+  <button style="margin-top:20px;" class="btn btn-primary" (click)="save()">Save</button>
+</div>
