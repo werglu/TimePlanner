@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
     if (authResp != null) {
       this.userId = authResp.userID;
       if (this.userId != '') {
-        this.userService.getUser(this.userId).subscribe((user) => {
+        this.userService.getUser().subscribe((user) => {
           this.theme = user.theme;
         });
       }
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
       if (response.authResponse != null) {
         this.userId = response.authResponse.userID;
         if (this.userId != '') {
-          this.userService.getUser(this.userId).subscribe((user) => {
+          this.userService.getUser().subscribe((user) => {
             this.theme = user.theme;
           });
         }

@@ -15,14 +15,14 @@ export class UserService {
     private fb: FacebookService) {
   }
 
-  public getUser(userId: string): Observable<User> {
+  public getUser(): Observable<User> {
     let baseUrl: string = environment.apiBaseUrl;
-    return this.http.get<User>(baseUrl + 'api/Users/' + userId.toString());
+    return this.http.get<User>(baseUrl + 'api/Users');
   }
 
-  public editUser(id: string, user: User): Observable<User> {
+  public editUser(user: User): Observable<User> {
     var baseUrl: string = environment.apiBaseUrl;
-    return this.http.put<User>(baseUrl + 'api/Users/' + id, user);
+    return this.http.put<User>(baseUrl + 'api/Users', user);
   }
 
   public putUser(token: string): Observable<any> {
