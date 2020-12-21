@@ -19,7 +19,7 @@ namespace Time_planner_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
         private const string TokenValidationUrl = "https://graph.facebook.com/debug_token?input_token={0}&access_token={1}|{2}";
         private readonly DatabaseContext _context;
@@ -33,10 +33,11 @@ namespace Time_planner_api.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         [Authorize]
-        public async Task<ActionResult<User>> GetUser(string id)
+        public async Task<ActionResult<User>> GetUser()
         {
+            var id = GetUserId();
             var user = await _context.Users.FindAsync(id);
 
             if (user == null)
@@ -47,12 +48,18 @@ namespace Time_planner_api.Controllers
             return user;
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         [Authorize]
-        public async Task<ActionResult> PutUser([FromRoute]string id, User user)
+        public async Task<ActionResult> PutUser(User user)
         {
-            User newUser = _context.Users.Where(u => u.FacebookId == id).Single();
+            var id = GetUserId();
 
+            if (user.FacebookId != id)
+            {
+                return Unauthorized();
+            }
+
+            User newUser = _context.Users.Where(u => u.FacebookId == id).Single();
 
             newUser.FacebookId = user.FacebookId;
             newUser.Theme = user.Theme;

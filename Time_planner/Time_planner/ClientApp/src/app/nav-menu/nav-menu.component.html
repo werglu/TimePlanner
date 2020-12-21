@@ -67,5 +67,5 @@
   <kendo-dialog-titlebar>
     <div><span class="k-icon k-i-user"></span>User settings</div>
   </kendo-dialog-titlebar>
-  <user-settings-modal [userId]="userId" (onCancel)="closeSettings()" (onSave)="themeChanged($event)" (updateTheme)="updateTheme($event)"></user-settings-modal>
+  <user-settings-modal (onCancel)="closeSettings()" (onSave)="themeChanged($event)" (updateTheme)="updateTheme($event)"></user-settings-modal>
 </kendo-dialog>

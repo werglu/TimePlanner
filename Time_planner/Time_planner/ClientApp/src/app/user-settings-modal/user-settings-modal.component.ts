@@ -8,7 +8,6 @@ import { UserService } from '../user/user.service';
 })
 
 export class UserSettingsModalComponent implements OnInit, AfterViewInit {
-  @Input() userId: string;
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<number>();
   @Output() updateTheme = new EventEmitter<number>();
@@ -23,7 +22,7 @@ export class UserSettingsModalComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.userService.getUser(this.userId).subscribe(user => {
+    this.userService.getUser().subscribe(user => {
       this.currentTheme = user.theme;
       if (this.currentTheme == 0) {
         (<HTMLInputElement>document.getElementById('light')).checked = true;

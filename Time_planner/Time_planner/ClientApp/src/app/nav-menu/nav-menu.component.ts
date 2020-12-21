@@ -48,7 +48,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
         if (response.authResponse != null) {
           this.userId = response.authResponse.userID;
-          this.userService.getUser(this.userId).subscribe(user => {
+          this.userService.getUser().subscribe(user => {
             this.theme = user.theme;
             this.onThemeChange.emit(this.theme);
           });
@@ -123,7 +123,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         this.showPhoto = true;
         if (response.authResponse != null) {
           this.userId = response.authResponse.userID;
-          this.userService.getUser(this.userId).subscribe(user => {
+          this.userService.getUser().subscribe(user => {
             this.theme = user.theme;
             this.onThemeChange.emit(this.theme);
 
@@ -140,7 +140,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
                   name: response.name,
                   photoUrl: response.picture.data.url
                 };
-                this.userService.getUser(response.id).subscribe(user => {
+                this.userService.getUser().subscribe(user => {
                   this.theme = user.theme;
                   this.onThemeChange.emit(this.theme);
                 });
@@ -205,10 +205,10 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   themeChanged(event: number) {
     this.closeSettings();
     this.onThemeChange.emit(event);
-    this.userService.getUser(this.userId).subscribe((user) => {
+    this.userService.getUser().subscribe((user) => {
       user.theme = event;
       // update theme for user
-      this.userService.editUser(user.facebookId, user).subscribe(() => {
+      this.userService.editUser(user).subscribe(() => {
         this.theme = event; // update current theme
         this.refresh.next();
       });
