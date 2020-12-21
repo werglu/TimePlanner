@@ -1,16 +1,16 @@
 <div class="col" style="display:flex;margin-bottom:30px">
 
   <div class="row" style="width:50%; margin-top:30px;">
-    <h4 style="color:#004445;">My today's events</h4>
+    <h4>My today's events</h4>
     <div *ngIf="events.length==0">
-      <label style="margin-left:-12rem;color:#004445;margin-top:55px">No events for today :)</label>
+      <label style="margin-left:-12rem;margin-top:55px">No events for today :)</label>
     </div>
     <ng-container *ngIf="events.length>0">
       <ul class="row-md-12 col-md-12" style="min-height:99px;max-height:160px;overflow-y:auto;margin-top:5px;margin-left:-15px;text-align:center;margin-top:1rem">
         <ng-container *ngFor="let event of events">
           <li class="table-row" id="block_container">
             <div class="col-md-7 col-sm-7">
-              <label style="color:#004445;">{{event.title}}</label>
+              <label>{{event.title}}</label>
             </div>
           </li>
         </ng-container>
@@ -19,9 +19,9 @@
   </div>
 
   <div class="row" style="width:50%; margin-top:30px;margin-left:4em;">
-    <h4 style="color:#004445;">My today's tasks</h4>
+    <h4>My today's tasks</h4>
     <div *ngIf="tasks.length==0">
-      <label style="margin-left:0rem;color:#004445;margin-top:55px">No tasks for today :)</label>
+      <label style="margin-left:0rem;margin-top:55px">No tasks for today :)</label>
       <br />
       <button class="btn btn-secondary" style="margin-bottom:30px;box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.5);background-color:var(--yellow);" (click)="showFindToDoModal()">Find something to do</button>
     </div>
@@ -30,7 +30,7 @@
         <ng-container *ngFor="let task of tasks">
           <li class="table-row" id="block_container">
             <div class="col-md-7 col-sm-7">
-              <label style="color: #004445;">{{task.title}}</label>
+              <label>{{task.title}}</label>
             </div>
           </li>
         </ng-container>

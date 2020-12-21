@@ -34,7 +34,7 @@ img.profile-photo-lg {
 
 #friendsList {
   border-width: 10px;
-  border-color: var(--color-light-orange);
+  border-color: var(--yellow);
   border-image: initial;
 }
 

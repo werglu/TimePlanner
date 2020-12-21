@@ -1,12 +1,55 @@
-:root {
+
+.myBody {
+  background-color: var(--color-background);
+}
+
+.light {
   --yellow: #f8b400;
   --color-background: #faf5e4;
   --color-dark-green: #004445;
   --color-light-green: #76b39d;
   --color-facebook-button: #3B5998;
+  --color-gray: #aaa;
+
   --color-greyish: #b4af9e;
   --color-light-beige: #fbf1cf;
   --color-light-orange: #f8b400;
-  --color-light-orange2: #f6d365;
+}
+
+.mono {
+  --yellow: #19d3da;
+  --color-background: #eeeeee;
+  --color-dark-green: #373a40;
+  --color-light-green: #686d76;
+  --color-facebook-button: #3B5998;
   --color-gray: #aaa;
+
+  --color-greyish: #b4af9e;
+  --color-light-beige: #fbf1cf;
+  --color-light-orange: #f8b400;
+}
+
+.red {
+  --yellow: #ff8585;
+  --color-background: #efd9d1;
+  --color-dark-green: #ff4646;
+  --color-light-green: #ffb396;
+  --color-facebook-button: #3B5998;
+  --color-gray: #aaa;
+  --color-greyish: #b4af9e;
+  --color-light-beige: #fbf1cf;
+  --color-light-orange: #f8b400;
+}
+
+
+.dark {
+  --yellow: #414141;
+  --color-background: #8d6262;
+  --color-dark-green: #010101;
+  --color-light-green: #525252;
+  --color-facebook-button: #3B5998;
+  --color-gray: #aaa;
+  --color-greyish: #b4af9e;
+  --color-light-beige: #fbf1cf;
+  --color-light-orange: #f8b400;
 }

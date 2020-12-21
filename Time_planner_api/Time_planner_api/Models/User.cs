@@ -8,6 +8,7 @@ namespace Time_planner_api.Models
     {
         [Key]
         public string FacebookId { get; set; }
+        public int Theme { get; set; }
 
         public List<Event> AttendedEvents { get; set; }
 

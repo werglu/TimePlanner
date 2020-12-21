@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Friend } from '../shared/friend';
 import { FacebookService } from 'ngx-facebook';
+import { User } from './user';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,16 @@ export class UserService {
 
   constructor(public http: HttpClient,
     private fb: FacebookService) {
+  }
+
+  public getUser(userId: string): Observable<User> {
+    let baseUrl: string = environment.apiBaseUrl;
+    return this.http.get<User>(baseUrl + 'api/Users/' + userId.toString());
+  }
+
+  public editUser(id: string, user: User): Observable<User> {
+    var baseUrl: string = environment.apiBaseUrl;
+    return this.http.put<User>(baseUrl + 'api/Users/' + id, user);
   }
 
   public putUser(token: string): Observable<any> {

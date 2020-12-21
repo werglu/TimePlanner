@@ -1,0 +1,5 @@
+@import "../colors.css";
+
+.myBody {
+  background-color: var(--color-background);
+}

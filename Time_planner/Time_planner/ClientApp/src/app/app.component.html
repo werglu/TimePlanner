@@ -1,6 +1,20 @@
-<body style="background-color:#faf5e4">
-  <app-nav-menu></app-nav-menu>
-  <div class="container">
+<ng-container *ngIf="theme == 0">
+  <app-nav-menu (onThemeChange)="themeChanged($event)" class="myBody light"></app-nav-menu>
+  <div class="container light">
     <router-outlet></router-outlet>
   </div>
-</body>
+</ng-container>
+
+<ng-container *ngIf="theme == 1">
+  <app-nav-menu (onThemeChange)="themeChanged($event)" class="myBody mono"></app-nav-menu>
+  <div class="container mono">
+    <router-outlet></router-outlet>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="theme == 2">
+  <app-nav-menu (onThemeChange)="themeChanged($event)" class="myBody red"></app-nav-menu>
+  <div class="container red">
+    <router-outlet></router-outlet>
+  </div>
+</ng-container>
