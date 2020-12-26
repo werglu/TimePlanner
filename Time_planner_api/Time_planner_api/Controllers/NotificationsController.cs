@@ -168,7 +168,9 @@ namespace Time_planner_api.Controllers
                     StreetAddress = ev.StreetAddress,
                     IsPublic = ev.IsPublic,
                     OwnerId = notification.ReceiverId,
-                    Description = ev.Description
+                    Description = ev.Description,
+                    Longitude = ev.Longitude,
+                    Latitude = ev.Latitude
                 });
             }
 

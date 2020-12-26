@@ -18,6 +18,7 @@ export class EditTaskAaEventModalComponent implements OnInit {
   public priorities: Array<string> = ['High priority', 'Medium priority', 'Low priority'];
   currentCategory: ListCategory;
   currentTask: Task;
+  geocoder: any;
   isDone = false;
   choosenPriority = 1;
   @Input() userId: string;
@@ -57,6 +58,7 @@ export class EditTaskAaEventModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCategories();
+    this.geocoder = new google.maps.Geocoder();
     if (this.editedTask.id != null) {
       this.tasksService.getTask(Number(this.editedTask.id)).subscribe((task) => {
         this.currentTask = task;
@@ -183,13 +185,40 @@ export class EditTaskAaEventModalComponent implements OnInit {
       date5: new Date(this.setDate('date5')),
       date6: new Date(this.setDate('date6')),
       city: (<HTMLInputElement>document.getElementById('city')).value,
-      streetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value
+      streetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value,
+      latitude: 0.0,
+      longitude: 0.0
     };
   }
   
   onSubmit() {
     if (this.editTaskForm.valid) {
-      this.tasksService.editTask(Number(this.editedTask.id), this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
+      var task = this.getFormValue();
+
+      if (task.city != '' && task.city != ' ' && task.streetAddress != '' && task.streetAddress != ' ') {
+        //setting task latitude and longtitude from address
+        this.geocoder.geocode({ 'address': task.city }, (results, status) => {
+          if (status == google.maps.GeocoderStatus.OK) {
+            this.geocoder.geocode({ 'address': task.city + ',' + task.streetAddress }, (results, status) => {
+              if (status == google.maps.GeocoderStatus.OK) {
+                task.latitude = results[0].geometry.location.lat();
+                task.longitude = results[0].geometry.location.lng();
+
+                this.tasksService.editTask(Number(this.editedTask.id), task).subscribe(() => this.onSave.emit(task));
+              }
+              else {
+                console.log(status);
+              }
+            });
+          }
+          else {
+            console.log(status);
+          }
+        });
+      }
+      else {
+          this.tasksService.editTask(Number(this.editedTask.id), this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
+      }
     }
     else {
       this.validateAllFormControls(this.editTaskForm);

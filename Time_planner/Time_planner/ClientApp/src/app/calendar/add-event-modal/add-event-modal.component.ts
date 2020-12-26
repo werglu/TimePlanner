@@ -34,6 +34,7 @@ export class AddEventModalComponent implements OnInit, AfterViewInit {
   placesList: any[] = [];
   conflictMessage: string = '';
   conflict: boolean = false;
+  geocoder: any;
 
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService,
@@ -71,6 +72,7 @@ export class AddEventModalComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     let authResp = this.fb.getAuthResponse();
     this.userId = authResp.userID;
+    this.geocoder = new google.maps.Geocoder();
 
     this.placesList.push({
       id: 1,
@@ -115,8 +117,28 @@ export class AddEventModalComponent implements OnInit, AfterViewInit {
     this.validateAllFormControls(this.editEventForm);
     if (this.editEventForm.valid && !this.startDateInvalid() && !this.endDateInvalid() && !this.dateInvalid()) {
       var event = this.getFormValue();
-      this.eventsService.addEvent(event, this.invitedFriendsIds).subscribe(() => {
-        this.onSave.emit(event);
+
+      this.geocoder.geocode({ 'address': event.city }, (results, status) => {
+        if (status == google.maps.GeocoderStatus.OK) {
+          var latitude = results[0].geometry.location.lat();
+          var longitude = results[0].geometry.location.lng();
+          this.geocoder.geocode({ 'address': event.city + ',' + event.streetAddress }, (results, status) => {
+            if (status == google.maps.GeocoderStatus.OK) {
+              event.latitude = results[0].geometry.location.lat();
+              event.longitude = results[0].geometry.location.lng();
+
+              this.eventsService.addEvent(event, this.invitedFriendsIds).subscribe((e) => {
+                this.onSave.emit(event);
+              });
+            }
+            else {
+              console.log(status);
+            }
+          });
+        }
+        else {
+          console.log(status);
+        }
       });
     }
     else {

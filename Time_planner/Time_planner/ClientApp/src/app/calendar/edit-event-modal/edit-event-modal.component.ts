@@ -28,6 +28,7 @@ export class EditEventModalComponent implements OnInit {
   invited: InvitedFriend[];
   isOwner: boolean;
   placesList: any[] = [];
+  geocoder: any;
   private wasInvitedInitialized = false;
   @Input() editedEvent: CalendarEvent;
   @Output() onCancel = new EventEmitter();
@@ -69,6 +70,7 @@ export class EditEventModalComponent implements OnInit {
 
     let authResp = this.fb.getAuthResponse();
     this.userId = authResp.userID;
+    this.geocoder = new google.maps.Geocoder();
 
     if (this.editedEvent.id != null) {
       this.eventsService.getEvent(Number(this.editedEvent.id)).subscribe((event) => {
@@ -164,8 +166,29 @@ export class EditEventModalComponent implements OnInit {
   onSubmit() {
     this.validateAllFormControls(this.editEventForm);
     if (this.editEventForm.valid && !this.dateInvalid()) {
-      this.eventsService.editEvent(Number(this.editedEvent.id), this.getFormValue()).subscribe(() => {
-        this.onSave.emit(this.getFormValue());
+      var event = this.getFormValue();
+
+      this.geocoder.geocode({ 'address': event.city }, (results, status) => {
+        if (status == google.maps.GeocoderStatus.OK) {
+          var latitude = results[0].geometry.location.lat();
+          var longitude = results[0].geometry.location.lng();
+          this.geocoder.geocode({ 'address': event.city + ',' + event.streetAddress }, (results, status) => {
+            if (status == google.maps.GeocoderStatus.OK) {
+              event.latitude = results[0].geometry.location.lat();
+              event.longitude = results[0].geometry.location.lng();
+
+              this.eventsService.editEvent(Number(this.editedEvent.id), event).subscribe(() => {
+                this.onSave.emit(this.getFormValue());
+              });
+            }
+            else {
+              console.log(status);
+            }
+          });
+        }
+        else {
+          console.log(status);
+        }
       });
     }
     else {

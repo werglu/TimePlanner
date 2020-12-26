@@ -76,11 +76,9 @@ export class HomeComponent {
   }
 
   getEventPoint(e: Events) {
-    // todo: to be changed when there will be proper location in Event
-    // only e.latitude and e.longitude should be assigned
     return {
-      lat: e.latitude + this.lat,
-      lng: e.longitude + this.lng,
+      lat: e.latitude,
+      lng: e.longitude,
       title: e.title,
       address: e.streetAddress,
       hour: new Date(e.startDate).getHours() + ":" + (new Date(e.startDate).getMinutes() < 10 ? '0' : '') + new Date(e.startDate).getMinutes() + ' - ' +
@@ -89,11 +87,9 @@ export class HomeComponent {
   }
 
   getTaskPoint(t: Task) {
-    // todo: to be changed when there will be proper location in Task
-    // only t.latitude and t.longitude should be assigned
     return {
-      lat: t.latitude + this.lat,
-      lng: t.longitude + this.lng,
+      lat: t.latitude,
+      lng: t.longitude,
       title: t.title,
       address: t.streetAddress ? t.streetAddress : '???'
     };
@@ -104,13 +100,13 @@ export class HomeComponent {
     // only task's/event's latitude and longitude should be assigned
     if (i.e) {
       return {
-        lat: i.e.latitude + this.lat,
-        lng: i.e.longitude + this.lng
+        lat: i.e.latitude,// + this.lat,
+        lng: i.e.longitude //+ this.lng
       };
     } else if (i.t) {
       return {
-        lat: i.t.latitude + this.lat,
-        lng: i.t.longitude + this.lng
+        lat: i.t.latitude,// + this.lat,
+        lng: i.t.longitude// + this.lng
       };
     } else {
       return null;

@@ -86,7 +86,7 @@ export function tokenGetter() {
     GridModule,
     FacebookModule.forRoot(),
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyABcru_NMTTmJLKCoddjaFgqeb9K3X4P48'
+      apiKey: 'XXXXX'
     }),
     //AgmDirectionModule,
     CalendarModule.forRoot({

@@ -82,6 +82,8 @@ namespace Time_planner_api.Controllers
             newTask.CategoryId = task.CategoryId;
             newTask.Category = task.Category;
             newTask.Priority = task.Priority;
+            newTask.Latitude = task.Latitude;
+            newTask.Longitude = task.Longitude;
             newTask.Date0 = task.Date0 != null ? task.Date0?.ToLocalTime() : task.Date0;
             newTask.Date1 = task.Date1 != null ? task.Date1?.ToLocalTime() : task.Date1;
             newTask.Date2 = task.Date2 != null ? task.Date2?.ToLocalTime() : task.Date2;
@@ -134,6 +136,8 @@ namespace Time_planner_api.Controllers
                 CategoryId = task.CategoryId,
                 Category = null,
                 Priority = task.Priority,
+                Latitude = task.Latitude,
+                Longitude = task.Longitude,
                 Date0 = task.Date0 == null ? null : task.Date0?.ToLocalTime(),
                 Date1 = task.Date1 == null ? null : task.Date1?.ToLocalTime(),
                 Date2 = task.Date2 == null ? null : task.Date2?.ToLocalTime(),

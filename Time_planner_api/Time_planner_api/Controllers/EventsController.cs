@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Time_planner_api.Helpers;
 using Time_planner_api.Models;
 
 namespace Time_planner_api.Controllers
@@ -90,7 +88,9 @@ namespace Time_planner_api.Controllers
                         Id = ourEvent.Id,
                         Title = ourEvent.Title,
                         StartDate = ourEvent.StartDate,
-                        EndDate = ourEvent.EndDate
+                        EndDate = ourEvent.EndDate,
+                        Latitude = ourEvent.Latitude,
+                        Longitude = ourEvent.Longitude
                     };
                 }
                 return new Event()
@@ -98,7 +98,9 @@ namespace Time_planner_api.Controllers
                     Id = ourEvent.Id,
                     Title = "",
                     StartDate = ourEvent.StartDate,
-                    EndDate = ourEvent.EndDate
+                    EndDate = ourEvent.EndDate,
+                    Latitude = ourEvent.Latitude,
+                    Longitude = ourEvent.Longitude
                 };
             }
         }
@@ -122,7 +124,9 @@ namespace Time_planner_api.Controllers
                 StreetAddress = ourEvent.Event.StreetAddress,
                 IsPublic = ourEvent.Event.IsPublic,
                 OwnerId = ourEvent.Event.OwnerId,
-                Description = ourEvent.Event.Description
+                Description = ourEvent.Event.Description,
+                Longitude = ourEvent.Event.Longitude,
+                Latitude = ourEvent.Event.Latitude
             };
 
             await _context.Events.AddAsync(newEvent); 
@@ -198,6 +202,8 @@ namespace Time_planner_api.Controllers
             newEvent.IsPublic = oldEvent.IsPublic;
             newEvent.OwnerId = oldEvent.OwnerId;
             newEvent.Description = oldEvent.Description;
+            newEvent.Latitude = oldEvent.Latitude;
+            newEvent.Longitude = oldEvent.Longitude;
 
             _context.Entry(newEvent).State = EntityState.Modified;
 

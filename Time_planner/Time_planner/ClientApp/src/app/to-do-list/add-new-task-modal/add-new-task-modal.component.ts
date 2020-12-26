@@ -24,6 +24,7 @@ export class AddNewTaskModalComponent implements OnInit {
   choosenHour = 1;
   choosenMinute = 0;
   choosenDays = 1 + 2 + 4 + 8 + 16;
+  geocoder: any;
   public addDatesOff = true;
   public addDateConstraintsOff = true;
   @Input() userId: string;
@@ -44,6 +45,7 @@ export class AddNewTaskModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCategories();
+    this.geocoder = new google.maps.Geocoder();
   }
 
   cancel() {
@@ -128,13 +130,42 @@ export class AddNewTaskModalComponent implements OnInit {
       priority: this.choosenPriority,
       split: this.addDatesOff ? null : this.choosenSplit,
       days: this.addDatesOff ? null : this.choosenDays,
-      time: this.addDatesOff ? null : (this.choosenHour * 60 + this.choosenMinute)
+      time: this.addDatesOff ? null : (this.choosenHour * 60 + this.choosenMinute),
+      latitude: 0.0,
+      longitude: 0.0,
+      city: '',
+      streetAddress: ''
     };
   }
   
   onSubmit() {
     if (this.addTaskForm.valid) {
-      this.tasksService.addTask(this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
+      var task = this.getFormValue();
+      if (task.city != '' && task.city != ' ' && task.streetAddress != '' && task.streetAddress != ' ') {
+        this.geocoder.geocode({ 'address': task.city }, (results, status) => {
+          if (status == google.maps.GeocoderStatus.OK) {
+            var latitude = results[0].geometry.location.lat();
+            var longitude = results[0].geometry.location.lng();
+            this.geocoder.geocode({ 'address': task.city + ',' + task.streetAddress }, (results, status) => {
+              if (status == google.maps.GeocoderStatus.OK) {
+                task.latitude = results[0].geometry.location.lat();
+                task.longitude = results[0].geometry.location.lng();
+
+                this.tasksService.addTask(task).subscribe(() => this.onSave.emit(task));
+              }
+              else {
+                console.log(status);
+              }
+            });
+          }
+          else {
+            console.log(status);
+          }
+        });
+      }
+      else {
+        this.tasksService.addTask(task).subscribe(() => this.onSave.emit(task));
+      }
     }
     else {
       this.validateAllFormControls(this.addTaskForm);
