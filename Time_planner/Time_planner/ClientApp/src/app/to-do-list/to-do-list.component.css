@@ -26,8 +26,7 @@ i.fa {
 }
 
 i.fa-star {
-  color: yellow;
-  text-shadow: 0 0 3px black;
+  color: var(--yellow);
 }
 
 h2 {
