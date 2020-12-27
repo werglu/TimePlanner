@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace UnitTests
 {
-    public class UsersControllerTests
+    public class UsersControllerTests : TestsBase
     {
         //[Fact]
         //public async void GetUsers_returnsAllUsers()
@@ -39,47 +39,49 @@ namespace UnitTests
         //    }
         //}
 
-        //[Fact]
-        //public async void GetUser_withProperId_returnsUser()
-        //{
-        //    var options = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(databaseName: "Test").Options;
+        [Fact]
+        public async void GetUser_withProperId_returnsUser()
+        {
+            var options = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(databaseName: "Test").Options;
 
-        //    using (var context = new DatabaseContext(options))
-        //    {
-        //        // Arrange
-        //        int userId = 5;
-        //        context.Users.Add(new User() { FacebookId = userId.ToString() });
-        //        context.SaveChanges();
+            using (var context = new DatabaseContext(options))
+            {
+                // Arrange
+                int userId = 5;
+                context.Users.Add(new User() { FacebookId = userId.ToString() });
+                context.SaveChanges();
 
-        //        // Act
-        //        var controller = new UsersController(context);
-        //        var result = await controller.GetUser(userId.ToString());
+                // Act
+                var controller = new UsersController(context, null, null);
+                AddUserClaim(controller, userId.ToString());
+                var result = await controller.GetUser();
 
-        //        // Assert
-        //        Assert.IsType<User>(result.Value);
-        //        var expectedId = userId.ToString();
-        //        Assert.Equal(expectedId, result.Value.FacebookId);
-        //    }
-        //}
+                // Assert
+                Assert.IsType<User>(result.Value);
+                var expectedId = userId.ToString();
+                Assert.Equal(expectedId, result.Value.FacebookId);
+            }
+        }
 
-        //[Fact]
-        //public async void GetUser_returnsNotFound()
-        //{
-        //    var options = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(databaseName: "Test").Options;
+        [Fact]
+        public async void GetUser_returnsNotFound()
+        {
+            var options = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(databaseName: "Test").Options;
 
-        //    using (var context = new DatabaseContext(options))
-        //    {
-        //        // Arrange
-        //        int userId = 6;
+            using (var context = new DatabaseContext(options))
+            {
+                // Arrange
+                int userId = 6;
 
-        //        // Act
-        //        var controller = new UsersController(context);
-        //        var result = await controller.GetUser(userId.ToString());
+                // Act
+                var controller = new UsersController(context, null, null);
+                AddUserClaim(controller, userId.ToString());
+                var result = await controller.GetUser();
 
-        //        // Assert
-        //        Assert.IsType<NotFoundResult>(result.Result);
-        //    }
-        //}
+                // Assert
+                Assert.IsType<NotFoundResult>(result.Result);
+            }
+        }
 
         //[Fact]
         //public async void PostUser_addsUserAndReturnsOk()

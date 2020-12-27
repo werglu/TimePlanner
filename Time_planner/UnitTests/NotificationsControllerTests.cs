@@ -6,28 +6,30 @@ using Xunit;
 
 namespace UnitTests
 {
-    public class NotificationsControllerTests
+    public class NotificationsControllerTests : TestsBase
     {
-        //[Fact]
-        //public async void get_notifications_should_return_all_notifications_per_user()
-        //{
-        //    var options = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(databaseName: "Test").Options;
+        [Fact]
+        public async void get_notifications_should_return_all_notifications_per_user()
+        {
+            var options = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(databaseName: "Test").Options;
+            string userId = "1";
 
-        //    using (var context = new DatabaseContext(options))
-        //    {
-        //        // Act
-        //        var controller = new NotificationsController(context);
-        //        context.Users.Add(new User() { FacebookId = "1" });
-        //        context.Notifications.Add(new Notification() { ReceiverId = "1", MessageType = 1, Id = 1 });
-        //        context.Notifications.Add(new Notification() { ReceiverId = "2", MessageType = 1, Id = 2 });
-        //        context.SaveChanges();
-        //        var notifications = await controller.GetNotifications("1");
-                
-        //        // Assert
-        //        var notificationsCount = notifications.Value.Count();
-        //        Assert.Equal(notificationsCount, 1);
-        //    }
-        //}
+            using (var context = new DatabaseContext(options))
+            {
+                // Act
+                var controller = new NotificationsController(context);
+                AddUserClaim(controller, userId);
+                context.Users.Add(new User() { FacebookId = userId });
+                context.Notifications.Add(new Notification() { ReceiverId = "1", MessageType = 1, Id = 1 });
+                context.Notifications.Add(new Notification() { ReceiverId = "2", MessageType = 1, Id = 2 });
+                context.SaveChanges();
+                var notifications = await controller.GetNotifications();
+
+                // Assert
+                var notificationsCount = notifications.Value.Count();
+                Assert.Equal(notificationsCount, 1);
+            }
+        }
 
         //[Fact]
         //public async void get_notification_should_return_this_notification()

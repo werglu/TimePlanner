@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace UnitTests
 {
-    public class SalesmanHelperTests
+    public class SalesmanHelperTests : TestsBase
     {
         [Fact]
         public void DoesNotTakeTooLongWhenManyTasks()
@@ -21,7 +21,7 @@ namespace UnitTests
             while (taskCount-- > 0)
             {
                 // todo: to be changed when there would be proper latitude/longitude to set
-                tasks.Add(new Time_planner_api.Models.Task() { Id = rnd.Next(), Title = rnd.Next().ToString(), City = rnd.Next().ToString(), StreetAddress = rnd.Next().ToString() });
+                tasks.Add(new Time_planner_api.Models.Task() { Id = rnd.Next(), Title = rnd.Next().ToString(), Longitude = rnd.Next(), Latitude = rnd.Next() });
             }
 
             int timeout = 5;

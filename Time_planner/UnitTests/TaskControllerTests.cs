@@ -10,25 +10,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace UnitTests
 {
-    public class TaskControllerTests
+    public class TaskControllerTests : TestsBase
     {
         [Fact]
         public async void CanGetAllTasks()
         {
-            var options = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(databaseName: "Test").Options;
+            var options = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(databaseName: "TaskTest").Options;
+            string userId = "123";
 
             using (var context = new DatabaseContext(options))
             {
                 context.Tasks.Add(new Time_planner_api.Models.Task()
                 {
                     Id = 1,
-                    Category = new ListCategory() { Id = 1, Category = "CategoryName" },
+                    Category = new ListCategory() { Id = 1, Category = "CategoryName", OwnerId = userId },
                     Title = "Task1",
                     CategoryId = 1,
                     IsDone = false
                 });
                 context.SaveChanges();
                 var controller = new TasksController(context);
+                AddUserClaim(controller, userId);
                 var result = await controller.GetTasks();
                 var count = result.Value.Count();
                 var value = result.Value.ToArray();
