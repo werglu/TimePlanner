@@ -37,13 +37,7 @@ namespace Time_planner_api.Controllers
             {
                 if (ev.IsPublic)
                 {
-                    filteredEvents.Add(new Event()
-                    {
-                        Id = ev.Id,
-                        Title = ev.Title,
-                        StartDate = ev.StartDate,
-                        EndDate = ev.EndDate
-                    });
+                    filteredEvents.Add(ev);
                 }
                 else
                 {
