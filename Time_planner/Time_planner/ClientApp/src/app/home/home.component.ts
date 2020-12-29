@@ -25,7 +25,7 @@ export class HomeComponent {
   tasks: Task[] = [];
   eventPoints: { lat: number, lng: number, title: string, address: string, hour: string }[] = [];
   taskPoints: { lat: number, lng: number, title: string, address: string }[] = [];
-  assignedPoints: { lat: number, lng: number }[] = [];
+  assignedPoints: { lat: number, lng: number, ind: number }[] = [];
   findToDoModalVisible: boolean = false;
 
   constructor(public eventsService: EventsService,
@@ -98,17 +98,17 @@ export class HomeComponent {
   }
 
   getAssignedPoint(i: CalendarItem) {
-    // todo: to be changed when there will be proper location in Task/Event
-    // only task's/event's latitude and longitude should be assigned
     if (i.e) {
       return {
-        lat: i.e.latitude,// + this.lat,
-        lng: i.e.longitude //+ this.lng
+        lat: i.e.latitude,
+        lng: i.e.longitude,
+        ind: this.assignedPoints.length
       };
     } else if (i.t) {
       return {
-        lat: i.t.latitude,// + this.lat,
-        lng: i.t.longitude// + this.lng
+        lat: i.t.latitude,
+        lng: i.t.longitude,
+        ind: this.assignedPoints.length
       };
     } else {
       return null;
@@ -181,7 +181,7 @@ export class HomeComponent {
           this.taskPoints.push(this.getTaskPoint(item.t));
         }
         if (item.assigned) {
-          this.assignedPoints.push(this.getAssignedPoint(item))
+          this.assignedPoints.push(this.getAssignedPoint(item));
         }
       });
     })

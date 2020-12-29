@@ -5,7 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AgmCoreModule } from '@agm/core';
-//import { AgmDirectionModule } from 'agm-direction';
+import { AgmDirectionModule } from 'agm-direction';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
@@ -94,7 +94,7 @@ export function tokenGetter() {
     AgmCoreModule.forRoot({
       apiKey: 'XXXXX'
     }),
-    //AgmDirectionModule,
+    AgmDirectionModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
