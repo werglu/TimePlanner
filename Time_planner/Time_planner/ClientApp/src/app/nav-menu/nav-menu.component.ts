@@ -22,6 +22,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   showPhoto = false;
   showSettingsModal = false;
   theme = 0;
+  logged = false;
   @Output() onThemeChange = new EventEmitter<number>();
 
   constructor(private router: Router,
@@ -61,13 +62,14 @@ export class NavMenuComponent implements OnInit, OnDestroy {
           logoutBtn.style.display = "block";
           notificationsBtn.style.display = "block";
           settingsBtn.style.display = "block";
+          this.logged = true;
           this.showPhoto = true;
         } else {
           loginBtn.style.display = "block";
           logoutBtn.style.display = "none";
           notificationsBtn.style.display = "none";
           settingsBtn.style.display = "none";
-
+          this.logged = false;
           this.showPhoto = false;
       }
 
@@ -100,6 +102,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       notificationsBtn.style.display = "none";
       let settingsBtn = document.getElementById("settingsBtn");
       settingsBtn.style.display = "none";
+      this.logged = false;
       this.showPhoto = false;
       this.router.navigate(['/logout']);
       this.userId = '';
@@ -114,12 +117,14 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       if (response.authResponse) {
         let loginBtn = document.getElementById("loginBtn");
         loginBtn.style.display = "none";
+
         let logoutBtn = document.getElementById("logoutBtn");
         logoutBtn.style.display = "block";
         let notificationsBtn = document.getElementById("notificationBtn");
         notificationsBtn.style.display = "block";
         let settingsBtn = document.getElementById("settingsBtn");
         settingsBtn.style.display = "block";
+        this.logged = true;
         this.showPhoto = true;
         if (response.authResponse != null) {
           this.userId = response.authResponse.userID;
@@ -161,15 +166,16 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   getNotifications() {
-
-    this.notificationsService.getNotifications().subscribe(n => {
-      if (n.length == 0) {
-        this.noNotifications = true;
-      }
-      else {
-        this.noNotifications = false;
-      }
-    });
+    if (this.logged) {
+      this.notificationsService.getNotifications().subscribe(n => {
+        if (n.length == 0) {
+          this.noNotifications = true;
+        }
+        else {
+          this.noNotifications = false;
+        }
+      });
+    }
   }
 
   collapse() {
