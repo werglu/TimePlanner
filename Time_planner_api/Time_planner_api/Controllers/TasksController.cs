@@ -182,8 +182,14 @@ namespace Time_planner_api.Controllers
             {
                 return NotFound();
             }
+            var category = await _context.ListCategories.FindAsync(task.CategoryId);
 
-            if (GetUserId() != task.Category.OwnerId)
+            if (GetUserId() != category.OwnerId)
+            {
+                return Unauthorized();
+            }
+
+            if (GetUserId() != category.OwnerId)
             {
                 return Unauthorized();
             }
