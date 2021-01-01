@@ -34,6 +34,8 @@ export class EditEventModalComponent implements OnInit {
   @Output() onCancel = new EventEmitter();
   @Output() onSave = new EventEmitter<Events>();
   @Output() onChangeVisibility = new EventEmitter<boolean>();
+  canEditEvent = true;
+
 
   constructor(private formBuilder: FormBuilder,
     public eventsService: EventsService,
@@ -71,6 +73,13 @@ export class EditEventModalComponent implements OnInit {
     let authResp = this.fb.getAuthResponse();
     this.userId = authResp.userID;
     this.geocoder = new google.maps.Geocoder();
+
+    if (this.editedEvent.meta.type == 'event') {
+      this.canEditEvent = true;
+    }
+    else {
+      this.canEditEvent = false;
+    }
 
     if (this.editedEvent.id != null) {
       this.eventsService.getEvent(Number(this.editedEvent.id)).subscribe((event) => {

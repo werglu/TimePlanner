@@ -137,7 +137,7 @@ namespace Time_planner_api.Controllers
                 return Unauthorized();
             }
 
-            // add accepted notification
+            // add rejected notification
             await _context.Notifications.AddAsync(new Notification()
             {
                 IsDismissed = false,

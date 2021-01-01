@@ -68,7 +68,9 @@ namespace Time_planner_api.Controllers
                 return NotFound();
             }
 
-            if (ourEvent.IsPublic || userId == ourEvent.OwnerId)
+            var userEvent = _context.UsersEvents.Where(ue => ue.EventId == id && ue.UserId == userId && ue.Status == 1).FirstOrDefault();
+
+            if (ourEvent.IsPublic || userId == ourEvent.OwnerId || userEvent != null)
             {
                 return ourEvent;
             }

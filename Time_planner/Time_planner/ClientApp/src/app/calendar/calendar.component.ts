@@ -11,6 +11,7 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { ListCategoriesService } from '../to-do-list/listCategories.service';
 import { isNullOrUndefined } from 'util';
 import { FacebookService } from 'ngx-facebook';
+import { UserEventsService } from './userEvents.service';
 
 @Component({
   selector: 'app-calendar-component',
@@ -25,8 +26,10 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   openEvent = false;
   openTask = false;
   isPublic = false;
+  canEditEvent = true;
   editedEvent: CalendarEvent;
   addNewEventModalVisible = false;
+  openAttendedEvent = false;
   view: CalendarView = CalendarView.Month;
   viewDate: Date = new Date();
   activeDayIsOpen = false;
@@ -50,6 +53,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     public http: HttpClient,
     private listCategoriesService: ListCategoriesService,
     private notificationsService: NotificationsService,
+    private userEventsService: UserEventsService,
     private fb: FacebookService) {
   }
 
@@ -83,7 +87,35 @@ export class CalendarComponent implements OnInit, AfterViewInit {
           }
         })
       });
+
+
+      this.userEventsService.getAllUserEvents(this.userId).subscribe((userEvents) => {
+        userEvents.forEach((userEvent) => {
+          if (userEvent.status == 1) { //if accepted than add to the calendar
+            this.eventsService.getEvent(userEvent.eventId).subscribe((event) => {
+              this.events.push({
+                id: event.id,
+                title: event.title,
+                start: new Date(event.startDate),
+                end: new Date(event.endDate),
+                draggable: false,
+                color: {
+                  primary: '#aa8976',
+                  secondary: '#aa8976'
+                },
+                meta: {
+                  type: 'eventAttended'
+                }
+              });
+              this.refresh.next();
+            });
+
+          }
+        });
+      });
+
       this.refresh.next();
+
     });
   }
 
@@ -123,6 +155,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   eventClicked(event: CalendarEvent): void {
     this.editedEvent = event;
+    if (event.meta.type == 'eventAttended') { this.openAttendedEvent = true;}
     if (event.meta.type == 'event') { this.openEvent = true; }
     if (event.meta.type == 'task') { this.openTask = true; }
   }
@@ -282,6 +315,16 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         this.refresh.next();
       });
     }
+  }
+
+  removeAttendedEvent() {
+    this.closeOpenAttendedEventModal();
+    this.events = this.events.filter(e => e.id != this.editedEvent.id);
+    this.refresh.next();
+  }
+
+  closeOpenAttendedEventModal() {
+    this.openAttendedEvent = false;
   }
 
   eventVisibilityChanged(event: boolean) {

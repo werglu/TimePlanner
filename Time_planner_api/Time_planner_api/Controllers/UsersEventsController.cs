@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,65 @@ namespace Time_planner_api.Controllers
                 }
                 return result;
             }
+        }
+
+        [HttpGet("{userId}")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<UsersEvents>>> GetAllUserEvents(string userId)
+        {
+            var result = _context.UsersEvents.Where(ue => userId == ue.UserId);
+            if (result == null)
+            {
+                return new List<UsersEvents>();
+            }
+            else
+            {
+                var askingUserId = GetUserId();
+                if (askingUserId != userId)
+                {
+                    return Unauthorized();
+                }
+                return result.ToList();
+            }
+        }
+
+        [HttpPut("{userId}/{eventId}/{status}")]
+        [Authorize]
+        public async Task<ActionResult> UpdateUserEvent([FromRoute]string userId, [FromRoute]int eventId, [FromRoute]int status, UsersEvents oldEvent)
+        {
+            var userEvent = _context.UsersEvents.Where(ue => ue.UserId == userId && ue.EventId == eventId).Single();
+
+            if (userEvent == null)
+            {
+                return NotFound();
+            }
+
+            if (GetUserId() != userId)
+            {
+                return Unauthorized();
+            }
+
+            userEvent.Status = status;
+
+            _context.Entry(userEvent).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserEventExists(userEvent.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         private bool UserEventExists(int id)

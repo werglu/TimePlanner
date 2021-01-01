@@ -48,6 +48,14 @@
   </div>
 </div>
 
+<kendo-dialog *ngIf="openAttendedEvent" (close)="closeOpenAttendedEventModal()" [minWidth]="250" [width]="450" [maxHeight]="650">
+  <kendo-dialog-titlebar>
+    <div><span class="k-icon k-i-myspace"></span>Event details</div>
+  </kendo-dialog-titlebar>
+  <attended-event-details-modal [editedEvent]="editedEvent" (onCancel)="closeOpenAttendedEventModal()" (onSave)="removeAttendedEvent()" ></attended-event-details-modal>
+</kendo-dialog>
+
+
 <kendo-dialog *ngIf="openEvent" (close)="closeOpenEventModal()" [minWidth]="250" [width]="450" [maxHeight]="650">
   <kendo-dialog-titlebar>
     <div *ngIf="isPublic"><span class="k-icon k-i-myspace"></span>Edit event</div>

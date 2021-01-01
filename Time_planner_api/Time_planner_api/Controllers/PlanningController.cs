@@ -188,6 +188,15 @@ namespace Time_planner_api.Controllers
             var userId = GetUserId();
             var events = await _context.Events.Where(x => x.OwnerId == userId).ToListAsync();
             var tasks = await _context.Tasks.Where(y => y.Category.OwnerId == userId).ToListAsync();
+            var attendedEventsIds = await _context.UsersEvents.Where(ue => ue.Status == 1 && ue.UserId == userId).Select(ue => ue.EventId).ToListAsync();
+            foreach(var ae in attendedEventsIds)
+            {
+                var attendedEvent = await _context.Events.FindAsync(ae);
+                if (attendedEvent != null)
+                {
+                    events.Add(attendedEvent);
+                }
+            }
             var user = await _context.Users.FirstOrDefaultAsync(u => u.FacebookId == userId);
             if (user != null && user.AttendedEvents != null)
             {

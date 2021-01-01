@@ -8,6 +8,7 @@ import { Task } from '../to-do-list/task';
 import { PlanningService } from '../planning/planning.service';
 import { CalendarItem } from '../planning/calendarItem';
 import { FacebookService } from 'ngx-facebook';
+import { UserEventsService } from '../calendar/userEvents.service';
 
 @Component({
   selector: 'app-home',
@@ -32,7 +33,8 @@ export class HomeComponent {
     public http: HttpClient,
     private listCategoriesService: ListCategoriesService,
     private tasksService: TasksService,
-    private fb: FacebookService) {
+    private fb: FacebookService,
+    private userEventsService: UserEventsService) {
   }
 
   ngOnInit(): void {
@@ -133,6 +135,19 @@ export class HomeComponent {
       events.forEach(e => {
         if (this.containsCurrentDate(e.startDate, e.endDate)) {
           this.events.push(e);
+        }
+      });
+    });
+
+    // get attended events
+    this.userEventsService.getAllUserEvents(this.userId).subscribe((userEvents) => {
+      userEvents.forEach((userEvent) => {
+        if (userEvent.status == 1) { //if accepted than add to the events list
+          this.eventsService.getEvent(userEvent.eventId).subscribe((event) => {
+            if (this.containsCurrentDate(event.startDate, event.endDate)) {
+              this.events.push(event)
+            }
+          });
         }
       });
     });

@@ -1,0 +1,157 @@
+@import "../../../colors.css";
+
+.btn-primary {
+  background-color: var(--yellow);
+}
+
+.fa-toggle-on {
+  font-size: 1.6rem;
+  color: var(--color-dark-green);
+}
+
+.fa-toggle-off {
+  font-size: 1.6rem;
+  color: var(--color-dark-green);
+}
+
+/*friends list*/
+.friendsContainer {
+  padding-top: 10px;
+}
+
+img.profile-photo-lg {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+}
+
+#block_container {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  background-color: var(--color-background);
+}
+
+#friendsList {
+  border-width: 10px;
+  border-color: var(--yellow);
+  border-image: initial;
+}
+
+/*scrollbar*/
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: linear-gradient(120deg, var(--color-light-green) 0%, var(--color-dark-green) 100%);
+  /*rgba(255,0,0,0.8);*/
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+  ::-webkit-scrollbar-thumb:window-inactive {
+    background: linear-gradient(120deg, var(--color-light-green) 0%, var(--color-dark-green) 100%);
+  }
+
+/*search bar*/
+.form-control:focus {
+  box-shadow: none;
+}
+
+.form-control-underlined {
+  border-width: 0;
+  border-bottom-width: 1px;
+  border-radius: 0;
+  padding-left: 0;
+}
+
+.form-control::placeholder {
+  font-size: 0.95rem;
+  color: var(--color-gray);
+  font-style: italic;
+}
+
+.searchBar {
+  margin-top: 10px;
+  margin-left: -14px;
+  width: 387px;
+}
+
+.text-warning {
+  color: var(--color-light-green) !important;
+}
+
+/*invited friends list*/
+.invitedfriends {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  display: flex;
+  margin-bottom: 4px;
+}
+
+img.profile-photo-s {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  padding: 2px;
+}
+
+.nameTooltip {
+  width: 140px;
+  opacity: 0.9;
+  top: 5%;
+  color: #fff;
+  visibility: hidden;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: smaller;
+  background-color: var(--color-light-green);
+}
+
+.invitedFriend:hover .nameTooltip {
+  visibility: visible;
+}
+
+.invitedFriend {
+  position: relative;
+}
+
+.status {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.accepted {
+  color: var(--color-light-green);
+}
+
+.rejected {
+  color: red;
+}
+
+.unknow {
+  color: var(--yellow);
+}
+
+.description {
+  border: solid 2px var(--color-light-green);
+  width: 80%;
+  background-color: var(--color-background);
+}

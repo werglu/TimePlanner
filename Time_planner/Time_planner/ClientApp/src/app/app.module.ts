@@ -40,6 +40,7 @@ import { EventDetailsModalComponent } from './shared-calendars/event-details-mod
 import { DefinedPlacesComponent } from './defined-places/defined-places.component';
 import { AddNewPlaceModalComponent } from './defined-places/add-new-place-modal/add-new-place-modal.component';
 import { UserSettingsModalComponent } from './user-settings-modal/user-settings-modal.component';
+import { AttendedEventDetailsModalComponent } from './calendar/attended-event-details-modal/attended-event-details-modal.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -72,7 +73,8 @@ export function tokenGetter() {
     CannotAccessComponent,
     DefinedPlacesComponent,
     AddNewPlaceModalComponent,
-    UserSettingsModalComponent
+    UserSettingsModalComponent,
+    AttendedEventDetailsModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
