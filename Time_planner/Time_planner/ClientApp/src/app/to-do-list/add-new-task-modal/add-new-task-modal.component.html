@@ -35,10 +35,10 @@
     <label>
       Add date constraints <i class=" fa fa-info-circle"><span class="tooltiptext">Specify on which days and how many times you want to do this task.</span></i>
     </label>
-    <button *ngIf="addDateConstraintsOff" class="btn" style="background-color:transparent;" (click)="turnOnAddDateConstraints()"><i class="fa fa-toggle-off"></i></button>
-    <button *ngIf="!addDateConstraintsOff" class="btn" style="background-color:transparent" (click)="turnOffAddDateConstraints()"><i class="fa fa-toggle-on"></i></button>
+    <button *ngIf="addDatesOff" class="btn" style="background-color:transparent;" (click)="turnOnAddDates()"><i class="fa fa-toggle-off"></i></button>
+    <button *ngIf="!addDatesOff" class="btn" style="background-color:transparent" (click)="turnOffAddDates()"><i class="fa fa-toggle-on"></i></button>
   </div>
-  <div *ngIf="!addDateConstraintsOff" style="display:grid">
+  <div *ngIf="!addDatesOff" style="display:grid">
     <label style="padding-top: 10px;" for="name">
       Days <span class="required">*</span>
     </label>
@@ -59,7 +59,7 @@
       <label for="weekday-sun">S</label>
     </div>
   </div>
-  <div *ngIf="!addDateConstraintsOff" style="display:grid">
+  <div *ngIf="!addDatesOff" style="display:grid">
     <label style="padding-top: 10px;" for="name">
       Total duration <span class="required" style="margin-left:1px;margin-right:5px">*</span> <i class=" fa fa-info-circle"><span class="tooltiptext">Choose how much time it will take to do your task in total.</span></i>
     </label>
@@ -80,7 +80,7 @@
       <label style="margin-left:1em">minutes</label>
     </div>
   </div>
-  <div *ngIf="!addDateConstraintsOff" style="display:grid">
+  <div *ngIf="!addDatesOff" style="display:grid">
     <label style="padding-top: 10px;" for="name">
       Split into days<span class="required" style="margin-left:3px;margin-right:5px">*</span> <i class=" fa fa-info-circle"><span class="tooltiptext">Choose how many days from selected you want to do your task.</span></i>
     </label>

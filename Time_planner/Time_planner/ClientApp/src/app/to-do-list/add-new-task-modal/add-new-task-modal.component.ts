@@ -65,6 +65,7 @@ export class AddNewTaskModalComponent implements OnInit {
 
   turnOnAddDates() {
     this.addDatesOff = false;
+    this.splits = [1, 2, 3, 4, 5];
   }
 
   turnOffAddDates() {
