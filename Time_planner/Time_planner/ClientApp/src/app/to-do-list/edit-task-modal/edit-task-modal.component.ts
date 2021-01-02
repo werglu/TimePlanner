@@ -255,6 +255,8 @@ export class EditTaskModalComponent implements OnInit {
         });
       }
       else {
+        task.latitude = null;
+        task.longitude = null;
         this.tasksService.editTask(Number(this.editedTask.id), task).subscribe(() => this.onSave.emit(task));
       }
 

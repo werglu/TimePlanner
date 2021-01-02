@@ -217,7 +217,9 @@ export class EditTaskAaEventModalComponent implements OnInit {
         });
       }
       else {
-          this.tasksService.editTask(Number(this.editedTask.id), this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
+        task.latitude = null;
+        task.longitude = null;
+        this.tasksService.editTask(Number(this.editedTask.id), task).subscribe(() => this.onSave.emit(task));
       }
     }
     else {

@@ -35,13 +35,13 @@
     <label style="padding-top:10px;" for="name">
       City
     </label>
-    <input style="width:50%;" id="city" type="text" formControlName="city" [value]="currentTask.city == null ? '' : currentTask.city" required>
+    <input style="width:50%;" id="city" type="text" formControlName="city" [value]="currentTask.city == null ? '' : currentTask.city">
   </div>
   <div style="display:grid" *ngIf="currentTask != null">
     <label style="padding-top:10px;" for="name">
       Street address
     </label>
-    <input style="width:70%;" id="streetAddress" type="text" formControlName="streetAddress" [value]="currentTask.streetAddress == null ? '' : currentTask.streetAddress" required>
+    <input style="width:70%;" id="streetAddress" type="text" formControlName="streetAddress" [value]="currentTask.streetAddress == null ? '' : currentTask.streetAddress">
   </div>
 
   <div style="padding-top: 10px;">
