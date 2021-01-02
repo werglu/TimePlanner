@@ -4,9 +4,7 @@ using Time_planner_api.Controllers;
 using Xunit;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Time_planner_api.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace UnitTests
 {
@@ -35,8 +33,8 @@ namespace UnitTests
                 var count = result.Value.Count();
                 var value = result.Value.ToArray();
                 Assert.Equal(1, count);
-                Assert.Equal("Task1", ((Time_planner_api.Models.Task)value[0]).Title);
-                Assert.False(((Time_planner_api.Models.Task)value[0]).IsDone);
+                Assert.Equal("Task1", (value[0]).Title);
+                Assert.False((value[0]).IsDone);
             }
         }
     }
