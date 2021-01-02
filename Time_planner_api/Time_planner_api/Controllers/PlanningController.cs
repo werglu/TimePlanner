@@ -41,7 +41,7 @@ namespace Time_planner_api.Controllers
             for (int i = 0; i < events.Length; i++)
             {
                 var begin = GetDate(i, date, currentWeek);
-                if (currentWeek && begin == date)
+                if (currentWeek && begin <= date)
                 {
                     continue;
                 }
