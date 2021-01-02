@@ -123,7 +123,7 @@ namespace Time_planner_api.Helpers
 
             foreach (var taskHelper in bestChromosom)
             {
-                taskHelper.AddAssignedTask(assignedTasks);
+                assignedTasks.Add((taskHelper.Task, taskHelper.DayTimes));
             }
 
             return assignedTasks;

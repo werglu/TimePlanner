@@ -95,6 +95,7 @@ export class FindDatesModalComponent implements OnInit {
   }
 
   buildFoundDatesModel() {
+    var newFoundDatesModel: TaskAssignment[] = [];
     this.foundDates.forEach(taskAssignmentProposition => {
       var taskDayTimes: Array<boolean> = [];
       var taskInfos: Array<string> = [];
@@ -114,8 +115,9 @@ export class FindDatesModalComponent implements OnInit {
           taskInfos.push('No time window specified')
         }
       }
-      this.foundDatesModel.push({ task: taskAssignmentProposition.task, dayTimes: taskDayTimes, infos: taskInfos, count: taskCount });
+      newFoundDatesModel.push({ task: taskAssignmentProposition.task, dayTimes: taskDayTimes, infos: taskInfos, count: taskCount });
     })
+    this.foundDatesModel = newFoundDatesModel;
   }
 
   formatDate(date: Date): string {
