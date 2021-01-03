@@ -360,7 +360,12 @@ namespace Time_planner_api.Controllers
 
         private DateTime GetDate(int day, DateTime duringWeek, bool currentWeek)
         {
-            var currentWeekDate = duringWeek.AddDays(-1 * (int)(duringWeek.DayOfWeek) + 1).AddDays(day % 7); // starts from monday
+            int dayOfWeek = (int)(duringWeek.DayOfWeek);
+            if (dayOfWeek == 0)
+            {
+                dayOfWeek = 7;
+            }
+            var currentWeekDate = duringWeek.AddDays(-1 * dayOfWeek + 1).AddDays(day % 7); // starts from monday
             if (!currentWeek)
             {
                 return currentWeekDate.AddDays(7);
