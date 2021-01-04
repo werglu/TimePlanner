@@ -37,11 +37,26 @@
     <label for="priority" style="padding-top: 10px;">
       Choose priority:
     </label>
-    <kendo-combobox [data]="priorities"
+    <kendo-combobox class="marginBtm"
+                    [data]="priorities"
                     [value]="priorities[this.currentTask.priority]"
                     (valueChange)="onPriorityChange($event)">
     </kendo-combobox>
   </div>
+
+  <!-- defined places -->
+  <div style="display:inline" *ngIf="currentTask != null">
+    <label class="myPlace">
+      My places
+    </label>
+    <kendo-combobox [data]="placesList"
+                    [value]="placesList[0]"
+                    [textField]="'name'"
+                    [valueField]="'id'"
+                    (valueChange)="onPlaceChange($event)">
+    </kendo-combobox>
+  </div>
+
   <div style="display:grid" *ngIf="currentTask != null">
     <label style="padding-top:10px;" for="name">
       City

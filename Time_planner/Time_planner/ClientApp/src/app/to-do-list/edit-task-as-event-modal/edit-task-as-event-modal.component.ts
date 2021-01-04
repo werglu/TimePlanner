@@ -5,6 +5,8 @@ import { ListCategoriesService } from '../listCategories.service';
 import { Task } from '../task';
 import { TasksService } from '../tasks.service';
 import { CalendarEvent } from 'angular-calendar';
+import { DefinedPlace } from '../../defined-places/defined-place';
+import { DefinedPlacesService } from '../../defined-places/defined-places.service';
 
 @Component({
   selector: 'edit-task-as-event-modal',
@@ -21,6 +23,7 @@ export class EditTaskAaEventModalComponent implements OnInit {
   geocoder: any;
   isDone = false;
   choosenPriority = 1;
+  placesList: any[] = [];
   @Input() userId: string;
   @Input() editedTask: CalendarEvent;
   @Output() onCancel = new EventEmitter();
@@ -28,7 +31,8 @@ export class EditTaskAaEventModalComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private listCategoriesService: ListCategoriesService,
-    private tasksService: TasksService) {
+    private tasksService: TasksService,
+    private definedPlacesService: DefinedPlacesService) {
     this.editTaskForm = this.formBuilder.group({
       category: '',
       title: ['title', Validators.required],
@@ -64,6 +68,18 @@ export class EditTaskAaEventModalComponent implements OnInit {
         this.currentTask = task;
         this.currentCategory = (this.listCategories.filter(c => c.id == task.categoryId))[0];
         this.choosenPriority = task.priority;
+      });
+
+      this.placesList.push({
+        id: 1,
+        name: 'not selected',
+        city: '',
+        streetAddress: '',
+        ownerId: this.userId,
+      });
+
+      this.definedPlacesService.getAllPlaces().subscribe((places) => {
+        places.forEach((p) => this.placesList.push(p));
       });
     }
   }
@@ -151,6 +167,11 @@ export class EditTaskAaEventModalComponent implements OnInit {
         this.currentCategory = (this.listCategories.filter(c => c.id == this.currentTask.categoryId))[0];
       }
     });
+  }
+
+  onPlaceChange(place: DefinedPlace) {
+    this.editTaskForm.controls.city.setValue(place.city);
+    this.editTaskForm.controls.streetAddress.setValue(place.streetAddress);
   }
 
   onCategoryChange(category: ListCategory) {

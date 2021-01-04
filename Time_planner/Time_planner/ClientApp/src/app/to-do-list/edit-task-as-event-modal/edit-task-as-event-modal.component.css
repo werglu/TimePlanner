@@ -57,3 +57,12 @@ i.fa-plus {
     padding: 2px;
     display: grid;
 }
+
+.myPlace {
+  margin-right: 10px;
+  padding-top: 10px;
+}
+
+.marginBtm {
+  margin-bottom: 8px;
+}

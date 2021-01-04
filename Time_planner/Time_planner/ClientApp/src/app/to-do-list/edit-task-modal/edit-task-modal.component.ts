@@ -4,6 +4,8 @@ import { ListCategory } from '../listCategory';
 import { ListCategoriesService } from '../listCategories.service';
 import { Task } from '../task';
 import { TasksService } from '../tasks.service';
+import { DefinedPlacesService } from '../../defined-places/defined-places.service';
+import { DefinedPlace } from '../../defined-places/defined-place';
 
 @Component({
   selector: 'edit-task-modal',
@@ -31,6 +33,7 @@ export class EditTaskModalComponent implements OnInit {
   choosenMinuteIndex = 0;
   choosenDays = 1;
   geocoder: any;
+  placesList: any[] = [];
 
   public addDateConstraintsOff = true;
   @Input() userId: string;
@@ -40,7 +43,8 @@ export class EditTaskModalComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private listCategoriesService: ListCategoriesService,
-    private tasksService: TasksService) {
+    private tasksService: TasksService,
+    private definedPlacesService: DefinedPlacesService) {
     this.editTaskForm = this.formBuilder.group({
       category: '',
       title: ['title', Validators.required],
@@ -72,6 +76,18 @@ export class EditTaskModalComponent implements OnInit {
           this.choosenPriority = task.priority;
           this.getSelectedDays(this.currentTask.days);
         }
+      });
+
+      this.placesList.push({
+        id: 1,
+        name: 'not selected',
+        city: '',
+        streetAddress: '',
+        ownerId: this.userId,
+      });
+
+      this.definedPlacesService.getAllPlaces().subscribe((places) => {
+        places.forEach((p) => this.placesList.push(p));
       });
     }
   }
@@ -140,6 +156,11 @@ export class EditTaskModalComponent implements OnInit {
     if (this.choosenSplit > this.splits.length) {
       this.choosenSplit = 1;
     }
+  }
+
+  onPlaceChange(place: DefinedPlace) {
+    this.editTaskForm.controls.city.setValue(place.city);
+    this.editTaskForm.controls.streetAddress.setValue(place.streetAddress);
   }
 
   onDayChange() {
