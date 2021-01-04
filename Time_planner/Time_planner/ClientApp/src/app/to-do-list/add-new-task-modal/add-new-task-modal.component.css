@@ -34,3 +34,12 @@
   background: rgb(255, 150, 66);
   color: #ffffff;
 }
+
+.myPlace {
+  margin-right: 10px;
+  padding-top: 10px;
+}
+
+.marginBtm {
+  margin-bottom: 8px;
+}

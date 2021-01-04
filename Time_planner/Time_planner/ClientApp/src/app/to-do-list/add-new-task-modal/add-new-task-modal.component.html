@@ -26,11 +26,39 @@
     <label for="priority" style="padding-top: 10px;">
       Choose priority:
     </label>
-    <kendo-combobox [data]="priorities"
+    <kendo-combobox class="marginBtm"
+                    [data]="priorities"
                     [value]="priorities[1]"
                     (valueChange)="onPriorityChange($event)">
     </kendo-combobox>
   </div>
+
+  <!-- places -->
+  <div style="display:inline">
+    <label class="myPlace">
+      My places
+    </label>
+    <kendo-combobox [data]="placesList"
+                    [value]="placesList[0]"
+                    [textField]="'name'"
+                    [valueField]="'id'"
+                    (valueChange)="onPlaceChange($event)">
+    </kendo-combobox>
+  </div>
+
+  <div style="display:grid">
+    <label style="padding-top:10px;" for="name">
+      City
+    </label>
+    <input style="width:50%;" id="city" type="text" formControlName="city">
+  </div>
+  <div style="display:grid">
+    <label style="padding-top:10px;" for="name">
+      Street address
+    </label>
+    <input style="width:70%;" id="streetAddress" type="text" formControlName="streetAddress">
+  </div>
+
   <div style="padding-top: 10px;">
     <label>
       Add date constraints <i class=" fa fa-info-circle"><span class="tooltiptext">Specify on which days and how many times you want to do this task.</span></i>

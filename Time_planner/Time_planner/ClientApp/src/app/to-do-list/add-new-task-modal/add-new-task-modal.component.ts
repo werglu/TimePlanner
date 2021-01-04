@@ -4,6 +4,8 @@ import { ListCategory } from '../listCategory';
 import { ListCategoriesService } from '../listCategories.service';
 import { Task } from '../task';
 import { TasksService } from '../tasks.service';
+import { DefinedPlacesService } from '../../defined-places/defined-places.service';
+import { DefinedPlace } from '../../defined-places/defined-place';
 
 @Component({
   selector: 'add-new-task-modal',
@@ -25,6 +27,7 @@ export class AddNewTaskModalComponent implements OnInit {
   choosenMinute = 0;
   choosenDays = 1 + 2 + 4 + 8 + 16;
   geocoder: any;
+  placesList: any[] = [];
   public addDatesOff = true;
   public addDateConstraintsOff = true;
   @Input() userId: string;
@@ -33,19 +36,36 @@ export class AddNewTaskModalComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private listCategoriesService: ListCategoriesService,
-    private tasksService: TasksService) {
+    private tasksService: TasksService,
+    private definedPlacesService: DefinedPlacesService) {
     this.addTaskForm = this.formBuilder.group({
       category: '',
       title: ['', Validators.required],
-      priority: ''
+      priority: '',
+      city: ' ',
+      streetAddress: ' ',
     });
   }
 
   get title() { return this.addTaskForm.get('title'); }
+  get city() { return this.addTaskForm.get('city'); }
+  get streetAddress() { return this.addTaskForm.get('streetAddress'); }
 
   ngOnInit(): void {
     this.getCategories();
     this.geocoder = new google.maps.Geocoder();
+
+    this.placesList.push({
+      id: 1,
+      name: 'not selected',
+      city: ' ',
+      streetAddress: ' ',
+      ownerId: this.userId,
+    });
+
+    this.definedPlacesService.getAllPlaces().subscribe((places) => {
+      places.forEach((p) => this.placesList.push(p));
+    });
   }
 
   cancel() {
@@ -57,6 +77,11 @@ export class AddNewTaskModalComponent implements OnInit {
       lc.forEach(c => this.listCategories.push(c));
       this.currentCategory = this.listCategories[0]; // set default value
     });
+  }
+
+  onPlaceChange(place: DefinedPlace) {
+    this.addTaskForm.controls.city.setValue(place.city);
+    this.addTaskForm.controls.streetAddress.setValue(place.streetAddress);
   }
 
   onCategoryChange(category: ListCategory) {
@@ -129,13 +154,13 @@ export class AddNewTaskModalComponent implements OnInit {
       isDone: false,
       title: (<HTMLInputElement>document.getElementById('title')).value,
       priority: this.choosenPriority,
+      city: (<HTMLInputElement>document.getElementById('city')).value,
+      streetAddress: (<HTMLInputElement>document.getElementById('streetAddress')).value,
       split: this.addDatesOff ? null : this.choosenSplit,
       days: this.addDatesOff ? null : this.choosenDays,
       time: this.addDatesOff ? null : (this.choosenHour * 60 + this.choosenMinute),
       latitude: 0.0,
-      longitude: 0.0,
-      city: '',
-      streetAddress: ''
+      longitude: 0.0
     };
   }
   
