@@ -83,8 +83,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
                 FacebookId: response.id,
                 name: response.name,
                 photoUrl: response.picture.data.url
-              };
-             
+              };             
               this.router.navigate(['/']);
             }
           });

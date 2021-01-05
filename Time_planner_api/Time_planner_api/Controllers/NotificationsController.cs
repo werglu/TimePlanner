@@ -155,25 +155,6 @@ namespace Time_planner_api.Controllers
                 _context.Entry(usersEvents).State = EntityState.Modified;
             }
 
-            // create new event, todo: don't
-            Event ev = await _context.Events.FirstOrDefaultAsync(e => e.Id == notification.EventId);
-            if (ev != null)
-            {
-                await _context.Events.AddAsync(new Event()
-                {
-                    StartDate = ev.StartDate,
-                    Title = ev.Title,
-                    EndDate = ev.EndDate,
-                    City = ev.City,
-                    StreetAddress = ev.StreetAddress,
-                    IsPublic = ev.IsPublic,
-                    OwnerId = notification.ReceiverId,
-                    Description = ev.Description,
-                    Longitude = ev.Longitude,
-                    Latitude = ev.Latitude
-                });
-            }
-
             await _context.SaveChangesAsync();
             return NoContent();
         }

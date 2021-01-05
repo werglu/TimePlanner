@@ -91,7 +91,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
       this.userEventsService.getAllUserEvents(this.userId).subscribe((userEvents) => {
         userEvents.forEach((userEvent) => {
-          if (userEvent.status == 1) { //if accepted than add to the calendar
+          if (userEvent.status === 1) { //if accepted than add to the calendar
             this.eventsService.getEvent(userEvent.eventId).subscribe((event) => {
               this.events.push({
                 id: event.id,
@@ -110,7 +110,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
               this.refresh.next();
             });
 
-          }
+          }               
         });
       });
 

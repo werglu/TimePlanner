@@ -21,7 +21,7 @@ export class NotificationDetailsModalComponent implements OnInit {
   notificationEvent: Events;
   friends: Friend[] = [];
 
-  public messages: Array<string> = [' invites you to join an event', ' accepted your request', ' rejected your request'];
+  public messages: Array<string> = [' invites you to join an event', ' accepted your request to join', ' rejected your request to join'];
 
   constructor(private eventsService: EventsService,
     private userService: UserService,
