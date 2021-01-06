@@ -46,12 +46,8 @@ namespace Time_planner_api.Controllers
                     continue;
                 }
                 var end = GetDate(i + 1, date, currentWeek);
-                events[i] = await _context.Events.Where(ev => ev.OwnerId == userId && ev.StartDate < end && ev.EndDate >= begin).ToListAsync();
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.FacebookId == userId);
-                if (user != null && user.AttendedEvents != null)
-                {
-                    events[i].AddRange(user.AttendedEvents.Where(ev => ev.StartDate < end && ev.EndDate >= begin && !events[i].Contains(ev)));
-                }
+                events[i] = await FindEventsForUser(userId);
+                events[i] = events[i].Where(ev => ev.StartDate < end && ev.EndDate >= begin).ToList();
                 events[i].Sort((x, y) =>
                 {
                     if (x.StartDate != y.StartDate)
@@ -186,22 +182,8 @@ namespace Time_planner_api.Controllers
         public async Task<ActionResult<IEnumerable<CalendarItem>>> GetDayPlannedTasks(int year, int month, int day, double startMinutes = 420.0, double endMinutes = 1320.0)
         {
             var userId = GetUserId();
-            var events = await _context.Events.Where(x => x.OwnerId == userId).ToListAsync();
+            var events = await FindEventsForUser(userId);
             var tasks = await _context.Tasks.Where(y => y.Category.OwnerId == userId).ToListAsync();
-            var attendedEventsIds = await _context.UsersEvents.Where(ue => ue.Status == 1 && ue.UserId == userId).Select(ue => ue.EventId).ToListAsync();
-            foreach(var ae in attendedEventsIds)
-            {
-                var attendedEvent = await _context.Events.FindAsync(ae);
-                if (attendedEvent != null)
-                {
-                    events.Add(attendedEvent);
-                }
-            }
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.FacebookId == userId);
-            if (user != null && user.AttendedEvents != null)
-            {
-                events.AddRange(user.AttendedEvents.Where(ev => !events.Contains(ev)));
-            }
             var date = new DateTime(year, month, day);
             events = events.Where(x => IsDay(x, date)).ToList();
             tasks = tasks.Where(y => IsDay(y, date)).ToList();
@@ -402,10 +384,14 @@ namespace Time_planner_api.Controllers
         private async Task<List<Event>> FindEventsForUser(string userId)
         {
             var events = await _context.Events.Where(ev => ev.OwnerId == userId).ToListAsync();
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.FacebookId == userId);
-            if (user != null && user.AttendedEvents != null)
+            var attendedEventsIds = await _context.UsersEvents.Where(ue => ue.Status == 1 && ue.UserId == userId).Select(ue => ue.EventId).ToListAsync();
+            foreach (var ae in attendedEventsIds)
             {
-                events.AddRange(user.AttendedEvents.Where(ev => !events.Contains(ev)));
+                var attendedEvent = await _context.Events.FindAsync(ae);
+                if (attendedEvent != null)
+                {
+                    events.Add(attendedEvent);
+                }
             }
             return events;
         }
