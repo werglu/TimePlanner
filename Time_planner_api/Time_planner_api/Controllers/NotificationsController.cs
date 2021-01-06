@@ -30,7 +30,7 @@ namespace Time_planner_api.Controllers
         public async Task<ActionResult<IEnumerable<Notification>>> GetNotifications()
         {
             var userId = GetUserId();
-            return await _context.Notifications.Where(n => n.IsDismissed == false && n.ReceiverId == userId).ToListAsync();
+            return await _context.Notifications.Where(n => n.IsDismissed == false && n.ReceiverId == userId).OrderByDescending(nn => nn.Id).ToListAsync();
         }
 
         // POST: api/Notifications/dismiss?id=a
