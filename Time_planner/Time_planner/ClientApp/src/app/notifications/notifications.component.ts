@@ -40,6 +40,7 @@ export class NotificationsComponent implements OnInit {
     this.notificationsService.getNotifications().subscribe(notifications => {
       this.gridData = [];
       notifications.forEach(n => this.gridData.push(n));
+      this.gridData = this.gridData.reverse();
       this.checkIfThereAreAnyNotifications();
     });
   }

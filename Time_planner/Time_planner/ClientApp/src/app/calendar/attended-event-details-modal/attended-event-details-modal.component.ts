@@ -132,15 +132,18 @@ export class AttendedEventDetailsModalComponent implements OnInit {
     if (!this.wasInvitedInitialized) {
       this.userEventsService.getUserEvents(this.userId, (this.editedEvent.id as number))
         .subscribe((x) => { this.isOwner = (x.status == Status.Owner); });
-      this.allFriends.forEach((x) => {
-        this.invited.push({
-          FacebookId: x.FacebookId,
-          name: x.name,
-          photoUrl: x.photoUrl,
-          status: 1
-        });
-      });
-
+      this.allFriends.forEach((x) => this.userEventsService.getUserEvents(x.FacebookId, (this.editedEvent.id as number))
+        .subscribe((y) => {
+          if (y.id > -1) {
+            this.invited.push({
+              FacebookId: x.FacebookId,
+              name: x.name,
+              photoUrl: x.photoUrl,
+              status: y.status,
+            });
+            this.friends.splice(this.friends.indexOf(x), 1);
+          }
+        }));
 
       if (this.allFriends.length > 0)
         this.wasInvitedInitialized = true;
