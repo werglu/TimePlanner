@@ -241,6 +241,8 @@ namespace Time_planner_api.Controllers
             _context.Events.Remove(ourEvent);
             var notifications = _context.Notifications.Where(n => n.EventId == id);
             _context.Notifications.RemoveRange(notifications);
+            var usersEvents = _context.UsersEvents.Where(ue => ue.EventId == id);
+            _context.UsersEvents.RemoveRange(usersEvents);
             await _context.SaveChangesAsync();
 
             return ourEvent;

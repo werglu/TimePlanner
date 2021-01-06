@@ -60,7 +60,7 @@ namespace Time_planner_api.Controllers
                 {
                     return Unauthorized();
                 }
-                return result.ToList();
+                return await result.ToListAsync();
             }
         }
 
@@ -75,7 +75,7 @@ namespace Time_planner_api.Controllers
                 return NotFound();
             }
 
-            if (GetUserId() != userId)
+            if (GetUserId() != userId || status == 3)
             {
                 return Unauthorized();
             }
