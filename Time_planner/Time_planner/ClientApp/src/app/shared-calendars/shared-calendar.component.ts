@@ -9,6 +9,7 @@ import { Events } from '../calendar/events';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user/user.service';
 import { Friend } from '../shared/friend';
+import { UserEventsService } from '../calendar/userEvents.service';
 
 @Component({
   selector: 'app-shared-calendar-component',
@@ -41,6 +42,7 @@ export class SharedCalendarComponent implements OnInit {
     private fb: FacebookService,
     private route: ActivatedRoute,
     private router: Router,
+    private userEventsService: UserEventsService,
     private userService: UserService) {
   }
 
@@ -106,6 +108,51 @@ export class SharedCalendarComponent implements OnInit {
         }
       });
       this.refresh.next();
+    });
+
+
+    this.userEventsService.getAllUserEvents(this.friendId).subscribe((userEvents) => {
+      userEvents.forEach((userEvent) => {
+        if (userEvent.status === 1) { //if accepted than add to the calendar
+          this.eventsService.getEvent(userEvent.eventId).subscribe((event) => {
+            if (event.isPublic) {
+              this.events.push({
+                id: event.id,
+                title: event.title,
+                start: new Date(event.startDate),
+                end: new Date(event.endDate),
+                draggable: false,
+                color: {
+                  primary: '#ff9642',
+                  secondary: '#ff9642'
+                },
+                meta: {
+                  type: 'public'
+                }
+              });
+            }
+            else {
+                this.events.push({
+                  id: event.id,
+                  title: 'Private appointment',
+                  start: new Date(event.startDate),
+                  end: new Date(event.endDate),
+                  draggable: false,
+                  color: {
+                    primary: '#2c786c',
+                    secondary: '#2c786c'
+                  },
+                  meta: {
+                    type: 'private'
+                  }
+                });
+            }
+
+            this.refresh.next();
+
+            });
+        }
+      });
     });
   }
 

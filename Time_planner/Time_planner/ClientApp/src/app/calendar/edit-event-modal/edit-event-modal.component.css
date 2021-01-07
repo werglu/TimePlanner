@@ -139,7 +139,7 @@ img.profile-photo-s {
 }
 
 .accepted {
-  color: var(--color-light-green);
+  color: #16c79a;
 }
 
 .rejected {
@@ -147,7 +147,7 @@ img.profile-photo-s {
 }
 
 .unknow {
-  color: var(--yellow);
+  color: #ffd56b;
 }
 
 .myPlace {

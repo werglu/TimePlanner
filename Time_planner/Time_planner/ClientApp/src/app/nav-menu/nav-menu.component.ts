@@ -84,7 +84,6 @@ export class NavMenuComponent implements OnInit, OnDestroy {
                 name: response.name,
                 photoUrl: response.picture.data.url
               };             
-              this.router.navigate(['/']);
             }
           });
     });

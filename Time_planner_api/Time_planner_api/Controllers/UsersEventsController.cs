@@ -55,11 +55,11 @@ namespace Time_planner_api.Controllers
             }
             else
             {
-                var askingUserId = GetUserId();
-                if (askingUserId != userId)
+                if(!_context.Users.Any(u => u.FacebookId == GetUserId()))
                 {
                     return Unauthorized();
                 }
+
                 return await result.ToListAsync();
             }
         }
