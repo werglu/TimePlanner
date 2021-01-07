@@ -86,7 +86,9 @@ namespace Time_planner_api.Controllers
                         StartDate = ourEvent.StartDate,
                         EndDate = ourEvent.EndDate,
                         Latitude = ourEvent.Latitude,
-                        Longitude = ourEvent.Longitude
+                        Longitude = ourEvent.Longitude,
+                        City = ourEvent.City,
+                        StreetAddress = ourEvent.StreetAddress
                     };
                 }
                 return new Event()
@@ -96,7 +98,9 @@ namespace Time_planner_api.Controllers
                     StartDate = ourEvent.StartDate,
                     EndDate = ourEvent.EndDate,
                     Latitude = ourEvent.Latitude,
-                    Longitude = ourEvent.Longitude
+                    Longitude = ourEvent.Longitude,
+                    City = ourEvent.City,
+                    StreetAddress = ourEvent.StreetAddress
                 };
             }
         }

@@ -35,7 +35,9 @@ export class NotificationDetailsModalComponent implements OnInit {
   ngOnInit(): void {
     this.messageType = this.notificationDetails.messageType;
     if (this.notificationDetails.eventId != null) {
-      this.eventsService.getEvent(this.notificationDetails.eventId).subscribe(ne => this.notificationEvent = ne);
+      this.eventsService.getEvent(this.notificationDetails.eventId).subscribe(ne => {
+        this.notificationEvent = ne;
+      });
     }
   } 
 
