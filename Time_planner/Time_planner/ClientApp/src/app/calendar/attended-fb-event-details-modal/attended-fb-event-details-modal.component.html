@@ -1,5 +1,5 @@
 <form [formGroup]="editEventForm" (ngSubmit)="onSubmit()">
-  <div style="display:grid">
+  <div style="display:grid" *ngIf="showTitle">
     <label style="padding-top: 10px;" for="name">
       Title
     </label>
@@ -30,7 +30,7 @@
     <input style="width:50%;" id="place" type="text" formControlName="place" [value]="editedEvent.place" readonly>
   </div>
 
-  <div style="display:grid">
+  <div style="display:grid" *ngIf="showDesc">
     <label style="padding-top:10px;" for="name">
       Description
     </label>

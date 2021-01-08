@@ -22,6 +22,7 @@ export class SharedCalendarComponent implements OnInit {
   dayView = false;
   weekView = false;
   openEvent = false;
+  openFbEvent = false;
   editedEvent: CalendarEvent;
   view: CalendarView = CalendarView.Month;
   viewDate: Date = new Date();
@@ -119,6 +120,7 @@ export class SharedCalendarComponent implements OnInit {
               this.events.push({
                 id: event.id,
                 title: event.title,
+                description: "",
                 start: new Date(event.startDate),
                 end: new Date(event.endDate),
                 draggable: false,
@@ -135,6 +137,7 @@ export class SharedCalendarComponent implements OnInit {
                 this.events.push({
                   id: event.id,
                   title: 'Private appointment',
+                  description: "",
                   start: new Date(event.startDate),
                   end: new Date(event.endDate),
                   draggable: false,
@@ -154,15 +157,48 @@ export class SharedCalendarComponent implements OnInit {
         }
       });
     });
+
+    this.fb.api("/" + this.friendId + "/events", "get").then(
+      response => {
+        response.data.forEach((x) => {
+          let ev: CalendarEvent = {
+            id: x.id + "f",
+            start: new Date(x.start_time),
+            title: '',
+            description: '',
+            color: {
+              primary: '#3b5998',
+              secondary: '#3b5998'
+            },
+            allDay: false,
+            draggable: false,
+            meta: {
+              type: 'fbEvent'
+            }
+          }
+          if (x.end_time == null)
+            ev.end = new Date(x.start_time);
+          else
+            ev.end = new Date(x.end_time);
+
+          this.events.push(ev);
+        });
+      });
   }
 
   eventClicked(event: CalendarEvent): void {
     this.editedEvent = event;
-    this.openEvent = true; 
+    if (event.meta.type == 'public') { this.openEvent = true; }
+    if (event.meta.type == 'private') { this.openEvent = true; }
+    if (event.meta.type == 'fbEvent') { this.openFbEvent = true; }
   }
 
   closeOpenEventModal() {
     this.openEvent = false;
+  }
+
+  closeOpenFbEventModal() {
+    this.openFbEvent = false;
   }
 
   getWeekView() {

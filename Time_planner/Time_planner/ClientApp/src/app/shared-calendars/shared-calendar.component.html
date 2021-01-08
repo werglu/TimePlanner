@@ -55,3 +55,10 @@
   </kendo-dialog-titlebar>
   <event-details-modal [editedEvent]="editedEvent" (onCancel)="closeOpenEventModal()"></event-details-modal>
 </kendo-dialog>
+
+<kendo-dialog *ngIf="openFbEvent" (close)="closeOpenFbEventModal()" [minWidth]="250" [width]="450" [maxHeight]="650">
+  <kendo-dialog-titlebar>
+    <div><span class="fa fa-facebook-official"></span>Facebook event details</div>
+  </kendo-dialog-titlebar>
+  <attended-fb-event-details-modal [editedEvent]="editedEvent" (onCancel)="closeOpenFbEventModal()"></attended-fb-event-details-modal>
+</kendo-dialog>

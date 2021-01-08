@@ -11,6 +11,8 @@ export class AttendedFbEventDetailsModalComponent implements OnInit {
   editEventForm: FormGroup;
   showEndDate: boolean = true;
   showPlace: boolean = true;
+  showDesc: boolean = true;
+  showTitle: boolean = true;
   @Input() editedEvent: CalendarEvent;
   @Output() onCancel = new EventEmitter();
 
@@ -25,12 +27,17 @@ export class AttendedFbEventDetailsModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.editedEvent.end.toString() === this.editedEvent.start.toString()) {
+    if (this.editedEvent.end.toString() === this.editedEvent.start.toString())
       this.showEndDate = false;
-    }
 
     if (!this.editedEvent.hasOwnProperty('place'))
       this.showPlace = false;
+
+    if (this.editedEvent.description === '')
+      this.showDesc = false;
+
+    if (this.editedEvent.title === '')
+      this.showTitle = false;
   }
 
   getStartDate(): string {

@@ -166,7 +166,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   getFbEvents() {
     this.fb.api("/me/events", "get").then(
       response => {
-        console.log(response);
         response.data.forEach((x) => {
           let ev: CalendarEvent = {
             id: x.id + "f",
