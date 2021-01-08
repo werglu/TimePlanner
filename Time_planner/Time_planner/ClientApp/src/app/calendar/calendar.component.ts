@@ -12,6 +12,7 @@ import { ListCategoriesService } from '../to-do-list/listCategories.service';
 import { isNullOrUndefined } from 'util';
 import { FacebookService } from 'ngx-facebook';
 import { UserEventsService } from './userEvents.service';
+import { UserService } from '../user/user.service';
 
 @Component({
   selector: 'app-calendar-component',
@@ -24,6 +25,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   dayView = false;
   weekView = false;
   openEvent = false;
+  openFbEvent = false;
+  openFbBirthday = false;
   openTask = false;
   isPublic = false;
   canEditEvent = true;
@@ -46,6 +49,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       },
     },
   ];
+  fbEvents: CalendarEvent[] = [];
+  fbBirthdayEvents: CalendarEvent[] = [];
   userId: string;
 
   constructor(public eventsService: EventsService,
@@ -63,6 +68,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.userId = authResp.userID;
     this.getTasks();
     this.getEvents();
+    this.getFbEvents();
+    this.getFbBirthday();
   }
 
   ngAfterViewInit(): void {
@@ -74,6 +81,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         this.events.push({
           id: ee.id,
           title: ee.title,
+          description: '',
           start: new Date(ee.startDate),
           end: new Date(ee.endDate),
           actions: this.actions,
@@ -96,6 +104,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
               this.events.push({
                 id: event.id,
                 title: event.title,
+                description: '',
                 start: new Date(event.startDate),
                 end: new Date(event.endDate),
                 draggable: false,
@@ -132,6 +141,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                 this.events.push({
                   id: task.id,
                   title: task.title,
+                  description: '',
                   start: new Date(new Date(date).setHours(0, 0)),
                   end: new Date(new Date(date).setHours(0, 30)),
                   actions: this.actions,
@@ -153,15 +163,102 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     });
   }
 
+  getFbEvents() {
+    this.fb.api("/me/events", "get").then(
+      response => {
+        console.log(response);
+        response.data.forEach((x) => {
+          let ev: CalendarEvent = {
+            id: x.id + "f",
+            start: new Date(x.start_time),
+            title: x.name,
+            description: x.description,
+            color: {
+              primary: '#3b5998',
+              secondary: '#3b5998'
+            },
+            allDay: false,
+            draggable: false,
+            meta: {
+              type: 'fbEvent'
+            }
+          }
+          if (x.end_time == null)
+            ev.end = new Date(x.start_time);
+          else
+            ev.end = new Date(x.end_time);
+
+          if (x.hasOwnProperty('place'))
+            ev.place = x.place.name;
+          this.fbEvents.push(ev);
+        });
+
+        this.addFbEvents();
+      });
+  }
+
+  getFbBirthday() {
+    this.fb.api('/me/friends', 'get', { fields: 'name,birthday' }).then(
+      response => {
+        response.data.forEach((x) => {
+          if (x.hasOwnProperty('birthday')) {
+            let name = x.name.split(" ");
+            let birthday = x.birthday.split("/");
+            let ev: CalendarEvent = {
+              id: "birthdayf",
+              title: name[0] + " birthday!",
+              description: x.name + " has a birthday today",
+              start: new Date(birthday[0] + '/' + birthday[1] + '/' + new Date().getFullYear()),
+              color: {
+                primary: '#FF0000',
+                secondary: '#FF0000',
+              },
+              allDay: true,
+              draggable: false,
+              meta: {
+                type: 'fbBirthday'
+              }
+            }
+
+            this.fbBirthdayEvents.push(ev);
+          }
+          
+        });
+        this.addFbBirthdatEvents();
+      });
+  }
+
+  addFbEvents() {
+    this.fbEvents.forEach((x) => {
+      this.events.push(x);
+    })
+  }
+
+  addFbBirthdatEvents() {
+    this.fbBirthdayEvents.forEach((x) => {
+      this.events.push(x);
+    })
+  }
+
   eventClicked(event: CalendarEvent): void {
     this.editedEvent = event;
     if (event.meta.type == 'eventAttended') { this.openAttendedEvent = true;}
     if (event.meta.type == 'event') { this.openEvent = true; }
+    if (event.meta.type == 'fbEvent') { this.openFbEvent = true; }
+    if (event.meta.type == 'fbBirthday') { this.openFbBirthday = true; }
     if (event.meta.type == 'task') { this.openTask = true; }
   }
 
   closeOpenEventModal() {
     this.openEvent = false;
+  }
+
+  closeOpenFbEventModal() {
+    this.openFbEvent = false;
+  }
+
+  closeOpenFbBirthdayModal() {
+    this.openFbBirthday = false;
   }
 
   closeOpenTaskModal() {
@@ -208,6 +305,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       start: event.startDate,
       end: event.endDate,
       title: event.title,
+      description: '',
       actions: this.actions,
       draggable: true,
       color: {
@@ -231,6 +329,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
           this.events.push({
             id: task.id,
             title: task.title,
+            description: '',
             start: new Date(date),
             end: new Date(date),
             actions: this.actions,
@@ -255,6 +354,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.events = [];
     this.getTasks();
     this.getEvents();
+    this.addFbEvents();
+    this.addFbBirthdatEvents();
     this.activeDayIsOpen = false;
     this.refresh.next();
   }
@@ -372,6 +473,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             start: newStart,
             end: newEnd,
             title: event.title,
+            description: '',
             actions: this.actions,
             draggable: true,
             color: {

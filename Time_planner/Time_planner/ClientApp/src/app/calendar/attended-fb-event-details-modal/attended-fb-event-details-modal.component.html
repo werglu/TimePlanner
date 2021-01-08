@@ -1,0 +1,43 @@
+<form [formGroup]="editEventForm" (ngSubmit)="onSubmit()">
+  <div style="display:grid">
+    <label style="padding-top: 10px;" for="name">
+      Title
+    </label>
+    <input id="title" type="text" formControlName="title" [value]="editedEvent.title" readonly>
+  </div>
+  <div style="display:grid">
+    <label style="padding-top: 10px;" for="name">
+      Start date
+    </label>
+    <div>
+      <input style="width:40%;margin-right:10px" type="date" id="startDate" name="startDate" [value]="getStartDate()" readonly>
+      <input type="time" id="startDateTime" name="startDateTime" [value]="getStartTime()" readonly>
+    </div>
+  </div>
+  <div style="display:grid" *ngIf="showEndDate">
+    <label style="padding-top: 10px;" for="name">
+      End date
+    </label>
+    <div>
+      <input style="width:40%;margin-right:10px" type="date" id="endDate" name="endDate" [value]="getEndDate()" readonly>
+      <input type="time" id="endDateTime" name="appt" [value]="getEndTime()" readonly>
+    </div>
+  </div>
+  <div style="display:grid" *ngIf="showPlace">
+    <label style="padding-top:10px;" for="place">
+      Place
+    </label>
+    <input style="width:50%;" id="place" type="text" formControlName="place" [value]="editedEvent.place" readonly>
+  </div>
+
+  <div style="display:grid">
+    <label style="padding-top:10px;" for="name">
+      Description
+    </label>
+    <textarea class="description" id="description" type="text" formControlName="description" [value]="editedEvent.description" readonly></textarea>
+  </div>
+
+  <div style="float:right">
+    <button style="margin-top:20px;margin-right:10px;opacity:0.6" class="btn btn-secondary" (click)="cancel()">Close</button>
+  </div>
+</form>

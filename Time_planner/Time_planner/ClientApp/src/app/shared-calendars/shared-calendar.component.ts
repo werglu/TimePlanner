@@ -75,6 +75,7 @@ export class SharedCalendarComponent implements OnInit {
           this.events.push({
             id: ee.id,
             title: ee.title,
+            description: '',
             start: new Date(ee.startDate),
             end: new Date(ee.endDate),
             actions: this.actions,
@@ -91,6 +92,7 @@ export class SharedCalendarComponent implements OnInit {
           this.events.push({
             id: ee.id,
             title: 'Private appointment',
+            description: '',
             start: new Date(ee.startDate),
             end: new Date(ee.endDate),
             color: {

@@ -41,6 +41,8 @@ import { DefinedPlacesComponent } from './defined-places/defined-places.componen
 import { AddNewPlaceModalComponent } from './defined-places/add-new-place-modal/add-new-place-modal.component';
 import { UserSettingsModalComponent } from './user-settings-modal/user-settings-modal.component';
 import { AttendedEventDetailsModalComponent } from './calendar/attended-event-details-modal/attended-event-details-modal.component';
+import { AttendedFbEventDetailsModalComponent } from './calendar/attended-fb-event-details-modal/attended-fb-event-details-modal.component';
+import { FbBirthdayDetailsModalComponent } from './calendar/fb-birthday-details/fb-birthday-details-modal.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -74,7 +76,9 @@ export function tokenGetter() {
     DefinedPlacesComponent,
     AddNewPlaceModalComponent,
     UserSettingsModalComponent,
-    AttendedEventDetailsModalComponent
+    AttendedEventDetailsModalComponent,
+    AttendedFbEventDetailsModalComponent,
+    FbBirthdayDetailsModalComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

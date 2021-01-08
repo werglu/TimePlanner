@@ -110,7 +110,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   fbLogin() {
     this.fb.login({
-      scope: 'public_profile, email, user_friends, user_photos',
+      scope: 'public_profile, email, user_friends, user_photos, user_events',
       return_scopes: true
     }).then((response: LoginStatus) => {
       if (response.authResponse) {

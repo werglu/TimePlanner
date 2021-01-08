@@ -1,0 +1,14 @@
+<form [formGroup]="editEventForm" (ngSubmit)="onSubmit()">
+  <div class="icon">
+    <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+  </div>
+  <div style="display:grid">
+    <label style="padding-top:10px;" for="name">
+      {{editedEvent.description}}
+    </label>
+  </div>
+
+  <div style="float:right">
+    <button style="margin-top:20px;margin-right:10px;opacity:0.6" class="btn btn-secondary" (click)="cancel()">Close</button>
+  </div>
+</form>

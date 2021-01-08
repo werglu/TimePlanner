@@ -64,6 +64,20 @@
   <edit-event-modal [editedEvent]="editedEvent" (onCancel)="closeOpenEventModal()" (onSave)="editEvent($event)" (onChangeVisibility)="eventVisibilityChanged($event)"></edit-event-modal>
 </kendo-dialog>
 
+<kendo-dialog *ngIf="openFbEvent" (close)="closeOpenFbEventModal()" [minWidth]="250" [width]="450" [maxHeight]="650">
+  <kendo-dialog-titlebar>
+    <div><span class="fa fa-facebook-official"></span>Facebook event details</div>
+  </kendo-dialog-titlebar>
+  <attended-fb-event-details-modal [editedEvent]="editedEvent" (onCancel)="closeOpenFbEventModal()"></attended-fb-event-details-modal>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="openFbBirthday" (close)="closeOpenFbBirthdayModal()" [minWidth]="250" [width]="450" [maxHeight]="650">
+  <kendo-dialog-titlebar>
+    <div><span class="fa fa-facebook-official"></span>Facebook friend's birthday</div>
+  </kendo-dialog-titlebar>
+  <fb-birthday-details-modal [editedEvent]="editedEvent" (onCancel)="closeOpenFbBirthdayModal()"></fb-birthday-details-modal>
+</kendo-dialog>
+
 <kendo-dialog *ngIf="openTask" (close)="closeOpenTaskModal()" [minWidth]="250" [width]="450" [maxHeight]="650">
   <kendo-dialog-titlebar>
     <div><span class="k-icon k-i-user"></span>Edit task</div>
