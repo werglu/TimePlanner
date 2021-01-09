@@ -43,11 +43,12 @@ export class PlanningService {
     return this.http.put<number[]>(this.baseUrl + 'tasksForToday?year=' + date.getFullYear() + '&month=' + (date.getMonth() + 1) + '&day=' + date.getDate(), taskIds);
   }
 
-  findCommonDate(userIds: string[], start: Date, end: Date): Observable<CommonDateOutput> {
+  findCommonDate(userIds: string[], start: Date, end: Date, excludeEventId: number): Observable<CommonDateOutput> {
     return this.http.put<CommonDateOutput>(this.baseUrl + 'commonDate', {
       userIds: userIds,
       start: start,
       end: end,
+      excludeEventId: excludeEventId
     });
   }
 }

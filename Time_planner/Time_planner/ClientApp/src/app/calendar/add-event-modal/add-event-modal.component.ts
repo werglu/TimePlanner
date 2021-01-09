@@ -252,7 +252,7 @@ export class AddEventModalComponent implements OnInit, AfterViewInit {
       var startDate = this.setDate('startDate');
       var endDate = this.setDate('endDate');
       this.invitedFriendsIds.forEach(friendId => userIds.push(friendId));
-      this.planningService.findCommonDate(userIds, startDate, endDate).subscribe(output => {
+      this.planningService.findCommonDate(userIds, startDate, endDate, -1).subscribe(output => {
         this.getConflictMessage(output);
       })
     }

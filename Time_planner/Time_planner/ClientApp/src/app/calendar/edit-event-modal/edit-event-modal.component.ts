@@ -11,6 +11,8 @@ import { UserEventsService, Status } from '../userEvents.service';
 import { FacebookService } from 'ngx-facebook';
 import { DefinedPlace } from '../../defined-places/defined-place';
 import { DefinedPlacesService } from '../../defined-places/defined-places.service';
+import { PlanningService } from '../../planning/planning.service';
+import { CommonDateOutput } from '../../planning/commonDateOutput';
 
 @Component({
   selector: 'edit-event-modal',
@@ -28,6 +30,8 @@ export class EditEventModalComponent implements OnInit {
   invited: InvitedFriend[];
   isOwner: boolean;
   placesList: any[] = [];
+  conflictMessage: string = '';
+  conflict: boolean = false;
   geocoder: any;
   private wasInvitedInitialized = false;
   @Input() editedEvent: CalendarEvent;
@@ -42,6 +46,7 @@ export class EditEventModalComponent implements OnInit {
     public userService: UserService,
     private notificationService: NotificationsService,
     private userEventsService: UserEventsService,
+    public planningService: PlanningService,
     private fb: FacebookService,
     private definedPlacesService: DefinedPlacesService) {
     this.editEventForm = this.formBuilder.group({
@@ -174,7 +179,7 @@ export class EditEventModalComponent implements OnInit {
 
   onSubmit() {
     this.validateAllFormControls(this.editEventForm);
-    if (this.editEventForm.valid && !this.dateInvalid()) {
+    if (this.editEventForm.valid && !this.startDateInvalid() && !this.endDateInvalid() && !this.dateInvalid()) {
       var event = this.getFormValue();
 
       this.geocoder.geocode({ 'address': event.city }, (results, status) => {
@@ -207,6 +212,14 @@ export class EditEventModalComponent implements OnInit {
 
   cancel() {
     this.onCancel.emit();
+  }
+
+  startDateInvalid(): boolean {
+    return this.setDate('startDate') == null;
+  }
+
+  endDateInvalid(): boolean {
+    return this.setDate('endDate') == null;
   }
 
   dateInvalid(): boolean {
@@ -246,6 +259,7 @@ export class EditEventModalComponent implements OnInit {
       });
       this.friends.splice(this.friends.indexOf(friend), 1);
     });
+    this.findCommonDate();
   }
 
   getUserEvent(eventId: number, status: number, userId: string): UsersEvents {
@@ -300,6 +314,7 @@ export class EditEventModalComponent implements OnInit {
               status: y.status,
             });
             this.friends.splice(this.friends.indexOf(x), 1);
+            this.findCommonDate();
           }
         }));
 
@@ -317,5 +332,68 @@ export class EditEventModalComponent implements OnInit {
     });
 
     return canInvite;
+  }
+
+  findCommonDate() {
+    if (!this.startDateInvalid() && !this.endDateInvalid() && !this.dateInvalid()) {
+      var userIds: string[] = [this.userId];
+      var startDate = this.setDate('startDate');
+      var endDate = this.setDate('endDate');
+      this.invited.forEach(friend => userIds.push(friend.FacebookId));
+      this.planningService.findCommonDate(userIds, startDate, endDate, (this.editedEvent.id as number)).subscribe(output => {
+        this.getConflictMessage(output);
+      })
+    }
+    else {
+      this.conflictMessage = "";
+      this.conflict = false;
+    }
+  }
+
+  getConflictMessage(output: CommonDateOutput) {
+    if (output.conflictingUsers.length == 0) {
+      this.conflictMessage = 'Everyone invited in available during selected time';
+      this.conflict = false
+      return;
+    }
+
+    var names = [];
+    output.conflictingUsers.forEach(conflictingUserId => {
+      if (conflictingUserId != this.userId) {
+        var conflictingFriend = this.invited.find(friend => friend.FacebookId == conflictingUserId);
+        if (conflictingFriend) {
+          names.push(conflictingFriend.name);
+        }
+      }
+    });
+
+    var message = '';
+    if (names.length == 0) {
+      if (output.conflictingUsers.includes(this.userId)) {
+        message = 'You are';
+      }
+      else {
+        this.conflictMessage = 'Everyone invited in available during selected time';
+        this.conflict = false
+        return;
+      }
+    }
+    else {
+      if (output.conflictingUsers.includes(this.userId)) {
+        names.unshift('You');
+      }
+      if (names.length == 1) {
+        message = names[0] + ' is';
+      }
+      else {
+        for (var ind = 0; ind < names.length - 2; ind++) {
+          message = message + names[ind] + ', '
+        }
+        message = message + names[names.length - 2] + ' and ' + names[names.length - 1] + ' are';
+      }
+    }
+
+    this.conflictMessage = message + ' busy during selected time.\n\nYou can try ' + output.commonDate.toString().replace('T', ' ');
+    this.conflict = true;
   }
 }

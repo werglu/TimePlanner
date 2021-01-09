@@ -154,6 +154,40 @@ img.profile-photo-s {
   margin-right: 10px;
 }
 
+/*conflict message*/
+.conflictTooltip {
+  width: 160px;
+  opacity: 0.9;
+  top: 5%;
+  color: #fff;
+  visibility: hidden;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  background-color: var(--color-light-green);
+  font-size: 0.6em;
+  white-space: pre-wrap;
+}
+
+.conflictBtn:hover .conflictTooltip {
+  visibility: visible;
+}
+
+.conflictMessage {
+  position: absolute;
+  top: 0.3em;
+  right: 1.3em;
+  font-size: 1.5em;
+}
+
+.conflictBtn {
+  position: fixed;
+  color: var(--yellow)
+}
+
 .description {
   border: solid 2px var(--color-light-green);
   width: 80%;

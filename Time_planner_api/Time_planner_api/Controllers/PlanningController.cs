@@ -295,6 +295,7 @@ namespace Time_planner_api.Controllers
             for (int i = 0; i < input.UserIds.Length; i++)
             {
                 events[i] = await FindEventsForUser(input.UserIds[i]);
+                events[i].RemoveAll(ev => ev.Id == input.ExcludeEventId);
                 if (events[i].Any(ev => Math.Max(ev.StartDate.Ticks, start.Ticks) < Math.Min(ev.EndDate.Ticks, end.Ticks)))
                 {
                     conflictingUsers.Add(input.UserIds[i]);
