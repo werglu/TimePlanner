@@ -182,12 +182,13 @@ export class AddEventModalComponent implements OnInit, AfterViewInit {
   setDate(value: string): Date {
     var time = (<HTMLInputElement>document.getElementById(value + 'Time')).value;
     var date = (<HTMLInputElement>document.getElementById(value)).valueAsDate;
-    var t = time.split(':');
-    if (date != null) {
+    if (time && date != null) {
+      var t = time.split(':');
       date.setHours(Number(t[0]));
       date.setMinutes(Number(t[1]));
+      return date;
     }
-    return date;
+    return null;
   }
 
   getStartDate(): string {
