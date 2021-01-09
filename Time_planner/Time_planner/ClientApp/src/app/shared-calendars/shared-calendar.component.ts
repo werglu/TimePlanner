@@ -89,7 +89,7 @@ export class SharedCalendarComponent implements OnInit {
             meta: {
               type: 'public'
             }
-          })
+          } as CalendarEvent)
         }
         else {
           this.events.push({
@@ -105,7 +105,7 @@ export class SharedCalendarComponent implements OnInit {
             meta: {
               type: 'private'
             }
-          })
+          } as CalendarEvent)
         }
       });
       this.refresh.next();
@@ -131,7 +131,7 @@ export class SharedCalendarComponent implements OnInit {
                 meta: {
                   type: 'public'
                 }
-              });
+              } as CalendarEvent);
             }
             else {
                 this.events.push({
@@ -148,7 +148,7 @@ export class SharedCalendarComponent implements OnInit {
                   meta: {
                     type: 'private'
                   }
-                });
+                } as CalendarEvent);
             }
 
             this.refresh.next();
@@ -175,7 +175,7 @@ export class SharedCalendarComponent implements OnInit {
             meta: {
               type: 'fbEvent'
             }
-          }
+          } as CalendarEvent
           if (x.end_time == null)
             ev.end = new Date(x.start_time);
           else

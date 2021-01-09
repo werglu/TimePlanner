@@ -93,7 +93,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
           meta: {
             type: 'event'
           }
-        })
+        } as CalendarEvent)
       });
 
 
@@ -153,7 +153,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                   meta: {
                     type: 'task'
                   }
-                })
+                } as CalendarEvent)
               }
             }
           }
@@ -181,7 +181,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             meta: {
               type: 'fbEvent'
             }
-          }
+          } as CalendarEvent
           if (x.end_time == null)
             ev.end = new Date(x.start_time);
           else
@@ -217,7 +217,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
               meta: {
                 type: 'fbBirthday'
               }
-            }
+            } as CalendarEvent
 
             this.fbBirthdayEvents.push(ev);
           }
@@ -314,7 +314,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       meta: {
         type: 'event'
       }
-    });
+    } as CalendarEvent);
     this.activeDayIsOpen = false;
     this.refresh.next();
   }
@@ -340,7 +340,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             meta: {
               type: 'task'
             }
-          });
+          } as CalendarEvent);
         }
       }
     }
@@ -482,7 +482,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             meta: {
               type: 'event'
             }
-          });
+          } as CalendarEvent);
           this.refresh.next();
         });
       });
