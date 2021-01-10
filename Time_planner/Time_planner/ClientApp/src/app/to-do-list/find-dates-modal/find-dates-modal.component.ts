@@ -51,7 +51,8 @@ export class FindDatesModalComponent implements OnInit {
   }
   
   onSubmit() {
-    this.planningService.saveDates(this.getFormValue(), this.currentWeek).subscribe(() => this.onSave.emit(this.getFormValue()));
+    var formValue = this.getFormValue();
+    this.planningService.saveDates(formValue, this.currentWeek).subscribe(() => this.onSave.emit(formValue));
   }
 
   checked(itemInd, dayInd: number) {

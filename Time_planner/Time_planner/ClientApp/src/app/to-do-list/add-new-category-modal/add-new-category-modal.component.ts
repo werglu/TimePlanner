@@ -42,7 +42,8 @@ export class AddNewCategoryModalComponent implements OnInit {
   
   onSubmit() {
     if (this.addCategoryForm.valid) {
-      this.listCategoriesService.addCategory(this.getFormValue()).subscribe(() => this.onSave.emit(this.getFormValue()));
+      var cat = this.getFormValue();
+      this.listCategoriesService.addCategory(cat).subscribe(() => this.onSave.emit(cat));
     }
     else {
       this.validateAllFormControls(this.addCategoryForm);

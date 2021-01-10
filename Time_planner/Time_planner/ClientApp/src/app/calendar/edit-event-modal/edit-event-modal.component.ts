@@ -192,7 +192,7 @@ export class EditEventModalComponent implements OnInit {
               event.longitude = results[0].geometry.location.lng();
 
               this.eventsService.editEvent(Number(this.editedEvent.id), event).subscribe(() => {
-                this.onSave.emit(this.getFormValue());
+                this.onSave.emit(event);
               });
             }
             else {
