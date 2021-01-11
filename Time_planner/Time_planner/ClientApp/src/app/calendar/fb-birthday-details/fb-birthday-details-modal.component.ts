@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, Input } from "@angular/core";
 import { FormGroup, FormBuilder } from "@angular/forms";
-import { CalendarEvent } from "angular-calendar";
+import { CalendarElement } from "../CalendarElement";
 
 @Component({
   selector: 'fb-birthday-details-modal',
@@ -10,7 +10,7 @@ import { CalendarEvent } from "angular-calendar";
 
 export class FbBirthdayDetailsModalComponent {
   editEventForm: FormGroup;
-  @Input() editedEvent: CalendarEvent;
+  @Input() editedEvent: CalendarElement;
   @Output() onCancel = new EventEmitter();
 
   constructor(private formBuilder: FormBuilder) {

@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Input, Output } from "@angular/core";
-import { CalendarEvent } from "angular-calendar";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { CalendarElement } from "../CalendarElement";
 
 @Component({
   selector: 'attended-fb-event-details-modal',
@@ -13,7 +13,7 @@ export class AttendedFbEventDetailsModalComponent implements OnInit {
   showPlace: boolean = true;
   showDesc: boolean = true;
   showTitle: boolean = true;
-  @Input() editedEvent: CalendarEvent;
+  @Input() editedEvent: CalendarElement;
   @Output() onCancel = new EventEmitter();
 
   constructor(private formBuilder: FormBuilder) {
