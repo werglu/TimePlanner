@@ -13,6 +13,7 @@ import { isNullOrUndefined } from 'util';
 import { FacebookService } from 'ngx-facebook';
 import { UserEventsService } from './userEvents.service';
 import { UserService } from '../user/user.service';
+import { CalendarElement } from './CalendarElement';
 
 @Component({
   selector: 'app-calendar-component',
@@ -30,7 +31,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   openTask = false;
   isPublic = false;
   canEditEvent = true;
-  editedEvent: CalendarEvent;
+  editedEvent: CalendarElement;
   addNewEventModalVisible = false;
   openAttendedEvent = false;
   view: CalendarView = CalendarView.Month;
@@ -39,7 +40,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   CalendarView = CalendarView;
   refresh: Subject<any> = new Subject();
   userTasksCateoriesIds: number[] = [];
-  events: CalendarEvent[] = [];
+  events: CalendarElement[] = [];
   actions: CalendarEventAction[] = [
     {
       label: '<i style="color:#f8b400;" class="fa fa-trash"></i>',
@@ -50,7 +51,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     },
   ];
   fbEvents: CalendarEvent[] = [];
-  fbBirthdayEvents: CalendarEvent[] = [];
+  fbBirthdayEvents: CalendarElement[] = [];
   userId: string;
 
   constructor(public eventsService: EventsService,
@@ -93,7 +94,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
           meta: {
             type: 'event'
           }
-        } as CalendarEvent)
+        })
       });
 
 
@@ -153,7 +154,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                   meta: {
                     type: 'task'
                   }
-                } as CalendarEvent)
+                })
               }
             }
           }
@@ -167,7 +168,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.fb.api("/me/events", "get").then(
       response => {
         response.data.forEach((x) => {
-          let ev: CalendarEvent = {
+          let ev: CalendarElement = {
             id: x.id + "f",
             start: new Date(x.start_time),
             title: x.name,
@@ -181,7 +182,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             meta: {
               type: 'fbEvent'
             }
-          } as CalendarEvent
+          }
           if (x.end_time == null)
             ev.end = new Date(x.start_time);
           else
@@ -203,7 +204,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
           if (x.hasOwnProperty('birthday')) {
             let name = x.name.split(" ");
             let birthday = x.birthday.split("/");
-            let ev: CalendarEvent = {
+            let ev: CalendarElement = {
               id: "birthdayf",
               title: name[0] + " birthday!",
               description: x.name + " has a birthday today",
@@ -217,7 +218,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
               meta: {
                 type: 'fbBirthday'
               }
-            } as CalendarEvent
+            }
 
             this.fbBirthdayEvents.push(ev);
           }
@@ -239,7 +240,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     })
   }
 
-  eventClicked(event: CalendarEvent): void {
+  eventClicked(event: CalendarElement): void {
     this.editedEvent = event;
     if (event.meta.type == 'eventAttended') { this.openAttendedEvent = true;}
     if (event.meta.type == 'event') { this.openEvent = true; }
@@ -285,7 +286,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.monthView = false;
   }
 
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }) {
+  dayClicked({ date, events }: { date: Date; events: CalendarElement[] }) {
     if (isSameMonth(date, this.viewDate)) {
       if (events.length == 0 || (isSameDay(this.viewDate, date) && this.activeDayIsOpen == true)) {
         this.activeDayIsOpen = false;
@@ -314,7 +315,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       meta: {
         type: 'event'
       }
-    } as CalendarEvent);
+    });
     this.activeDayIsOpen = false;
     this.refresh.next();
   }
@@ -340,7 +341,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             meta: {
               type: 'task'
             }
-          } as CalendarEvent);
+          });
         }
       }
     }
@@ -374,7 +375,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     return d1 == d2;
   }
 
-  async deleteEvent(event: CalendarEvent) {
+  async deleteEvent(event: CalendarElement) {
     if (event.meta.type == 'task') {
       this.tasksService.getTask(+event.id).subscribe((task) => {
         if (this.areDatesEqual(task.date0, event.start)) {
@@ -482,7 +483,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             meta: {
               type: 'event'
             }
-          } as CalendarEvent);
+          });
           this.refresh.next();
         });
       });

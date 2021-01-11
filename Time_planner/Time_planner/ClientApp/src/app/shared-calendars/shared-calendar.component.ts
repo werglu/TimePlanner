@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user/user.service';
 import { Friend } from '../shared/friend';
 import { UserEventsService } from '../calendar/userEvents.service';
+import { CalendarElement } from '../calendar/CalendarElement';
 
 @Component({
   selector: 'app-shared-calendar-component',
@@ -23,13 +24,13 @@ export class SharedCalendarComponent implements OnInit {
   weekView = false;
   openEvent = false;
   openFbEvent = false;
-  editedEvent: CalendarEvent;
+  editedEvent: CalendarElement;
   view: CalendarView = CalendarView.Month;
   viewDate: Date = new Date();
   activeDayIsOpen = false;
   CalendarView = CalendarView;
   refresh: Subject<any> = new Subject();
-  events: CalendarEvent[] = [];
+  events: CalendarElement[] = [];
   actions: CalendarEventAction[] = [];
   userId: string;
   friendId: string;
@@ -89,7 +90,7 @@ export class SharedCalendarComponent implements OnInit {
             meta: {
               type: 'public'
             }
-          } as CalendarEvent)
+          })
         }
         else {
           this.events.push({
@@ -105,7 +106,7 @@ export class SharedCalendarComponent implements OnInit {
             meta: {
               type: 'private'
             }
-          } as CalendarEvent)
+          })
         }
       });
       this.refresh.next();
@@ -131,7 +132,7 @@ export class SharedCalendarComponent implements OnInit {
                 meta: {
                   type: 'public'
                 }
-              } as CalendarEvent);
+              });
             }
             else {
                 this.events.push({
@@ -148,7 +149,7 @@ export class SharedCalendarComponent implements OnInit {
                   meta: {
                     type: 'private'
                   }
-                } as CalendarEvent);
+                });
             }
 
             this.refresh.next();
@@ -161,7 +162,7 @@ export class SharedCalendarComponent implements OnInit {
     this.fb.api("/" + this.friendId + "/events", "get").then(
       response => {
         response.data.forEach((x) => {
-          let ev: CalendarEvent = {
+          let ev: CalendarElement = {
             id: x.id + "f",
             start: new Date(x.start_time),
             title: '',
@@ -175,7 +176,7 @@ export class SharedCalendarComponent implements OnInit {
             meta: {
               type: 'fbEvent'
             }
-          } as CalendarEvent
+          } as CalendarElement
           if (x.end_time == null)
             ev.end = new Date(x.start_time);
           else
@@ -186,7 +187,7 @@ export class SharedCalendarComponent implements OnInit {
       });
   }
 
-  eventClicked(event: CalendarEvent): void {
+  eventClicked(event: CalendarElement): void {
     this.editedEvent = event;
     if (event.meta.type == 'public') { this.openEvent = true; }
     if (event.meta.type == 'private') { this.openEvent = true; }
@@ -222,7 +223,7 @@ export class SharedCalendarComponent implements OnInit {
     this.monthView = false;
   }
 
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }) {
+  dayClicked({ date, events }: { date: Date; events: CalendarElement[] }) {
     if (isSameMonth(date, this.viewDate)) {
       if (events.length == 0 || (isSameDay(this.viewDate, date) && this.activeDayIsOpen == true)) {
         this.activeDayIsOpen = false;
