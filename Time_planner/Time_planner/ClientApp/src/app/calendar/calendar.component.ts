@@ -45,12 +45,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     {
       label: '<i style="color:#f8b400;" class="fa fa-trash"></i>',
       a11yLabel: 'Delete',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
+      onClick: ({ event }: { event: CalendarElement }): void => {
         this.deleteEvent(event);
       },
     },
   ];
-  fbEvents: CalendarEvent[] = [];
+  fbEvents: CalendarElement[] = [];
   fbBirthdayEvents: CalendarElement[] = [];
   userId: string;
 
