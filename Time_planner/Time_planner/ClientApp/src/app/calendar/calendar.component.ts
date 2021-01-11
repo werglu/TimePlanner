@@ -45,7 +45,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     {
       label: '<i style="color:#f8b400;" class="fa fa-trash"></i>',
       a11yLabel: 'Delete',
-      onClick: ({ event }: { event: CalendarElement }): void => {
+      onClick: ({ event }: { event: CalendarEvent }): void => {
         this.deleteEvent(event);
       },
     },
@@ -375,7 +375,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     return d1 == d2;
   }
 
-  async deleteEvent(event: CalendarElement) {
+  async deleteEvent(event: CalendarEvent) {
     if (event.meta.type == 'task') {
       this.tasksService.getTask(+event.id).subscribe((task) => {
         if (this.areDatesEqual(task.date0, event.start)) {
