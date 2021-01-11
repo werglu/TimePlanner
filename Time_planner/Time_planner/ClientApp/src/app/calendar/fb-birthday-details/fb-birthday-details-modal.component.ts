@@ -22,4 +22,7 @@ export class FbBirthdayDetailsModalComponent {
   cancel() {
     this.onCancel.emit();
   }
+
+  onSubmit() {
+  }
 }

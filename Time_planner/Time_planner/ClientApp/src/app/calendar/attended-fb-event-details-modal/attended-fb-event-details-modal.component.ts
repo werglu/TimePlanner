@@ -83,4 +83,7 @@ export class AttendedFbEventDetailsModalComponent implements OnInit {
   cancel() {
     this.onCancel.emit();
   }
+
+  onSubmit() {
+  }
 }
