@@ -165,7 +165,7 @@ export class SharedCalendarComponent implements OnInit {
           let ev: CalendarElement = {
             id: x.id + "f",
             start: new Date(x.start_time),
-            title: '',
+            title: 'Facebook event',
             description: '',
             color: {
               primary: '#3b5998',

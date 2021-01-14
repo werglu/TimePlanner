@@ -36,7 +36,7 @@ export class AttendedFbEventDetailsModalComponent implements OnInit {
     if (this.editedEvent.description === '')
       this.showDesc = false;
 
-    if (this.editedEvent.title === '')
+    if (this.editedEvent.title === '' || this.editedEvent.title === 'Facebook event')
       this.showTitle = false;
   }
 
