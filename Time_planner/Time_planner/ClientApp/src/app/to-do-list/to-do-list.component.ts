@@ -146,7 +146,10 @@ export class ToDoListComponent implements OnInit {
   }
 
   removeTask(task: any) {
-    this.tasksService.deleteTask(task.id).subscribe(() => this.getTasks(this.currentCategory));
+    this.tasksService.deleteTask(task.id).subscribe(() => {
+      this.getTasks(this.currentCategory);
+      this.mySelection = [];
+    });
   }
 
   addCategory(category: any) {
