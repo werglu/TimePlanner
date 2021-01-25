@@ -305,7 +305,7 @@ export class AddEventModalComponent implements OnInit, AfterViewInit {
       }
     }
 
-    this.conflictMessage = message + ' busy during selected time.\n\nYou can try ' + output.commonDate.toString().replace('T', ' ');
+    this.conflictMessage = message + ' busy during selected time.\n\nYou can try ' + output.commonDate.toLocaleString().replace('T', ' ');
     this.conflict = true;
   }
 }

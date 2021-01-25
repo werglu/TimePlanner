@@ -393,7 +393,7 @@ export class EditEventModalComponent implements OnInit {
       }
     }
 
-    this.conflictMessage = message + ' busy during selected time.\n\nYou can try ' + output.commonDate.toString().replace('T', ' ');
+    this.conflictMessage = message + ' busy during selected time.\n\nYou can try ' + output.commonDate.toLocaleString().replace('T', ' ');
     this.conflict = true;
   }
 }
